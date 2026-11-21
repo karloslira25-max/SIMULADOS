@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulado Saúde da Mulher — Banco N1 &amp; N2 Comentado</title>
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #263349;
+      --bg-hover: #334155;
+      --border-color: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #0ea5e9;
+      --success: #10b981;
+      --success-bg: rgba(16, 185, 129, 0.14);
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.14);
+      --warning: #f59e0b;
+      --warning-bg: rgba(245, 158, 11, 0.14);
+      --radius: 12px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding-bottom: 4rem;
+    }
+
+    .container {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 1.25rem;
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow);
+    }
+
+    .header-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .title-group h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+
+    .title-group p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .header-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      background-color: var(--bg-tertiary);
+      color: var(--text-primary);
+      transition: all 0.15s ease;
+    }
+
+    .btn:hover {
+      background-color: var(--bg-hover);
+      border-color: #475569;
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      color: #0f172a;
+      border-color: var(--accent);
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+      border-color: var(--accent-hover);
+    }
+
+    .btn-danger {
+      color: #fca5a5;
+      border-color: rgba(239, 68, 68, 0.35);
+      background-color: rgba(239, 68, 68, 0.08);
+    }
+
+    .btn-danger:hover {
+      background-color: rgba(239, 68, 68, 0.2);
+    }
+
+    /* User & Sync Bar */
+    .user-sync-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      background-color: rgba(15, 23, 42, 0.65);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      margin-bottom: 1.25rem;
+    }
+
+    .user-input-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+      flex: 1;
+      min-width: 240px;
+    }
+
+    .user-input-wrap label {
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .user-input-wrap input {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.4rem 0.7rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      min-width: 210px;
+    }
+
+    .user-input-wrap input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .sync-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+    }
+
+    .sync-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background-color: var(--text-muted);
+    }
+
+    .sync-badge.synced .sync-dot { background-color: var(--success); }
+    .sync-badge.synced { color: #6ee7b7; border-color: rgba(16, 185, 129, 0.35); }
+
+    .sync-badge.syncing .sync-dot { background-color: var(--warning); }
+    .sync-badge.syncing { color: #fcd34d; border-color: rgba(245, 158, 11, 0.35); }
+
+    .sync-badge.local .sync-dot { background-color: var(--accent); }
+    .sync-badge.local { color: #7dd3fc; border-color: rgba(56, 189, 248, 0.35); }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 680px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .stat-card {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .stat-value {
+      font-size: 1.45rem;
+      font-weight: 800;
+      margin-top: 0.15rem;
+      color: var(--text-primary);
+    }
+
+    .stat-value.green { color: var(--success); }
+    .stat-value.red { color: var(--danger); }
+    .stat-value.blue { color: var(--accent); }
+
+    .stat-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    /* Progress Bar */
+    .progress-wrap {
+      width: 100%;
+      height: 10px;
+      background-color: var(--bg-primary);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--success));
+      transition: width 0.3s ease;
+    }
+
+    /* Filters Panel */
+    .filters-panel {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 1.15rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .search-box {
+      position: relative;
+      margin-bottom: 0.9rem;
+    }
+
+    .search-box input {
+      width: 100%;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      padding: 0.65rem 1rem 0.65rem 2.35rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      pointer-events: none;
+    }
+
+    .filter-section-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 0.45rem;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .pill-row:last-child {
+      margin-bottom: 0;
+    }
+
+    .pill {
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .pill:hover {
+      border-color: var(--accent);
+      color: var(--text-primary);
+    }
+
+    .pill.active {
+      background-color: var(--accent);
+      color: #0f172a;
+      border-color: var(--accent);
+    }
+
+    .results-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* Question Cards */
+    .question-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 1.35rem;
+      margin-bottom: 1.15rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: border-color 0.2s ease;
+    }
+
+    .question-card.answered-correct {
+      border-color: rgba(16, 185, 129, 0.45);
+    }
+
+    .question-card.answered-wrong {
+      border-color: rgba(239, 68, 68, 0.45);
+    }
+
+    .q-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .q-badges {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .q-num {
+      font-weight: 800;
+      font-size: 0.9rem;
+      color: var(--accent);
+      background-color: rgba(56, 189, 248, 0.12);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+    }
+
+    .q-theme {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-secondary);
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+    }
+
+    .q-source {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .q-status-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+    }
+
+    .q-status-tag.correct {
+      background-color: var(--success-bg);
+      color: #6ee7b7;
+    }
+
+    .q-status-tag.wrong {
+      background-color: var(--danger-bg);
+      color: #fca5a5;
+    }
+
+    .q-stem {
+      font-size: 0.97rem;
+      color: var(--text-primary);
+      margin-bottom: 1.05rem;
+      white-space: pre-line;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .option-btn {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      width: 100%;
+      text-align: left;
+      background-color: var(--bg-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 9px;
+      padding: 0.75rem 0.95rem;
+      color: var(--text-secondary);
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      background-color: var(--bg-tertiary);
+      border-color: var(--accent);
+      color: var(--text-primary);
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    .opt-letter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 26px;
+      height: 26px;
+      border-radius: 6px;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      font-weight: 700;
+      font-size: 0.8rem;
+      color: var(--text-primary);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .option-btn.correct {
+      background-color: var(--success-bg);
+      border-color: var(--success);
+      color: #ecfdf5;
+    }
+
+    .option-btn.correct .opt-letter {
+      background-color: var(--success);
+      border-color: var(--success);
+      color: #064e3b;
+    }
+
+    .option-btn.wrong {
+      background-color: var(--danger-bg);
+      border-color: var(--danger);
+      color: #fef2f2;
+    }
+
+    .option-btn.wrong .opt-letter {
+      background-color: var(--danger);
+      border-color: var(--danger);
+      color: #fff;
+    }
+
+    /* Explanation Box */
+    .explanation-box {
+      margin-top: 1rem;
+      padding: 0.95rem 1.1rem;
+      background-color: rgba(15, 23, 42, 0.85);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+    }
+
+    .explanation-box strong {
+      display: block;
+      color: var(--accent);
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.3rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      background-color: var(--bg-secondary);
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius);
+      color: var(--text-muted);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2.5rem;
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="header-top">
+        <div class="title-group">
+          <h1>Simulado Saúde da Mulher</h1>
+          <p>Banco N1 &amp; N2 Ginecologia e Obstetrícia Comentada (FEBRASGO • FIGO • Ministério da Saúde)</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-danger" id="btnReset" type="button">↺ Reiniciar</button>
+        </div>
+      </div>
+
+      <div class="user-sync-bar">
+        <div class="user-input-wrap">
+          <label for="userIdInput">Usuário (E-mail / Matrícula):</label>
+          <input type="text" id="userIdInput" placeholder="ex.: aluno@med.br ou 2026001" />
+          <button class="btn btn-primary" id="btnSaveUser" type="button">Carregar</button>
+        </div>
+        <div class="sync-badge local" id="syncBadge">
+          <span class="sync-dot"></span>
+          <span id="syncText">Salvo localmente</span>
+        </div>
+      </div>
+
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-label">Respondidas</div>
+          <div class="stat-value" id="statAnswered">0/106</div>
+          <div class="stat-sub">Progresso geral</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Acertos</div>
+          <div class="stat-value green" id="statCorrect">0</div>
+          <div class="stat-sub">Questões corretas</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Erros</div>
+          <div class="stat-value red" id="statWrong">0</div>
+          <div class="stat-sub">Revisar justificativa</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Aproveitamento</div>
+          <div class="stat-value blue" id="statRate">0%</div>
+          <div class="stat-sub">Taxa sobre respondidas</div>
+        </div>
+      </div>
+
+      <div class="progress-wrap" title="Barra de progresso do simulado">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </header>
+
+    <section class="filters-panel">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Buscar por palavra-chave (ex.: nifedipina, clue cells, sulfato, adenomiose, TOTG)..." />
+      </div>
+
+      <div class="filter-section-title">Filtrar por Status</div>
+      <div class="pill-row" id="statusFilters">
+        <button class="pill active" data-status="all" type="button">Todas (106)</button>
+        <button class="pill" data-status="pending" type="button">Pendentes</button>
+        <button class="pill" data-status="wrong" type="button">Erradas</button>
+        <button class="pill" data-status="correct" type="button">Acertos</button>
+      </div>
+
+      <div class="filter-section-title">Filtrar por Especialidade / Tema</div>
+      <div class="pill-row" id="themeFilters"></div>
+    </section>
+
+    <div class="results-info">
+      <span id="showingCount">Exibindo 106 questões</span>
+      <span id="activeUserLabel"></span>
+    </div>
+
+    <main id="questionsContainer"></main>
+
+    <footer>
+      Simulado de Ginecologia e Obstetrícia • Questões extraídas dos Bancos N1 e N2 de Saúde da Mulher com comentários baseados em FEBRASGO, FIGO e Ministério da Saúde.
+    </footer>
+  </div>
+
+  <script>
+    // =========================================================================
+    // CONFIGURAÇÃO DA INTEGRAÇÃO GOOGLE APPS SCRIPT
+    // =========================================================================
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwmXTD92Nu-D5-2skmg5pJIvBno4PuH_1uusPmxJzY3TlBafC7RmFqyI74tvoUajDQMfA/exec";
+    const QUIZ_ID = "saude_mulher_n1_n2";
+
+    function getScriptUrl() {
+      return SCRIPT_URL;
+    }
+
+    // =========================================================================
+    // BANCO DE QUESTÕES (106 QUESTÕES COMENTADAS)
+    // =========================================================================
+    const QUESTIONS = [{"id": 1, "theme": "Dor Pélvica Crônica", "source": "Banco N2 - DPC Q1", "stem": "Paciente de 36 anos, casada, procura o ambulatório por estar apresentando dor pélvica crônica de longa data, incapacitante, desde a última gravidez há 6 anos, fazendo uso de medicação com associação de codeína + paracetamol para alívio dos sintomas. Refere há 1 ano aumento do fluxo menstrual (8 dias de fluxo intenso - 5 absorventes noturnos/dia) acompanhado de cólicas menstruais importantes e dispareunia profunda. Vem apresentando ainda sensação de fraqueza e tontura. G2P2A0 - 2 partos vaginais, laqueadura há 6 anos. Trouxe RNM: útero com aumento de volume difuso (180 cm³), discreto espessamento irregular da zona juncional, miométrio heterogêneo com áreas anecoicas entremeadas, endométrio 11 mm; lesão com características de endometriose profunda na região retrocervical/tórus uterino estendendo-se aos ligamentos uterossacros, causando retração do ovário direito. Ovários sem cistos de conteúdo denso (OD: 5,8 cm³ e OE: 6,0 cm³). A conduta mais adequada para essa paciente é:", "options": ["SIU de Levonorgestrel para suprimir a menstruação", "Histerectomia por via vaginal", "Contraceptivo combinado contínuo para suprimir a menstruação", "Histerectomia total laparoscópica e exérese dos focos de endometriose"], "answer": 3, "explanation": "Paciente com prole constituída (laqueadura), dor pélvica crônica incapacitante refratária a analgésicos opioides, sangramento uterino intenso com repercussão sistêmica (fraqueza/tontura), adenomiose difusa e endometriose profunda retrocervical/ligamentos uterossacros com retração ovariana. Conforme protocolos da FEBRASGO, diante de falha do manejo conservador e sem desejo reprodutivo, a histerectomia total laparoscópica associada à exérese completa dos focos de endometriose profunda é a conduta definitiva mais adequada."}, {"id": 2, "theme": "Dor Pélvica Crônica", "source": "Banco N2 - DPC Q2", "stem": "Paciente com dor pélvica crônica, dispareunia e dismenorreia progressiva, procura o ginecologista para avaliação. Os exames clínicos e de imagem estão sem alterações. Baseado na queixa da paciente, a melhor conduta será:", "options": ["Uso somente de analgésicos", "Uso de dispositivo intrauterino de cobre", "Uso de método hormonal combinado contínuo", "Uso somente de anti-inflamatórios"], "answer": 2, "explanation": "Em pacientes jovens com quadro clínico clássico de dor pélvica crônica, dispareunia e dismenorreia progressiva e exames físico e de imagem normais (sugestivos de endometriose superficial/peritoneal ou dismenorreia refratária), o tratamento empírico de primeira linha recomendado pela FEBRASGO é o bloqueio hormonal da menstruação com contraceptivo hormonal combinado contínuo ou progestagênio isolado contínuo."}, {"id": 3, "theme": "Dor Pélvica Crônica", "source": "Banco N2 - DPC Q3", "stem": "Buscar por palavra-chave (ex.: nifedipina, clue cells, sulfato, adenomiose, TOTG)... S im u la d o S a ú d e d a M u lh e r B a n c o N 1 & N 2 • G in e c o lo g ia e O b s te tr íc ia C o m e n ta d a M o d o E s c u ro R e in ic ia r Paciente MRC, 35 anos, nuligesta, tentando engravidar há 3 anos, com queixa de dor pélvica crônica há 5 anos, que piora com as relações sexuais. Ciclos menstruais regulares, fluxo 8 dias, 3 a 4 absorventes/dia. Antecedentes cirúrgicos: cisto de ovário aos 18 anos. Qual a melhor alternativa para possíveis hipóteses diagnósticas?", "options": ["Aderências pélvicas, obstipação", "SOP (Síndrome dos ovários policísticos)", "Endometriose, sequela de DIPA", "Dismenorreia, cisto no ovário", "Varizes pélvicas"], "answer": 2, "explanation": "Mulher em idade fértil, nuligesta com infertilidade há 3 anos, dor pélvica crônica há 5 anos com dispareunia e antecedente de cirurgia pélvica: as duas principais hipóteses etiológicas ginecológicas são a endometriose e as sequelas aderenciais/tubárias de Doença Inflamatória Pélvica Aguda (DIPA)."}, {"id": 4, "theme": "Dor Pélvica Crônica", "source": "Banco N2 - DPC Q4", "stem": "O diagnóstico de dor pélvica crônica é desafiador e apresenta etiologia multifatorial. No exame de toque vaginal de uma mulher de 23 anos que se queixa de dor pélvica crônica, identificam-se espessamento em região retrocervical e diminuição da mobilidade uterina. A principal hipótese diagnóstica é:", "options": ["Adenomiose", "Distopia genital", "Obstrução intestinal crônica intermitente", "Endometriose profunda", "Espasmos musculares do assoalho pélvico"], "answer": 3, "explanation": "O achado no exame físico de espessamento, nodulação ou dor à palpação da região retrocervical e dos ligamentos uterossacros, associado à redução da mobilidade uterina (útero fixo/retrovertido), é altamente característico de endometriose profunda infiltrativa."}, {"id": 5, "theme": "Dor Pélvica Crônica", "source": "Banco N2 - DPC Q5", "stem": "Paciente com 32 anos relata dismenorreia de forte intensidade e dispareunia de profundidade, com piora nos últimos 6 meses. Relata também dor pélvica de longa data e alteração do hábito intestinal no período menstrual. Nega queixas urinárias. Considere as afirmativas abaixo: I - Histeroscopia é um exame que pode ser solicitado para investigação do quadro acima. II - RM da pelve com resultado normal exclui endometriose. III - CA-125 aumentado é patognomônico de endometriose. IV - São diagnósticos diferenciais de endometriose: síndrome do intestino irritável e doença inflamatória pélvica aguda. Assinale a alternativa correta:", "options": ["FFFV", "VFFV", "VVFV", "FFVV", "FVFV"], "answer": 0, "explanation": "I - Falsa: a histeroscopia avalia apenas a cavidade uterina/endométrio, não diagnosticando endometriose pélvica. II - Falsa: a RM de pelve normal não exclui focos peritoneais superficiais. III - Falsa: o CA-125 não é específico nem patognomônico. IV - Verdadeira: Síndrome do Intestino Irritável (SII) e DIPA são diagnósticos diferenciais clássicos. Sequência: FFFV."}, {"id": 6, "theme": "Dor Pélvica Crônica", "source": "Banco N2 - DPC Q7 (UFPR)", "stem": "(UFPR) J.P.G, 38 anos, G2P0C2A0, chega ao ambulatório da Ginecologia com queixa de dor lombar tipo cólica, com 6 meses de piora progressiva e irradiação para fossa ilíaca direita. Relata irregularidades menstruais com fluxo aumentado e dismenorreia intensa, hábito constipado e sangramento gastrintestinal cíclico. Teve diagnóstico de endometriose. A partir do exposto, assinale a alternativa correta:", "options": ["O exame padrão-ouro para diagnóstico de endometriose inicial é a ultrassonografia transvaginal para mapeamento da endometriose", "O principal sítio de endometriose intestinal é ceco e cólon ascendente, acometendo na maior parte dos casos o apêndice vermiforme", "O tratamento do endometrioma de ovário maior ou igual a 3 cm deve ser cirúrgico, pelo fato de existir 5% de progressão cancerígena", "O tratamento medicamentoso de primeira linha deve ser o análogo de GnRH, podendo ser utilizado por, no máximo, 18 meses", "O dienogest, que é um derivado da nortestosterona, é altamente eficaz no controle da dor e atrofia dos focos iniciais da endometriose"], "answer": 4, "explanation": "O dienogest é um progestagênio sintético derivado da 19-nortestosterona de primeira linha para endometriose, promovendo decidualização e atrofia dos implantes endometrióticos com excelente controle álgico. (A: padrão-ouro diagnóstico é videolaparoscopia com biópsia; B: principal sítio intestinal é retossigmoide; C: risco de malignização de endometrioma é < 1%; D: análogo de GnRH é 2ª linha, por até 6 meses sem terapia add-back)."}, {"id": 7, "theme": "Dor Pélvica Crônica", "source": "Banco N2 - DPC Q8 (UFMT)", "stem": "(UFMT) A endometriose frequentemente compromete a qualidade de vida da paciente. São comuns os atrasos do diagnóstico e as recidivas sintomáticas. Com relação a essa patologia, assinale a alternativa correta:", "options": ["As principais manifestações clínicas da endometriose são a dor pélvica, a infertilidade e a presença de massa pélvica em mulheres na fase reprodutiva", "A dispareunia profunda é identificada como dor cíclica no interior da pelve durante o período menstrual", "A disúria na fase menstrual só é sugestiva de endometriose na presença de hematúria", "Os marcadores sorológicos CA-125 e CA 19-9 são fundamentais para o diagnóstico da endometriose"], "answer": 0, "explanation": "A tríade clínica clássica da endometriose em mulheres na menacme compreende dor pélvica (dismenorreia progressiva, dispareunia profunda, dor pélvica crônica acíclica), infertilidade e presença de massa anexial (endometrioma ovariano)."}, {"id": 8, "theme": "Dor Pélvica Crônica", "source": "Banco N2 - DPC Q9", "stem": "Sobre a dor pélvica crônica (DPC), assinale a alternativa FALSA:", "options": ["Dismenorreia severa pode estar associada à endometriose", "Dispareunia, além da endometriose, pode estar relacionada com disfunções do assoalho pélvico, cistite intersticial ou síndrome do intestino irritável", "Vítimas de violência sexual têm alta incidência de dor pélvica crônica, ansiedade e depressão", "Dor pélvica crônica diretamente relacionada a procedimento cirúrgico abdômino-pélvico pode sugerir síndrome miofascial", "Não há uma relação entre dor pélvica crônica e depressão"], "answer": 4, "explanation": "A alternativa FALSA é a E: existe forte associação bidirecional entre dor pélvica crônica e transtornos do humor (ansiedade e depressão), devendo a abordagem terapêutica ser multidisciplinar e biopsicossocial."}, {"id": 9, "theme": "Dor Pélvica Crônica", "source": "Banco N2 - Obstetrícia Q7", "stem": "Paciente com 32 anos relata há dois anos dismenorreia de forte intensidade e dispareunia de profundidade, com piora nos últimos 6 meses tendo melhora parcial após uso de analgésicos. Paciente refere ainda ser nuligesta, sem uso prévio de método contraceptivo, com ciclos menstruais regulares e com relações sexuais frequentes. Exame físico ginecológico sem alterações. Qual a principal hipótese diagnóstica para o caso?", "options": ["Infecção urinária", "Endometriose", "Síndrome do intestino irritável", "Doença inflamatória pélvica"], "answer": 1, "explanation": "Dismenorreia progressiva de forte intensidade associada à dispareunia de profundidade em mulher jovem nuligesta tem como principal hipótese diagnóstica a endometriose, mesmo quando o exame físico ginecológico inicial não apresenta alterações."}, {"id": 10, "theme": "Dor Pélvica Crônica", "source": "Banco N2 - Obstetrícia Q8", "stem": "Ainda sobre a paciente de 32 anos com dismenorreia intensa, dispareunia de profundidade e suspeita clínica de endometriose (exame físico ginecológico sem alterações), dos métodos abaixo, qual seria o de primeira escolha para avaliação diagnóstica por imagem do caso?", "options": ["USG-TV com preparo intestinal", "Colonoscopia", "Videolaparoscopia diagnóstica", "USG de abdome inferior"], "answer": 0, "explanation": "Segundo a FEBRASGO, a ultrassonografia transvaginal (USG-TV) com preparo intestinal realizada por examinador experiente é o exame de imagem de primeira escolha para o mapeamento e investigação diagnóstica inicial da endometriose."}, {"id": 11, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q1", "stem": "Paciente de 25 anos, ciclos irregulares desde a menarca (intervalos longos, ficando até 6 meses sem menstruar), procurou atendimento porque após um período de amenorreia de 5 meses, iniciou com sangramento genital de moderada intensidade há 18 dias comprometendo sua qualidade de vida, apresentando inclusive assaduras pelo uso constante do absorvente. Qual a alternativa mais efetiva para suspender esse tipo de sangramento?", "options": ["Contraceptivo com progestagênio contínuo para atrofiar o endométrio e reduzir o sangramento a curto prazo", "Estrogênio em doses maiores para cortar o sangramento, associado a progestogênio para descamação universal (na interrupção da medicação) e esquema de manutenção", "Anti-inflamatórios não esteroidais para diminuir a inflamação e, em consequência, o sangramento genital", "Contraceptivo hormonal combinado oral contínuo para regular o ciclo menstrual"], "answer": 1, "explanation": "No sangramento uterino anormal agudo por anovulação crônica (estímulo estrogênico contínuo sem progesterona gerando endométrio espesso e instável), o uso de estrogênio em doses maiores promove rápida proliferação e reepitelização endometrial para estancar o sangramento agudo, seguido de progestagênio para estabilização e descamação organizada."}, {"id": 12, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q2", "stem": "Paciente de 38 anos, G3P3nA0, laqueada, vem apresentando sangramento uterino em grande quantidade desde a laqueadura há 2 anos. Já fez tratamento com anticoncepcionais e medicamento para reduzir o fluxo. Veio para consulta médica trazendo exames: Hemograma mostrando Hemoglobina 9,8 g/dL e Ht: 30% (VR: 35% a 45%), Ferritina: 10 ng/mL (VR: 11 a 306 ng/mL). USG TV: útero 320 cm³, endométrio 1,1 cm, múltiplos miomas, sendo os maiores: M1: 3,2x3,0x2,8 cm parede corporal posterior intramural; M2: 4,3x5,0x4,9 cm parede corporal anterior subseroso e M3: 2,8x2,5x3,0 cm submucoso. Qual a sua sugestão de tratamento?", "options": ["Tratamento conservador com contraceptivo hormonal", "Histerectomia por qualquer via", "Miomectomia por histeroscopia", "Tratamento conservador com SIU de levonorgestrel (MIRENA)"], "answer": 1, "explanation": "Paciente de 38 anos, multípara com prole constituída (laqueadura), apresentando SUA volumoso refratário ao tratamento clínico, anemia ferropriva (Hb 9,8 g/dL, ferritina 10 ng/mL) e útero aumentado (320 cm³) com múltiplos miomas em diferentes localizações (submucoso, intramural e subseroso). A histerectomia é o tratamento definitivo indicado."}, {"id": 13, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q3", "stem": "A adenomiose é uma patologia uterina que tem seu diagnóstico de suspeição pela ultrassonografia e a confirmação é feita com análise histopatológica do útero, após a histerectomia. Assinale a afirmação correta sobre adenomiose:", "options": ["Compromete os ovários em 50% dos casos", "Pode ocorrer durante qualquer período de vida do organismo feminino", "Pode provocar hipermenorragia e metrorragia", "Encontra-se apenas no climatério", "Transforma-se em carcinoma do corpo uterino em 5% dos casos"], "answer": 2, "explanation": "A adenomiose caracteriza-se pela presença ectópica de glândulas e estroma endometriais no interior do miométrio, manifestando-se clinicamente por aumento do volume menstrual (hipermenorragia/sangramento menstrual aumentado), sangramento irregular (metrorragia) e dismenorreia secundária progressiva."}, {"id": 14, "theme": "Sangramento Uterino Anormal", "source": "Banco N1 / N2 - SUA Q4", "stem": "Considerando que uma paciente com diagnóstico de Síndrome dos Ovários Policísticos (SOP) com quadro de amenorreia há 4 meses apresente sangramento uterino anormal, o padrão de sangramento esperado será:", "options": ["Sangramento em pequena quantidade devido à atrofia endometrial causada pela exposição à progesterona", "Sangramento duradouro e de volume aumentado devido a endométrio espesso, exposto a estímulo estrogênico prolongado sem progesterona", "Sangramento aumentado por incremento nos mediadores inflamatórios produzidos no endométrio com ação nas arteríolas espiraladas", "Sangramento aumentado por diminuição da contratilidade miometrial que faz o tamponamento vascular", "Sangramento diminuído e de curta duração já que a camada funcional não se desenvolveu satisfatoriamente"], "answer": 1, "explanation": "Na Síndrome dos Ovários Policísticos (SOP), a anovulação crônica mantém o endométrio sob estímulo estrogênico constante sem a ação antiproliferativa e secretora da progesterona, resultando em hiperplasia/espessamento desorganizado e sangramento uterino prolongado e volumoso."}, {"id": 15, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q5", "stem": "Paciente de 39 anos, G4P3A1, com ciclos menstruais regulares, fluxo muito aumentado nos 3 primeiros dias, acompanhado de dismenorreia severa não conseguindo frequentar as atividades laborais. Realizou USG endovaginal que revelou útero de 230 cm³, apresentando miométrio heterogêneo com áreas hipoecogênicas intramiometriais e descontinuidade da zona juncional. Espessura aumentada da parede posterior em relação à parede anterior. O diagnóstico provável do Sangramento Uterino Anormal é:", "options": ["Adenomiose", "Miomatose", "Miohipertrofia uterina", "Endometriose", "Malignidade"], "answer": 0, "explanation": "Útero aumentado difusamente (230 cm³), miométrio heterogêneo com áreas hipoecogênicas/anecoicas intramiometriais, assimetria entre paredes uterinas e espessamento/descontinuidade da zona juncional ao USG-TV, aliados à menorragia e dismenorreia severa em multípara, configuram o diagnóstico típico de adenomiose."}, {"id": 16, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q6", "stem": "Paciente de 42 anos refere sangramento menstrual irregular há 2 anos, com piora há 6 meses, às vezes fica menstruada por 15 dias com fluxo aumentado e sangra entre as menstruações e após coito. Avaliações hormonais sem alteração. Exame de Ultrassonografia identificou espessamento endometrial. Qual o melhor exame para avaliação da cavidade endometrial?", "options": ["Histerossalpingografia", "Ultrassom de abdome inferior", "Histeroscopia", "Laparoscopia diagnóstica", "Ressonância magnética"], "answer": 2, "explanation": "A histeroscopia diagnóstica (com possibilidade de biópsia dirigida) é o exame padrão-ouro para visualização direta e avaliação da cavidade endometrial diante de SUA e espessamento endometrial."}, {"id": 17, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q7", "stem": "Sra. Maria, 52 anos, queixa-se de dor pélvica recorrente, acompanhada de perda de secreção escura transvaginal discreta, às vezes com odor intenso, com início há 5 meses. Nega vida sexual desde out/2010; diabética, hipertensa, hipotireoidismo; G6P4A2, DUM: ago/2010. Focando apenas a possível causa do SUA frente a esta hipótese, qual alternativa está correta?", "options": ["Sangramento normal, comum no climatério. Exame especular e coleta de material para análise citopatológica", "SUA por pólipo endometrial + exame especular + toque vaginal", "SUA por hiperplasia endometrial: USG pélvica transvaginal (endométrio acima de 5 mm sem TH), exame especular e coleta de material para análise citopatológica", "Sangramento fisiológico no climatério + RM pélvica"], "answer": 2, "explanation": "Todo sangramento ou perda genital na pós-menopausa (52 anos, DUM há mais de 10 anos) exige investigação imediata de hiperplasia endometrial e câncer de endométrio (especialmente em diabéticas e hipertensas), iniciando-se por exame especular, citologia/avaliação cervical e USG-TV (ponto de corte endometrial de 4 a 5 mm sem terapia hormonal)."}, {"id": 18, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q8", "stem": "Qual das condições abaixo NÃO está associada com sangramento uterino anormal estrutural (grupo PALM da FIGO)?", "options": ["Uso de anticoagulantes", "Pólipos endometriais", "Adenomiose", "Miomas", "Leiomiomas submucosos"], "answer": 0, "explanation": "Na classificação PALM-COEIN da FIGO, o acrônimo PALM reúne as causas estruturais: Pólipo, Adenomiose, Leiomioma e Malignidade/hiperplasia. O uso de anticoagulantes integra o grupo não estrutural COEIN (Coagulopatia / Iatrogênica)."}, {"id": 19, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q9", "stem": "Paciente de 47 anos veio para a consulta referindo ciclos irregulares há 1 ano, com longos períodos de amenorreia. Quando menstrua o fluxo é abundante, ultrapassando 8 dias de sangramento. G2P2A0. Ao exame físico: hipocorada +1/+4, PA: 120x80 mmHg. Realizou USG Transvaginal que evidenciou útero de 90 cm³, mioma de 1,5 cm intramural em parede corporal posterior, endométrio 10 mm, cisto simples de 15 mm em ovário direito. A conduta mais adequada é:", "options": ["Uso de medicação hormonal combinada para regular o ciclo visando proteger o endométrio", "Apenas correção da anemia e aguardar a menopausa", "Histerectomia junto com ooforectomia", "Ressecção do mioma por histeroscopia"], "answer": 0, "explanation": "Paciente na perimenopausa (47 anos) com ciclos anovulatórios irregulares, endométrio espessado (10 mm) e pequeno mioma intramural de 1,5 cm (sem abaulamento cavitário): o tratamento clínico hormonal (combinado ou progestagênio) regula o ciclo, reduz o fluxo e protege o endométrio contra hiperplasia."}, {"id": 20, "theme": "Sangramento Uterino Anormal", "source": "Banco N1 / N2 - SUA Q10", "stem": "Paciente de 13 anos, menarca há 03 meses, iniciou com sangramento menstrual vermelho vivo com coágulos, em grande intensidade (6- 8 absorventes/dia) há 02 dias, sujando roupas íntimas e roupa de cama. Procurou atendimento no Pronto Atendimento, acompanhada da mãe. Ao exame: mucosas hipocoradas ++/4+, FC: 100 bpm, PA: 100x60 mmHg, boa perfusão periférica. Considerando essa situação, a alternativa de tratamento mais racional será:", "options": ["Anticoncepcional hormonal combinado", "Ácido tranexâmico isolado", "AINE isolado", "Pílula de progestogênio isolado", "Conduta expectante"], "answer": 0, "explanation": "Em adolescente logo após a menarca com SUA agudo intenso por imaturidade do eixo hipotálamo-hipófise-ovário, hemodinamicamente estável mas com anemia clínica (hipocorada ++/4+), o anticoncepcional hormonal combinado é a terapêutica de escolha para estabilizar rapidamente o endométrio e cessar o sangramento."}, {"id": 21, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q11", "stem": "Paciente de 38 anos, G4P3A1, vem apresentando aumento de intensidade do sangramento menstrual há 10 meses com comprometimento da qualidade de vida. Relata que seus ciclos são regulares, acompanhados de muita cólica desde o último parto há 04 anos. Trouxe exames recentes: USGTV – útero AVF, volume de 89 cm³, endométrio 15 mm, com imagem ecogênica fúndica de 2,6 cm, compatível com mioma submucoso, ovários normais. Hb = 10,8 g/dL, Ht = 34%, VCM = 72 fL, leuco = 5.800, plaquetas 220.000, ferritina = 23 ng/mL. Considerando o caso clínico, qual seria a sua primeira conduta?", "options": ["Histerectomia e correção da anemia", "Prescrição de anticoncepcionais hormonais orais apenas", "Correção da anemia apenas", "Miomectomia por histeroscopia e reposição de ferro", "Prescrição de ferro e curetagem uterina"], "answer": 3, "explanation": "Paciente de 38 anos com SUA importante, anemia ferropriva (Hb 10,8 g/dL, VCM 72 fL) e mioma submucoso único de 2,6 cm: a miomectomia por via histeroscópica é o tratamento conservador padrão-ouro para remoção do nódulo intracavitário, devendo ser associada à reposição de ferro."}, {"id": 22, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q12", "stem": "Em relação à histeroscopia, considere: I - É o método de escolha para diagnóstico de DIP. II - Deve ser realizada durante a fase secretora média do ciclo menstrual, para melhor observação dos óstios tubários. III - O uso de agonistas de GnRH por 3 meses facilita a retirada dos miomas por este método. Quais estão corretas:", "options": ["I", "II", "III", "II e III", "Todas"], "answer": 2, "explanation": "I - Falsa: DIP é contraindicação à histeroscopia pelo risco de disseminação infecciosa. II - Falsa: deve ser realizada preferencialmente na fase proliferativa precoce (logo após a menstruação), quando o endométrio está fino. III - Verdadeira: o uso pré-operatório de agonistas do GnRH por 2 a 3 meses reduz o volume do mioma e a vascularização, facilitando a ressecção histeroscópica."}, {"id": 23, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q13", "stem": "Acerca de patologias benignas do corpo uterino, assinale a correta:", "options": ["A leiomiomatose uterina é sempre sintomática e, portanto, seu tratamento é sempre cirúrgico", "Miomatose uterina com componente submucoso geralmente provoca alterações no ciclo no que diz respeito à regularidade", "A associação de menorragia (aumento do fluxo) com dismenorreia em paciente com miomatose pode levantar a suspeita de concomitância com endometriose ou adenomiose", "Presença de mioma subseroso único e volumoso é a principal causa de sangramento uterino anormal", "Nenhuma das anteriores"], "answer": 2, "explanation": "A coexistência de sangramento menstrual aumentado (menorragia) com dismenorreia secundária intensa em paciente portadora de miomatose uterina deve levantar a suspeita clínica de adenomiose ou endometriose associada. (A: maioria dos miomas é assintomática; B: miomas submucosos aumentam o volume/duração do fluxo sem alterar a regularidade do ciclo; D: miomas subserosos raramente causam SUA)."}, {"id": 24, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q14-I", "stem": "Mulher, 30 anos, procura serviço de urgência com queixa clínica de sangramento menstrual bastante volumoso nos últimos 6 ciclos. Teve ganho de 8 kg. Mantém atividade sexual regular com uso de preservativo. Ao exame físico apresenta IMC 33 (obesidade), descorada, PA 105x70 mmHg, vulva com sinais de sangramento ativo moderado; toque: colo cartilaginoso, fechado e com volume levemente aumentado. Quanto aos exames complementares a serem solicitados inicialmente no quadro clínico descrito, assinale a correta:", "options": ["Insulina, TSH, tipagem sanguínea + fator Rh e hemograma", "USG, Hb, contagem de plaquetas e beta-hCG", "USG, coagulograma, glicemia, TS + fator Rh", "USG, hemograma, TGO e TGP", "USG, TSH e insulina"], "answer": 1, "explanation": "Diante de mulher em idade fértil atendida na urgência por sangramento genital agudo intenso, é obrigatório solicitar teste de gravidez (β-hCG) para afastar complicações gestacionais, hemograma/plaquetas para avaliar anemia e coagulação, e USG pélvica para investigar causas estruturais."}, {"id": 25, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q14-II", "stem": "Ainda sobre o atendimento da mulher de 30 anos com sangramento menstrual volumoso no serviço de urgência (após exclusão de gestação), a conduta terapêutica possível é:", "options": ["Ácido tranexâmico + analgésicos caso cólicas", "Ácido tranexâmico + contraceptivo oral combinado contínuo após análise dos exames", "Analgésicos + ferro oral + atividade física", "Dieta hipocalórica + atividade física + analgésicos de uso contínuo", "Nenhuma das anteriores"], "answer": 1, "explanation": "Após exclusão de gravidez e avaliação inicial, o controle do sangramento menstrual volumoso pode ser feito associando antifibrinolítico (ácido tranexâmico) para redução imediata da perda sanguínea e contraceptivo oral combinado para estabilização endometrial."}, {"id": 26, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q15-I", "stem": "Creuza, 23 anos, solicita atendimento em PS com queixa de sangramento intenso há 12h acompanhado de cólicas e perdas de coágulos. G0P0A0. Ciclos regulares. Preservativo como método contraceptivo. DUM: 20/04. Ao exame: palidez cutâneo-mucosa +/4+, PA 90x50 mmHg, abdome pouco doloroso. Exame especular com sangramento moderado a intenso e saída de coágulos pelo óstio externo do colo. Toque com colo amolecido e orifício cervical externo pérvio. Marque a conduta correta:", "options": ["Solicitar USG pélvica transvaginal + beta-hCG + exames laboratoriais + ácido tranexâmico EV + retorno em consulta ambulatorial", "Solicitar USG pélvica transvaginal + beta-hCG + medicação EV analgésica + retorno em consulta ambulatorial", "Solicitar USG pélvica transvaginal + beta-hCG + exames laboratoriais + medicação EV analgésica + hidratação EV + observação até resultados dos exames", "Solicitar USG pélvica transvaginal + beta-hCG + encaminhar ao centro cirúrgico para curetagem imediatamente", "Encaminhar com urgência ao centro cirúrgico para esvaziamento uterino sem exames"], "answer": 2, "explanation": "Mulher em idade fértil com sangramento genital intenso, cólicas, eliminação de coágulos, colo amolecido e orifício cervical externo pérvio, com PA limítrofe (90×50 mmHg): a conduta inicial consiste em hidratação venosa, analgesia, solicitação de β-hCG, USG-TV e exames laboratoriais, mantendo a paciente em observação até definição diagnóstica."}, {"id": 27, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q15-II", "stem": "No caso clínico acima (Creuza, 23 anos, sangramento intenso com coágulos, cólicas, colo amolecido e orifício cervical pérvio), qual a principal hipótese diagnóstica?", "options": ["SUA por pólipo", "SUA por neoplasia uterina", "SUA por coagulopatia", "SUA por causa desconhecida", "SUA por abortamento incompleto"], "answer": 4, "explanation": "Sangramento vaginal intenso acompanhado de cólicas em hipogástrio, eliminação de coágulos, colo uterino amolecido e orifício cervical externo pérvio em mulher na menacme caracteriza clinicamente o abortamento incompleto."}, {"id": 28, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q18", "stem": "Paciente de 39 anos com hipermenorreia, nuligesta e tentando engravidar há dois anos. A USG-TV mostra 3 nódulos miomatosos, o maior medindo 5 cm de diâmetro. A conduta adequada nesse caso é:", "options": ["Miomectomia múltipla", "Histerectomia subtotal", "Histerectomia total", "Histerectomia total com anexectomia bilateral"], "answer": 0, "explanation": "Paciente de 39 anos, nuligesta com desejo reprodutivo e múltiplos miomas uterinos sintomáticos (maior com 5 cm): a cirurgia conservadora de escolha para preservar a fertilidade é a miomectomia múltipla."}, {"id": 29, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q19", "stem": "Paciente de 37 anos de idade refere metrorragia há 8 meses. Qual das seguintes afecções NÃO faz parte do diagnóstico diferencial habitual de sangramento uterino?", "options": ["Pólipo endometrial", "Hiperplasia endometrial", "Adenomiose", "Mioma subseroso"], "answer": 3, "explanation": "O mioma subseroso desenvolve-se na superfície externa do útero sob a serosa peritoneal, não distorcendo a cavidade endometrial e, portanto, não constituindo causa habitual de sangramento uterino anormal."}, {"id": 30, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q24 (SES-GO)", "stem": "(SES-GO) Uma mulher de 30 anos, nuligesta, com sangramento menstrual aumentado em relação a quantidade e duração, associado a dismenorreia secundária, apresenta à ultrassonografia endovaginal imagem de mioma submucoso com seu maior diâmetro de 2 cm. A terapêutica adequada é:", "options": ["Anti-inflamatório não hormonal", "Anticoncepção hormonal", "Embolização do mioma", "Ressecção histeroscópica"], "answer": 3, "explanation": "Para mioma submucoso sintomático de até 4–5 cm (no caso, 2 cm) em mulher jovem nuligesta com SUA e dismenorreia secundária, o tratamento padrão-ouro é a ressecção histeroscópica (miomectomia histeroscópica)."}, {"id": 31, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q25", "stem": "Indique o exame complementar padrão-ouro no diagnóstico de hiperplasia endometrial:", "options": ["Histerossalpingografia", "Ultrassonografia transvaginal", "Curetagem de prova", "Histeroscopia com biópsia"], "answer": 3, "explanation": "A histeroscopia com biópsia dirigida é o exame complementar padrão-ouro para o diagnóstico preciso da hiperplasia endometrial e exclusão de carcinoma endometrial focal."}, {"id": 32, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q26", "stem": "Indique o exame complementar NÃO recomendável no diagnóstico de hiperplasia endometrial:", "options": ["Histerossalpingografia", "Ultrassonografia", "Curetagem de prova", "Teste de progestagênio"], "answer": 0, "explanation": "A histerossalpingografia é um exame radiológico contrastado voltado à avaliação da permeabilidade tubária e morfologia cavitária na investigação de infertilidade, não sendo recomendada para diagnóstico de hiperplasia endometrial."}, {"id": 33, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q27", "stem": "Fator de risco importante para o carcinoma do endométrio é:", "options": ["Hipertensão arterial isolada", "Obesidade", "Menopausa precoce", "Subnutrição"], "answer": 1, "explanation": "A obesidade é um dos principais fatores de risco para o adenocarcinoma de endométrio devido à aromatização periférica de androgênios em estrona no tecido adiposo, mantendo estímulo estrogênico contínuo sem oposição progestagênica."}, {"id": 34, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q28", "stem": "Escolha o tratamento recomendado para paciente de 48 anos de idade, portadora de hiperplasia complexa do endométrio com atipias celulares:", "options": ["Emprego de análogos de GnRH", "Medicação com progestagênios", "Ooforectomia bilateral isolada", "Histerectomia total"], "answer": 3, "explanation": "Na hiperplasia endometrial atípica (neoplasia intraepitelial endometrial) em paciente de 48 anos sem desejo reprodutivo, a histerectomia total é o tratamento recomendado pelo elevado risco de progressão ou coexistência de carcinoma invasor do endométrio."}, {"id": 35, "theme": "Sangramento Uterino Anormal", "source": "Banco N1 / N2 - SUA Q54", "stem": "Qual a causa a ser considerada mais comumente de S.U.A. (sangramento uterino disfuncional) na Adolescência?", "options": ["Imaturidade hormonal (eixo hipotálamo-hipófise-ovário)", "Neoplasias benignas do útero", "Miomatose uterina", "Traumas genitais", "Nenhuma das anteriores"], "answer": 0, "explanation": "Nos primeiros anos após a menarca, a imaturidade do eixo hipotálamo-hipófise-ovário gera ciclos predominantemente anovulatórios, sendo esta a causa mais frequente de sangramento uterino anormal na adolescência."}, {"id": 36, "theme": "Sangramento Uterino Anormal", "source": "Banco N2 - SUA Q55", "stem": "Apresentam-se como terapêutica clínica/complementar em casos de S.U.A. (sangramento uterino anormal), EXCETO:", "options": ["Anti-inflamatórios não hormonais (AINEs)", "USG (ultrassonografia)", "Antifibrinolíticos (ex.: ácido tranexâmico)", "Hormônios (combinados ou progestagênios)", "Nenhuma das anteriores"], "answer": 1, "explanation": "A ultrassonografia (USG) é um método propedêutico diagnóstico complementar, e não uma modalidade terapêutica para o controle do sangramento uterino anormal."}, {"id": 37, "theme": "RUPREMA", "source": "Banco N1 - RUPREMA Q1", "stem": "Gestante de 36 semanas e 02 dias refere perda líquida abundante há 02 horas. Ao exame físico, bolsa rota clássica. Sinais vitais todos normais, exames laboratoriais normais. Qual a conduta imediata adequada?", "options": ["Parto (resolução da gestação)", "Betametasona", "Azitromicina", "Amoxicilina", "Todas as anteriores"], "answer": 0, "explanation": "Segundo protocolos do Ministério da Saúde e FEBRASGO, na rotura prematura das membranas ovulares (RUPREMA) com idade gestacional ≥ 34 semanas (36 semanas e 2 dias), está indicada a resolução da gestação (parto), não havendo indicação de corticoterapia antenatal nem de antibiótico de latência."}, {"id": 38, "theme": "RUPREMA", "source": "Banco N1 - RUPREMA Q2", "stem": "Sobre as indicações para profilaxia de Estreptococo Beta-Hemolítico do Grupo B (EGB) na RUPREMA, analise os itens abaixo: I. RUPREMA há mais de 18 horas II. Febre materna (≥ 38°C) III. Cultura positiva para Strepto (swab vaginal/retal) IV. Aumentar o período de latência V. Tratar o agente etiológico da RUPREMA Quais afirmações são verdadeiras?", "options": ["Somente II e IV", "Somente I e III", "Somente I, II e III", "Todas estão corretas"], "answer": 2, "explanation": "Na RUPREMA, a profilaxia intraparto para Estreptococo do Grupo B (EGB) com penicilina cristalina é indicada quando há cultura positiva para EGB (I/III), bolsa rota há ≥ 18 horas (I) ou febre materna intraparto ≥ 38°C (II). Não se destina a prolongar latência (IV) nem a tratar o agente causador da rotura (V). Corretas: I, II e III."}, {"id": 39, "theme": "RUPREMA", "source": "Banco N1 - RUPREMA Q3", "stem": "Está associado à Rotura de Vasa Prévia:", "options": ["Pré-eclâmpsia", "Diabetes mellitus", "Oligoâmnio", "Inserção baixa de placenta"], "answer": 3, "explanation": "A rotura de vasa prévia está fortemente associada à inserção baixa de placenta / placenta prévia no segundo trimestre, inserção velamentosa do cordão umbilical, placentas bilobadas ou succenturiadas e gestações múltiplas."}, {"id": 40, "theme": "RUPREMA", "source": "Banco N1 - RUPREMA Q4", "stem": "Gestante primigesta de 31 semanas apresenta quadro clássico de RUPREMA sem sinais de corioamnionite (infecção). Internou agora no hospital, BCF 148 bpm, afebril. Assinale as assertivas: I. Está indicado o uso de azitromicina para aumentar o período de latência II. Está indicado o uso de betametazona III. Está indicado o uso de ampicilina EV para aumentar o período de latência IV. Está indicado solicitar rastreio infeccioso laboratorial V. Está indicado monitorar BCF, temperatura axilar e FC materna", "options": ["Está correta somente I e III", "Está correta somente II e IV", "Está correta somente I, II e III", "Todas estão corretas", "Todas estão falsas"], "answer": 3, "explanation": "Na RUPREMA pré-termo (31 semanas) sem sinais de corioamnionite ou sofrimento fetal, preconiza-se conduta conservadora hospitalar com antibioticoterapia de latência (ampicilina + azitromicina), corticoterapia antenatal para maturação pulmonar fetal (betametasona), rastreio infeccioso seriado e vigilância materno-fetal rigorosa (BCF, temperatura e FC materna). Todas corretas."}, {"id": 41, "theme": "RUPREMA", "source": "Banco N1 - RUPREMA Q5", "stem": "Gestante primigesta, 37 semanas e 3 dias, quadro clássico de RUPREMA, sem sinais de corioamnionite, bolsa rompeu há 22 horas. No momento BCF: 140 bpm, AU: ausente (sem contrações), TV: colo fechado, especular com saída de líquido amniótico claro. USG obstétrico: feto cefálico, PEF 2857 g, ausência de sinais de sofrimento fetal. Assinale: I. Indicado uso de penicilina cristalina p/ profilaxia de estreptococo beta-hemolítico pois já se passaram mais de 18h de RUPREMA II. Indicado aguardar espontaneamente por mais 24h antes de induzir III. RUPREMA com IG ≥ 34 semanas está indicado o parto IV. Indicado azitromicina para aumentar período de latência V. Indicado betametazona para maturação pulmonar", "options": ["Correta somente I e III", "Correta somente II e IV", "Correta somente I, II e III", "Todas estão corretas", "Todas estão erradas"], "answer": 0, "explanation": "Com 37 semanas e 3 dias (≥ 34 semanas), a conduta na RUPREMA é a resolução imediata do parto (III), sem aguardar 24h, sem corticoide e sem antibiótico de latência. Como a bolsa rompeu há 22 horas (> 18h), está indicada a profilaxia intraparto para EGB com penicilina cristalina (I). Corretas: I e III."}, {"id": 42, "theme": "RUPREMA", "source": "Banco N1 - RUPREMA Q6", "stem": "Se uma gestante com 29 semanas chega no pronto-socorro com queixa de perda de líquido, sem outros sintomas, é correto que:", "options": ["Se a dinâmica uterina for negativa, deve-se realizar toque vaginal seriado e dar alta se impérvio", "Se a dinâmica for negativa e a avaliação de infecção for negativa, deve-se introduzir antibiótico apenas para prevenção de EGB por 24h", "Se usa antibiótico para aumentar o período de latência e se prescreve corticoide para a melhora da maturidade pulmonar se ocorrer o parto", "Se entrar em trabalho de parto deve-se inibi-lo com uterolítico de manutenção até 34 semanas", "O parto deve ser programado imediatamente em até 24 horas pelo risco de infecção"], "answer": 2, "explanation": "Em gestante de 29 semanas com RUPREMA sem infecção nem trabalho de parto ativo, adota-se conduta expectante com antibioticoterapia para prolongar o período de latência e corticoterapia antenatal para acelerar a maturidade pulmonar fetal (evitando toques vaginais desnecessários)."}, {"id": 43, "theme": "RUPREMA", "source": "Banco N1 - RUPREMA Q8", "stem": "Em uma gestante com diagnóstico de RUPREMA em conduta conservadora, qual a maior preocupação? Durante sua internação, a vigilância materno-fetal visa investigar precocemente qual complicação?", "options": ["Prematuridade pós-termo", "Pré-eclâmpsia", "Síndrome de Aspiração Meconial crônica", "Infecção (corioamnionite)"], "answer": 3, "explanation": "Durante a conduta conservadora na RUPREMA pré-termo, a principal complicação a ser vigiada precocemente pela equipe obstétrica é a infecção intra-amniótica (corioamnionite), monitorando temperatura, frequência cardíaca materna/fetal, dor uterina e leucograma."}, {"id": 44, "theme": "RUPREMA", "source": "Banco N1 - RUPREMA Q9", "stem": "Gestante cuja DUM foi em 06/05/2020 procura a maternidade dia 18/12/2020, referindo perda líquida abundante há 2 horas. Ao exame físico, bolsa rota clássica. Sinais vitais TODOS normais, exames laboratoriais TODOS normais. Qual a conduta imediata mais adequada?", "options": ["Misoprostol", "Parto imediato", "Nesta idade gestacional a gestação é inviável", "Betametasona (conduta conservadora com corticoide e antibiótico de latência)"], "answer": 3, "explanation": "Calculando a idade gestacional pela DUM de 06/05/2020 até 18/12/2020, totalizam-se 226 dias (32 semanas e 2 dias). Por ser RUPREMA pré-termo (< 34 semanas) sem sinais de infecção, indica-se conduta conservadora com betametasona e antibioticoterapia de latência."}, {"id": 45, "theme": "RUPREMA", "source": "Banco N1 - RUPREMA Q10", "stem": "Considerando o achado de perda de líquido amniótico (RUPREMA) durante o período gestacional:", "options": ["Sempre indica a interrupção imediata da gravidez", "Sempre está presente em casos de infecção urinária", "Sempre está associada a anomalias fetais e maternas", "Próximo ao termo (≥ 34–37 semanas), uma das condutas recomendadas é a indução imediata do parto", "Nenhuma das anteriores"], "answer": 3, "explanation": "Quando a RUPREMA ocorre próximo ao termo (a partir de 34–37 semanas), os riscos infecciosos superam os benefícios da expectação, indicando-se a indução imediata do parto."}, {"id": 46, "theme": "RUPREMA", "source": "Banco N1 - RUPREMA Q11", "stem": "Em caso de RUPREMA está indicada a interrupção da gravidez se, EXCETO:", "options": ["Sinais clínicos de infecção materna", "Sofrimento fetal", "Corioamnionite", "ILA 6 cm (oligoidrâmnio isolado sem sofrimento fetal em pré-termo)", "IG ≥ 34 semanas"], "answer": 3, "explanation": "Sinais clínicos de infecção materna, corioamnionite, sofrimento fetal agudo e idade gestacional ≥ 34 semanas indicam interrupção da gestação na RUPREMA. Já um ILA de 6 cm isolado (oligoidrâmnio limítrofe sem sofrimento fetal) em gestação pré-termo não contraindica a conduta conservadora."}, {"id": 47, "theme": "RUPREMA", "source": "Banco N1 - RUPREMA Q13", "stem": "Paciente G1P0, DUM: 30/10/13, procura a maternidade com queixa de perda de líquido vaginal abundante há 5 dias e que no início tinha odor similar a água sanitária. Procurou o serviço pois estava apresentando febre e dor em baixo ventre. Ao exame físico: Tax 38,7°C, FC 115 bpm, BCF 160 bpm. Ao exame especular observou-se saída de líquido purulento de odor fétido; ao exame de toque evidenciou índice de Bishop de 4 e ao USG ILA de 6 cm. Além da antibioticoterapia (ampicilina + gentamicina / penicilina cristalina), deve-se também:", "options": ["Realizar cesariana de imediato como primeira opção", "Iniciar indução do parto (resolução pela via vaginal preferencialmente)", "Ministrar corticoide e realizar cesariana após 48h", "Ministrar corticoide e induzir o parto após 48h", "Aguardar o parto espontaneamente"], "answer": 1, "explanation": "O quadro clínico (febre 38,7°C, taquicardia materna e fetal, líquido amniótico purulento e fétido) confirma corioamnionite clínica. Além de iniciar imediatamente antibioticoterapia de amplo espectro, deve-se interromper a gestação, preferencialmente por indução do parto vaginal (reservando a cesariana para indicações obstétricas)."}, {"id": 48, "theme": "RUPREMA", "source": "Banco N1 - RUPREMA Q14", "stem": "Para confirmação diagnóstica e condução inicial de RUPREMA (fora de trabalho de parto ativo), NÃO se deve utilizar rotineiramente:", "options": ["Exame especular estéril", "AmniSure (teste rápido para PAMG-1)", "Toque vaginal", "Teste de azul-de-nilo / cristalização em folha de samambaia", "Avaliação do pH vaginal (papel de nitrazina)"], "answer": 2, "explanation": "Na suspeita ou confirmação de RUPREMA fora de trabalho de parto ativo, deve-se evitar o toque vaginal digital rotineiro, pois aumenta significativamente o risco de infecção ascendente (corioamnionite) e encurta o período de latência."}, {"id": 49, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q1", "stem": "O papilomavírus humano (HPV) é responsável por 5% de todos os cânceres em humanos e está implicado em praticamente 100% dos cânceres de colo uterino. Em relação ao HPV e sua manifestação clínica, considere as alternativas: I - Os genes E6 e E7 do HPV são os oncogenes que conseguem inativar as proteínas p53 e pRB (Retinoblastoma), respectivamente, levando à supressão da apoptose e proliferação celular desordenada. II - O Condiloma acuminado (verrugas genitais) é causado pelos HPV 6 e 11 em 90% dos casos. III - Apesar de existirem cerca de 40 tipos de HPV que infectam a região genital, apenas 2 tipos (16 e 18) são considerados de alto risco para o desenvolvimento de neoplasia intraepitelial. Estão CORRETAS:", "options": ["II e III", "I e III", "Todas", "I e II"], "answer": 3, "explanation": "I - Verdadeira: as oncoproteínas virais E6 e E7 inativam respectivamente os supressores tumorais p53 e pRB. II - Verdadeira: os subtipos HPV 6 e 11 (baixo risco) causam cerca de 90% dos condilomas acuminados. III - Falsa: existem cerca de 12 a 14 subtipos de HPV de alto risco oncogênico (incluindo 16, 18, 31, 33, 45, 52, 58). Corretas: I e II."}, {"id": 50, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q2", "stem": "Paciente Maria procura a UBS referindo que após a menstruação vem apresentando odor vaginal bastante desagradável, sem corrimento significativo e sem prurido. Na comprovação do diagnóstico de vaginose bacteriana (Critérios de Amsel), você utilizaria:", "options": ["Exame clínico (corrimento fino homogêneo acinzentado)", "Teste de pH vaginal (> 4,5)", "Teste do KOH 10% (teste das aminas / Whiff positivo)", "Microscopia / Citologia — presença de \"clue cells\"", "Todos os anteriores"], "answer": 4, "explanation": "O diagnóstico clínico de vaginose bacteriana pelos Critérios de Amsel requer pelo menos 3 dos 4 achados: corrimento branco-acinzentado fino e homogêneo, pH vaginal > 4,5, teste das aminas (Whiff com KOH 10%) positivo e presença de 'clue cells' (células-alvo) na microscopia."}, {"id": 51, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q3", "stem": "Paciente apresentando episódios recorrentes mensais de corrimento branco espesso, tipo \"nata de leite\", no pré-mênstruo (candidíase vulvovaginal recorrente), deverá receber o seguinte esquema de manutenção:", "options": ["Creme vaginal clotrimazol, miconazol ou terconazol por 10 dias apenas", "Cetoconazol oral por 3 meses", "Fluconazol (150 mg VO) ou Itraconazol semanal por 6 meses (após indução)", "Fluconazol 1 cp dose única, repetição com 7 dias apenas", "Banhos de bicarbonato e estimulante de imunidade celular"], "answer": 2, "explanation": "Na candidíase vulvovaginal recorrente (≥ 4 episódios/ano), após o tratamento de indução (ex.: fluconazol 150 mg nos dias 1, 4 e 7), indica-se terapia de manutenção supressiva com fluconazol 150 mg VO semanal por 6 meses (ou antifúngico azólico tópico semanal)."}, {"id": 52, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q4", "stem": "Em relação à carcinogênese e o vírus HPV, analise as afirmativas: I - O desenvolvimento de lesões precursoras de Câncer de colo uterino depende da resposta imunológica do organismo, poder oncogênico do tipo viral e de cofatores (como tabagismo e imunossupressão). II - Após infecção genital pelo HPV a possibilidade de clareamento do vírus no organismo é muito pequena. III - Infecção por HPV persistente e integração viral ao genoma da célula hospedeira levam ao desenvolvimento de lesões precursoras. Estão CORRETAS:", "options": ["Todas", "I e II", "I e III", "II e III", "Nenhuma"], "answer": 2, "explanation": "I - Verdadeira: a progressão para lesões precursoras depende da persistência viral, do potencial oncogênico do HPV e de cofatores do hospedeiro (imunossupressão, tabagismo). II - Falsa: a grande maioria (80–90%) das infecções por HPV sofre clareamento espontâneo pelo sistema imune em até 1–2 anos. III - Verdadeira. Corretas: I e III."}, {"id": 53, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q5", "stem": "Paciente que procura a UBS referindo corrimento amarelado com odor fétido e trazendo resultado de citologia oncótica realizada há 3 meses mostrando laudo: amostra satisfatória, inflamação, flora de Lactobacilos, negativo para malignidade. A melhor conduta é:", "options": ["Exame ginecológico + exame a fresco / pH / teste das aminas se possível, e tratar o corrimento conforme diagnóstico", "Tratar com creme ginecológico inespecífico, pois ela já tem resultado de citologia", "Repetir a citologia oncótica e aguardar o resultado para tratar", "Prescrever medicação com cobertura empírica para todos os microrganismos vaginais", "Realizar cultura de secreção vaginal e aguardar para orientar o tratamento"], "answer": 0, "explanation": "A colpocitologia oncótica tem finalidade de rastreamento oncológico, não devendo substituir a investigação específica de vulvovaginites. Diante de queixa atual de corrimento fétido, realiza-se exame especular, aferição de pH, teste das aminas e microscopia a fresco para instituir tratamento direcionado."}, {"id": 54, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q6", "stem": "Mulher de 26 anos, soropositiva (HIV+), usuária de crack, foi trazida para a consulta ginecológica por estar apresentando verrugas genitais extensas. Nesse contexto, a conduta considerada INADEQUADA é:", "options": ["Programação de eletrocauterização ou excisão cirúrgica das lesões genitais", "Aplicação de ácido tricloroacético 80% até o completo desaparecimento das lesões extensas", "Coleta de citologia cervical para afastar lesões precursoras de câncer de colo", "Avaliar carga viral e CD4 para prescrição adequada de antirretrovirais", "Rastreio de outras infecções sexualmente transmissíveis tipo sífilis, cervicites, hepatites, HTLV 1 e 2"], "answer": 1, "explanation": "Em paciente imunossuprimida (HIV+) com verrugas genitais extensas, a aplicação isolada de ácido tricloroacético (ATA) 80% é inadequada devido à extensão das lesões (sendo indicada cirurgia excisional ou eletrocauterização), além da obrigatoriedade de rastreio cervical, sorologias para outras ISTs e otimização da TARV."}, {"id": 55, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q7", "stem": "Qual o conceito de Candidíase vulvovaginal recorrente (Protocolos FEBRASGO e CDC)?", "options": ["Quatro ou mais episódios sintomáticos confirmados em um ano (12 meses)", "Dois ou três episódios em seis meses", "Um novo episódio com intervalo inferior a dois meses", "Três episódios consecutivos com a mesma espécie"], "answer": 0, "explanation": "Conforme protocolos da FEBRASGO e do CDC, define-se candidíase vulvovaginal recorrente pela ocorrência de quatro ou mais episódios sintomáticos confirmados no intervalo de 12 meses."}, {"id": 56, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q8", "stem": "Em relação ao diagnóstico das vulvovaginites, NÃO podemos afirmar:", "options": ["A bacterioscopia mostrando aumento excessivo dos lactobacilos e citólise pode fazer diagnóstico de vaginose citolítica", "A avaliação de teste das aminas positivo, pH alcalino (> 4,5) e presença de clue cells faz o diagnóstico de vaginose bacteriana", "Cultura vaginal para fungos pode ser solicitada para diagnóstico e tipagem de espécie na candidíase vulvovaginal recorrente", "A avaliação do teste das aminas positivo não faz parte dos achados possíveis da tricomoníase"], "answer": 3, "explanation": "A alternativa INCORRETA (NÃO podemos afirmar) é a D: na tricomoníase, o pH vaginal eleva-se (> 4,5) e o teste das aminas (Whiff) frequentemente resulta positivo devido à proliferação concomitante de bactérias anaeróbias produtoras de aminas voláteis."}, {"id": 57, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q9", "stem": "Paciente refere há 02 semanas aparecimento de lesão ulcerada única, indolor, com bordas endurecidas e fundo limpo em região interna dos grandes lábios, associado a linfonodo palpável indolor em região inguinal. Qual a melhor conduta laboratorial neste caso?", "options": ["Solicitar apenas testes não treponêmicos, e caso a titulação for menor que 1/8, é entendido que a paciente não tem sífilis", "Solicitar testes treponêmicos e não treponêmicos, pois os testes não treponêmicos podem ser negativos na fase inicial (cancro duro)", "Solicitar somente sorologias para herpes vírus", "Solicitar somente cultura para Haemophilus ducreyi"], "answer": 1, "explanation": "Úlcera genital única, indolor, com bordas endurecidas e fundo limpo acompanhada de linfadenopatia inguinal indolor caracteriza o cancro duro (sífilis primária). Como os testes não treponêmicos (VDRL) podem demorar a positivar na fase inicial da úlcera, devem-se solicitar testes treponêmicos e não treponêmicos (e iniciar tratamento imediato)."}, {"id": 58, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q10", "stem": "Pacientes que ao exame ginecológico apresentam corrimento vaginal persistente/recorrente há mais de 1 ano, aspecto homogêneo fétido, pH vaginal 5,5, teste das aminas + e presença de \"clue cells\" na bacterioscopia. Qual alternativa contempla o tratamento mais adequado?", "options": ["O ácido bórico deverá ser prescrito isoladamente como primeira linha absoluta", "A melhor opção disponível é prescrever apenas terapêutica com Lactobacillus para recuperação da flora vaginal", "Não há necessidade de tratamento para mulheres que apresentem essa sintomatologia", "O Metronidazol via oral deverá ser associado concomitantemente com o creme de mesmo nome via vaginal de rotina", "Metronidazol e Clindamicina são a primeira escolha de tratamento. Nessa situação recorrente, o metronidazol pode ser usado por via vaginal em regime prolongado (supressivo)"], "answer": 4, "explanation": "Metronidazol e Clindamicina são as drogas de primeira linha na vaginose bacteriana. Nos quadros persistentes ou recorrentes, recomenda-se regime estendido/supressivo com metronidazol gel vaginal (2 vezes por semana por 4 a 6 meses)."}, {"id": 59, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q11", "stem": "Considerando que uma paciente procurou o médico por conta de seu parceiro estar apresentando corrimento uretral mucopurulento, algúria e disúria, estando ela assintomática, qual seria sua conduta?", "options": ["Coleta de material para confirmação diagnóstica se disponível e tratamento epidemiológico imediato com Azitromicina e Ceftriaxone", "Emprego de apenas creme vaginal polivalente, sem necessidade de antibioticoterapia sistêmica", "Expectante, aguardando manifestação de sintomas no trato genital baixo", "Antibioticoterapia apenas se desenvolver dor abdominal e febre", "Apenas realização de exames e aguardar resultado para tratar"], "answer": 0, "explanation": "Parceira sexual assintomática de paciente com uretrite mucopurulenta (síndrome de corrimento uretral) deve ser submetida a coleta de exames se disponíveis e receber tratamento epidemiológico imediato para *Chlamydia trachomatis* e *Neisseria gonorrhoeae* (Azitromicina + Ceftriaxona)."}, {"id": 60, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q12", "stem": "Constitui achado fisiológico na microbiota vaginal saudável na menacme o predomínio de flora:", "options": ["Aeróbica, principalmente bastonetes gram-negativos, com pH menor que 5", "Anaeróbica estrita, principalmente cocos gram-positivos, com pH maior que 5", "Anaeróbica, principalmente bastonetes gram-positivos, com pH maior que 5", "Aeróbica/facultativa, principalmente bastonetes gram-positivos (Lactobacilos de Döderlein), com pH ácido (< 4,5–5)"], "answer": 3, "explanation": "Na menacme, sob ação estrogênica, a microbiota vaginal saudável apresenta predomínio de bastonetes gram-positivos aeróbios/facultativos (*Lactobacillus* spp. ou bacilos de Döderlein), que metabolizam glicogênio em ácido lático, mantendo o pH vaginal ácido (< 4,5)."}, {"id": 61, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q13", "stem": "Sobre a infecção pelo HPV, é INCORRETO afirmar:", "options": ["Nenhuma forma de tratamento assegura a erradicação/cura virológica definitiva da infecção pelo HPV", "Em lesões intraepiteliais precursoras do câncer do colo uterino, a conduta se baseia exclusivamente na detecção e tipagem do DNA-HPV", "Pode haver regressão espontânea dos condilomas e das lesões subclínicas de baixo grau (NIC 1)", "Os métodos destrutivos ou excisionais utilizados na remoção das lesões clínicas apresentam taxas de sucesso semelhantes"], "answer": 1, "explanation": "A alternativa INCORRETA é a B: a conduta clínica nas lesões intraepiteliais escamosas precursoras (NIC) não se baseia exclusivamente na tipagem do DNA-HPV, mas na integração entre citologia, colposcopia, resultado histopatológico da biópsia, idade e desejo reprodutivo da paciente."}, {"id": 62, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q14", "stem": "Mulher, 27 anos, com corrimento vaginal homogêneo, cor acinzentada e odor fétido. Nega ardência ou prurido. O exame laboratorial padrão-ouro para confirmar a hipótese diagnóstica é:", "options": ["Bacterioscopia corada pelo Gram do conteúdo vaginal, pelos critérios de Nugent", "Medida isolada do pH vaginal", "Teste de aminas isolado", "Cultura para Gardnerella vaginalis"], "answer": 0, "explanation": "O exame laboratorial padrão-ouro para confirmação diagnóstica da vaginose bacteriana é a bacterioscopia de esfregaço vaginal corado pelo Gram avaliada pelo escore de Nugent (pontuação ≥ 7 confirma VB)."}, {"id": 63, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q15", "stem": "Constituem critérios diagnósticos de vaginose bacteriana (Critérios de Amsel), EXCETO:", "options": ["Corrimento branco-acinzentado homogêneo e odor fétido acentuado depois do coito", "pH vaginal menor que 4,5", "Presença de células-alvo (\"clue cells\") ao esfregaço vaginal", "Teste de aminas (KOH 10%) positivo"], "answer": 1, "explanation": "Na vaginose bacteriana, a redução dos lactobacilos produtores de ácido lático e o supercrescimento de anaeróbios elevam o pH vaginal para valores **maiores** que 4,5 (e não menores que 4,5)."}, {"id": 64, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q16", "stem": "O diagnóstico laboratorial de infecção por Chlamydia trachomatis (clamídia) é realizado preferencialmente com:", "options": ["Cultura em ágar sangue convencional", "Imunofluorescência direta ou Biologia Molecular (PCR / NAAT)", "Microscopia em campo escuro", "Bacterioscopia por coloração de Gram"], "answer": 1, "explanation": "Por ser *Chlamydia trachomatis* uma bactéria intracelular obrigatória que não cresce em meios de cultura convencionais, o diagnóstico laboratorial preferencial é feito por testes de amplificação de ácidos nucleicos (NAAT/PCR) ou imunofluorescência direta."}, {"id": 65, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q17", "stem": "Uma das principais queixas da ginecologia é o corrimento vaginal. Dependendo da etiologia, tem sintomatologia e achados diferentes no exame. Em relação às vulvovaginites, assinale a correta:", "options": ["Na vaginose bacteriana é comum pH abaixo de 4,5", "Na tricomoníase não é necessário o tratamento do parceiro sexual", "Uso recente de antibióticos, diabetes descompensado e gravidez são fatores de risco para candidíase vulvovaginal", "A etiologia da vaginose bacteriana é explicada exclusivamente pela infecção isolada pela Gardnerella vaginalis"], "answer": 2, "explanation": "Uso recente de antibióticos de amplo espectro, diabetes mellitus descompensado, gestação, uso de corticoides/imunossupressores e níveis elevados de estrogênio são fatores predisponentes clássicos da candidíase vulvovaginal."}, {"id": 66, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q18", "stem": "Paciente queixa-se de corrimento vaginal fétido, branco-acinzentado e leve irritação vulvovaginal. O odor intensifica-se após relações sexuais. Após exame ginecológico, o médico informa que ela está com vaginose bacteriana. Diante deste quadro, é correto afirmar:", "options": ["Bem provável que o pH vaginal esteja abaixo de 4,0 e teste de aminas negativo", "Só se pode finalizar o diagnóstico com biópsia das glândulas de Bartholin e Skene", "Pode ser solicitada bacterioscopia de conteúdo vaginal ou checar os critérios clínicos de Amsel", "A pesquisa de células-alvo serve para diferenciar se o agente isolado é Gardnerella ou Treponema"], "answer": 2, "explanation": "O diagnóstico de vaginose bacteriana pode ser firmado clinicamente pela presença de pelo menos 3 dos 4 critérios de Amsel ou confirmado laboratorialmente pela bacterioscopia do conteúdo vaginal (escore de Nugent)."}, {"id": 67, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q19", "stem": "Mulher procura UBS com queixa de corrimento vaginal amarelado-esverdeado com odor fétido, sensação de queimação, disúria e dispareunia. Ao exame especular, além do conteúdo vaginal bolhoso, observam-se lesões puntiformes hiperemiadas no colo (\"colo em framboesa\" / colpite tigroide). A terapêutica indicada é:", "options": ["Penicilina benzatina", "Azitromicina", "Metronidazol", "Miconazol", "Nistatina"], "answer": 2, "explanation": "Corrimento amarelo-esverdeado bolhoso fétido associado à colpite focal/tigroide ('colo em framboesa') é patognomônico de tricomoníase, cujo tratamento de escolha é o Metronidazol (devendo-se tratar simultaneamente a parceria sexual)."}, {"id": 68, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q20", "stem": "Primigesta, 16 anos, 21 semanas de gestação, refere aparecimento de verrugas na vulva há 30 dias que vêm aumentando em número. Qual a melhor conduta terapêutica durante a gravidez?", "options": ["Ácido tricloroacético (ATA) 80–90%", "Podofilotoxina", "Conduta expectante obrigatória até o parto mesmo em lesões crescentes", "Imiquimode", "Corticoide tópico"], "answer": 0, "explanation": "Durante a gestação, o tratamento tópico de escolha para condilomas acuminados é o ácido tricloroacético (ATA) a 80–90% (ou crioterapia/exérese). Podofilotoxina, podofilina e imiquimode são contraindicados na gravidez."}, {"id": 69, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q21 / Q30", "stem": "Após uma semana de tratamento antibiótico para cistite, uma mulher de 28 anos vem queixando-se de prurido vaginal intenso há 2 dias, ardência e corrimento vaginal grumoso. Qual a terapia mais adequada?", "options": ["Clindamicina", "Eritromicina", "Fluconazol (ou antifúngico azólico tópico)", "Metronidazol"], "answer": 2, "explanation": "Prurido vulvovaginal intenso e corrimento branco grumoso surgidos após antibioticoterapia caracterizam candidíase vulvovaginal aguda, tratada com antifúngico azólico tópico ou fluconazol 150 mg VO em dose única."}, {"id": 70, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q22", "stem": "A vaginose bacteriana não tratada pode predispor a diversas complicações ginecológicas e obstétricas, tais como:", "options": ["Sinusorragia, hipertensão gestacional e endometriose", "Câncer de ovário, dor pélvica crônica e sinusorragia", "Parto pré-termo (e RUPREMA), maior aquisição de ISTs (incluindo HIV) e Doença Inflamatória Pélvica (DIP)", "Gravidez ectópica isolada, diabetes gestacional e miomatose"], "answer": 2, "explanation": "A vaginose bacteriana não tratada associa-se a maior risco de parto pré-termo e RUPREMA na gestação, maior susceptibilidade à aquisição de ISTs (incluindo HIV) e desenvolvimento de Doença Inflamatória Pélvica (DIP)."}, {"id": 71, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q23", "stem": "Quais mecanismos microbiológicos contribuem para a virulência da Candida albicans, favorecendo a recorrência?", "options": ["Colonização passiva sem invasão epitelial e estímulo de lactobacilos", "Formação de biofilmes, transição dimórfica para hifas/pseudo-hifas e aderência às células epiteliais do hospedeiro", "Queda intensa do pH vaginal abaixo de 3,0 e consumo de proteínas", "Produção de aminas voláteis e destruição de hemácias"], "answer": 1, "explanation": "Os principais mecanismos de virulência de *Candida albicans* envolvidos na patogênese e recorrência incluem a aderência às células epiteliais vaginais, a transição dimórfica de levedura para hifas/pseudo-hifas invasivas e a formação de biofilmes."}, {"id": 72, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q24", "stem": "Paciente grávida de 34 semanas vem para consulta de pré-natal queixando-se de corrimento vaginal abundante, associado a edema de vulva e prurido vulvovaginal intenso. Como você confirmaria rapidamente o diagnóstico etiológico no consultório?", "options": ["Cultura em meio específico com resultado em 15 dias", "Testes de biologia molecular de alta complexidade", "Colpocitologia oncótica", "Exame microscópico a fresco do conteúdo vaginal (com soro fisiológico e KOH 10%)"], "answer": 3, "explanation": "O exame microscópico a fresco do conteúdo vaginal (com soro fisiológico 0,9% e hidróxido de potássio — KOH 10%) permite confirmação rápida e imediata no consultório ao evidenciar hifas, pseudo-hifas e esporos leveduriformes."}, {"id": 73, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q28", "stem": "Paciente Clara de 18 anos procurou atendimento por estar apresentando febre, dor de garganta e odinofagia há 5 dias. Há 2 dias apresentou úlceras vulvares múltiplas e dolorosas com fundo coberto por fibrina e linfadenomegalia inguinal dolorosa. A alternativa que contém os diagnósticos diferenciais infecciosos mais prováveis é:", "options": ["Úlcera por reação medicamentosa fixa e infecção por HPV", "Condiloma acuminado e molusco contagioso", "Infecção por HPV e Doença de Behçet", "Herpes genital (primoinfecção) e Cancro mole"], "answer": 3, "explanation": "Úlceras genitais múltiplas e dolorosas acompanhadas de linfadenopatia inguinal dolorosa (podendo haver pródromos febris e odinofagia na primoinfecção herpética) têm como principais diagnósticos diferenciais infecciosos o herpes genital primário e o cancro mole (*Haemophilus ducreyi*)."}, {"id": 74, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q29", "stem": "Paciente de 28 anos, empresária, chega à consulta queixando-se de episódios frequentes de lesões vesiculosas/ulceradas dolorosas na vulva que aparecem recorrentemente no período pré-menstrual (5 episódios até o momento). Qual o provável diagnóstico e tratamento?", "options": ["Herpes genital recorrente — Aciclovir", "Cancro duro — Penicilina benzatina", "Cancro mole — Azitromicina", "Molusco contagioso — Imiquimode"], "answer": 0, "explanation": "Lesões vesiculosas agrupadas que evoluem para pequenas úlceras dolorosas recidivantes na vulva, frequentemente desencadeadas no período pré-menstrual ou por estresse, são características do herpes genital recorrente, tratado com Aciclovir."}, {"id": 75, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q32", "stem": "Gestante, 35 semanas, veio à consulta de pré-natal referindo que vem apresentando corrimento amarelado-acinzentado, fétido, sem prurido e homogêneo. Foi realizada bacterioscopia de secreção vaginal, que apresentou \"clue cells\". Assinale a resposta correta:", "options": ["O corrimento deve ser tratado com azólicos, sendo de escolha a nistatina creme vaginal", "O corrimento deve ser tratado devido ao risco de parto prematuro, sendo droga de escolha cefalexina", "A presença de corrimento não possui nenhuma relevância clínica na gravidez", "Todo aumento de secreção vaginal na gravidez é patológico e deve ser tratado com medicações orais", "A etiologia mais comum da vaginose está associada à Gardnerella vaginalis/anaeróbios e tem como medicação de escolha o uso do metronidazol"], "answer": 4, "explanation": "A vaginose bacteriana decorre do desequilíbrio da microbiota vaginal com predomínio de *Gardnerella vaginalis* e anaeróbios, sendo tratada com Metronidazol (inclusive em gestantes sintomáticas, conforme protocolos do Ministério da Saúde e FEBRASGO)."}, {"id": 76, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q57", "stem": "Qual a conduta mais adequada para uma paciente de 20 anos que procura a UBS com queixa de corrimento fétido, dor em baixo ventre e sangramento intermenstrual, cujo exame ginecológico mostrou ectrópio coberto com secreção espessa mucopurulenta e, ao toque vaginal, dor à mobilização do colo uterino e à palpação do útero/anexos?", "options": ["Teste KOH e fita de pH e, se sugestivos de Vaginose bacteriana, tratamento apenas com Metronidazol", "Coleta de citologia cervical e aguardar resultado para tratar", "Testes de biologia molecular (PCR) para Clamídia e Gonorreia e aguardar resultado para tratar", "Solicitação de exames laboratoriais e tratamento empírico imediato para Gonorreia, Clamídia e anaeróbios (Doença Inflamatória Pélvica)", "Exame a fresco e tratamento apenas com Fluconazol"], "answer": 3, "explanation": "Dor pélvica/em baixo ventre associada a dor à mobilização do colo uterino e palpação anexial, além de secreção endocervical mucopurulenta, preenche os critérios diagnósticos de Doença Inflamatória Pélvica (DIP). A conduta é solicitar exames (incluindo β-hCG) e iniciar imediatamente antibioticoterapia empírica cobrindo gonococo, clamídia e anaeróbios."}, {"id": 77, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q33", "stem": "Julgue os itens a seguir, relativos à SÍFILIS: I - O tratamento clássico de escolha da sífilis secundária (em protocolos tradicionais de duas séries) é a administração de Penicilina G Benzatina em séries de 2.400.000 UI com intervalo de 1 semana (nota: protocolo atual do MS preconiza dose única de 2,4 milhões UI para sífilis recente). II - O estolato de eritromicina é o tratamento de segunda linha mais efetivo e seguro tanto para a gestante alérgica à penicilina quanto para seu feto. III - A transmissão vertical da sífilis ocorre principalmente na fase latente tardia e terciária da doença. IV - Quanto maior a idade gestacional, menor o risco da transmissão vertical da sífilis. V - A falha terapêutica da sífilis na gestação pode ser decorrente da hemodiluição gestacional e alterações farmacocinéticas. Estão CORRETOS apenas os itens:", "options": ["I, II e IV", "I, III e V", "I e V", "II e V", "I, III e IV"], "answer": 2, "explanation": "I - Verdadeira. II - Falsa: estolato de eritromicina é contraindicado na gestação (hepatotoxicidade) e não atravessa adequadamente a placenta para tratar o feto (apenas a penicilina trata o feto). III e IV - Falsas: a transmissão vertical é maior nas fases recentes (primária/secundária) e aumenta com o avançar da idade gestacional. V - Verdadeira: a hemodiluição gestacional e o aumento da depuração renal podem contribuir para falha terapêutica. Corretas: I e V."}, {"id": 78, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q34", "stem": "Os subtipos mais comuns de papilomavírus humano (HPV), associados a verrugas genitais (condiloma acuminado), são:", "options": ["HPV-1 e 2", "HPV-4 e 7", "HPV-6 e 11", "HPV-18 e 24", "HPV-22 e 23"], "answer": 2, "explanation": "Os subtipos de HPV de baixo risco oncogênico 6 e 11 são responsáveis por aproximadamente 90% dos casos de condiloma acuminado (verrugas anogenitais)."}, {"id": 79, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q36-2", "stem": "Qual a MELHOR CONDUTA integral para a paciente com diagnóstico de Tricomoníase?", "options": ["Tratamento com Azólicos orais: Fluconazol e Itraconazol", "Tratamento apenas com creme vaginal sem convocar o parceiro", "Tratamento com Azitromicina e Cefalosporina de 3ª geração (Ceftriaxona)", "Tratamento sistêmico com Metronidazol, tratamento simultâneo do(s) parceiro(s) sexual(is) e rastreamento (screening) para outras ISTs", "Não há necessidade de tratamento porque se trata de microrganismo comensal"], "answer": 3, "explanation": "Por ser a tricomoníase uma infecção sexualmente transmissível causada pelo protozoário *Trichomonas vaginalis*, a conduta integral exige tratamento sistêmico com Metronidazol, tratamento simultâneo das parcerias sexuais, abstinência sexual durante o tratamento e rastreamento de outras ISTs."}, {"id": 80, "theme": "ISTs e Vulvovaginites", "source": "Banco N2 - IST Q36-3", "stem": "Em paciente de 22 anos com quadro agudo doloroso em FIE (Fossa Ilíaca Esquerda) + febre e sinais de irritação peritoneal, com comportamento de risco para IST e sem prole definida, o tratamento recomendável é: I - Instilação de antibiótico intracavitário por Laparoscopia antes que o quadro se complique. II - Tratar inicialmente como infecção polimicrobiana (gonococo, clamídia e anaeróbios), por via parenteral ou oral dependendo do estado geral/sinais peritoneais da paciente e dos resultados de exames laboratoriais e USG. III - Empregar apenas anti-inflamatório e analgésico enquanto se aguardam os resultados laboratoriais. IV - Intervenção cirúrgica se os controles laboratoriais e quadro clínico não indicarem melhora com antibioticoterapia parenteral (após 48–72h) ou se USG mostrar abscesso tubo-ovariano roto. Estão CORRETOS os itens:", "options": ["I, II e III", "II e IV", "I e IV", "II e III", "II, III e IV"], "answer": 1, "explanation": "I - Falsa. II - Verdadeira: paciente com DIP aguda, febre e sinais de irritação peritoneal deve receber tratamento empírico polimicrobiano (gonococo, clamídia e anaeróbios) por via parenteral em regime hospitalar. III - Falsa. IV - Verdadeira: a abordagem cirúrgica está indicada se não houver melhora clínica após 48–72h de antibioticoterapia parenteral ou na suspeita de abscesso tubo-ovariano roto. Corretas: II e IV."}, {"id": 81, "theme": "Trabalho de Parto Prematuro", "source": "Banco N1 - TPP Q1", "stem": "Paciente cuja DUM foi em 23/04/2020 procura o Hospital no dia 24/11/2020, referindo 3 contrações em 10 minutos (50 segundos cada). Ao exame físico, confirmaram-se as contrações; ao toque vaginal a dilatação era de 5 cm, feto cefálico, bolsa íntegra, BCF 148 bpm. Sem sinais de sofrimento fetal. Diante do quadro clínico analise as assertivas: I. A idade gestacional é de 30 semanas e 5 dias no dia da consulta II. Está indicado o uso de Nifedipina III. Está indicado o uso de Betametasona IV. Está indicado o uso de misoprostol V. Está indicado o uso de ocitocina endovenosa", "options": ["Estão corretas somente as assertivas I e III", "Todas as assertivas estão corretas", "Estão corretas somente as assertivas II e IV", "Estão corretas somente as assertivas I, II e III"], "answer": 3, "explanation": "Calculando a IG de 23/04/2020 a 24/11/2020: 215 dias = 30 semanas e 5 dias (I correta). Diante de trabalho de parto prematuro franco (< 34 semanas, bolsa íntegra, sem infecção ou sofrimento fetal), indica-se tocólise com Nifedipina (II) e corticoterapia antenatal com Betametasona (III). Misoprostol e ocitocina são contraindicados. Corretas: I, II e III."}, {"id": 82, "theme": "Trabalho de Parto Prematuro", "source": "Banco N1 - TPP Q2", "stem": "Gestante de 32 semanas com diagnóstico de Trabalho de Parto Prematuro, foi prescrita Betametasona. Sobre este fármaco analise as assertivas abaixo e responda: I) Está indicada para \"maturação pulmonar\" evitando a Síndrome do Desconforto Respiratório (membrana hialina) e aumentando a produção de surfactante pelo pulmão fetal II) Diminui o risco de hemorragia intraventricular fetal III) Diminui o risco de enterocolite necrotizante fetal IV) Causa leucopenia no sangue materno (transitória) V) Aumenta o período de latência na bolsa íntegra", "options": ["Somente II e IV estão corretas", "Somente I, II e III estão corretas", "Somente I e II estão corretas", "Somente I e III estão corretas"], "answer": 1, "explanation": "A corticoterapia antenatal (betametasona) reduz comprovadamente a incidência e gravidade da Síndrome do Desconforto Respiratório (I), da hemorragia intraventricular (II) e da enterocolite necrotizante (III). A assertiva IV é falsa (provoca leucocitose materna transitória) e a V é falsa (não prolonga o período de latência). Corretas: I, II e III."}, {"id": 83, "theme": "Trabalho de Parto Prematuro", "source": "Banco N1 - TPP Q3", "stem": "Qual das drogas abaixo é uma antagonista competitiva dos receptores da Ocitocina utilizada na tocólise?", "options": ["Atosibano", "Inibina® (Isoxsuprina)", "Nifedipina", "Utrogestan® (progesterona)"], "answer": 0, "explanation": "O atosibano é um peptídeo sintético que atua como antagonista competitivo seletivo dos receptores de ocitocina no miométrio e na decídua, utilizado como agente tocolítico."}, {"id": 84, "theme": "Trabalho de Parto Prematuro", "source": "Banco N1 - TPP Q4", "stem": "São inúmeras as causas que podem levar a gestante a ter um parto antes de completar as 37 semanas com resultados perinatais graves. Qual medida apresenta resultado efetivo (alto grau de evidência) na prevenção/redução da prematuridade?", "options": ["Progesterona via vaginal em gestantes com encurtamento de colo uterino", "Nifedipino oral de manutenção em gestantes com história de prematuridade", "Beta-adrenérgicos por via oral em gestantes com atividade uterina aumentada", "Sulfato de magnésio como tocolítico de escolha no trabalho de parto prematuro", "Corticoterapia profilática de rotina a partir de 34 semanas"], "answer": 0, "explanation": "A administração de progesterona natural micronizada por via vaginal em gestantes assintomáticas com colo uterino curto (≤ 25 mm na ultrassonografia transvaginal) possui alto grau de evidência científica na prevenção do parto pré-termo espontâneo."}, {"id": 85, "theme": "Trabalho de Parto Prematuro", "source": "Banco N1 - TPP Q5", "stem": "Em qual das situações clínicas a seguir está PERMITIDA a inibição (tocólise) do trabalho de parto prematuro?", "options": ["Corioamnionite / Sepse materna", "Infecção do Trato Urinário (ITU) não complicada", "Morte Fetal", "Pré-Eclâmpsia com critérios de gravidade", "RCIU grave com sofrimento fetal agudo"], "answer": 1, "explanation": "Corioamnionite, óbito fetal, pré-eclâmpsia com sinais de gravidade e RCIU grave com sofrimento fetal agudo são contraindicações absolutas à tocólise. Já uma infecção do trato urinário (ITU) não complicada não contraindica a inibição do trabalho de parto prematuro, devendo ser tratada simultaneamente."}, {"id": 86, "theme": "Trabalho de Parto Prematuro", "source": "Banco N1 - TPP Q6", "stem": "Das drogas abaixo, qual é a recomendada nas maternidades públicas brasileiras (Ministério da Saúde / FEBRASGO) como primeira escolha para inibir o trabalho de parto prematuro?", "options": ["Isoxsuprina (Inibina)", "Piperidolato (Dactil)", "Nifedipino", "Indometacina", "Ritodrina"], "answer": 2, "explanation": "O nifedipino (bloqueador dos canais de cálcio) é o agente tocolítico de primeira escolha preconizado pelo Ministério da Saúde e pela FEBRASGO nas maternidades públicas brasileiras devido à sua eficácia, facilidade posológica (via oral) e perfil favorável de segurança."}, {"id": 87, "theme": "Trabalho de Parto Prematuro", "source": "Banco N1 - TPP Q11", "stem": "São contraindicações absolutas à inibição do trabalho de parto prematuro, EXCETO:", "options": ["RUPREMA (bolsa rota)", "Óbito fetal", "Pré-eclâmpsia grave", "Gestação gemelar de 28 semanas", "Malformação fetal incompatível com a vida"], "answer": 3, "explanation": "A gestação gemelar de 28 semanas não constitui contraindicação absoluta à tocólise (que pode ser feita para permitir a ação do corticoide antenatal, exigindo apenas monitorização rigorosa pelo maior risco materno de edema agudo de pulmão)."}, {"id": 88, "theme": "Trabalho de Parto Prematuro", "source": "Banco N1 - TPP Q12", "stem": "São fatores de risco clássicos para Trabalho de Parto Prematuro (TPP), EXCETO:", "options": ["TPP / parto prematuro anterior", "Distensão uterina excessiva (polidrâmnio, gemelaridade)", "Anomalias uterinas (útero bicorno/septado) e trauma", "Infecções maternas (ITU, vaginose, periodontite) e RUPREMA", "Anencefalia isolada sem polidrâmnio"], "answer": 4, "explanation": "Antecedente de parto prematuro, sobredistensão uterina (polidrâmnio, gemelaridade), malformações mullerianas e infecções maternas/RUPREMA são fatores de risco clássicos para TPP. A anencefalia geralmente associa-se a polidrâmnio; isoladamente sem polidrâmnio não constitui fator clássico."}, {"id": 89, "theme": "Trabalho de Parto Prematuro", "source": "Banco N1 - TPP Q13", "stem": "Para o diagnóstico clínico de trabalho de parto verdadeiro (inclusive no TPP), é correto afirmar que a parturiente apresenta:", "options": ["Contrações irregulares e perda isolada de tampão mucoso", "Contrações uterinas regulares/rítmicas associadas à dilatação e apagamento progressivos do colo uterino", "Dilatação fixa sem contrações e parada dos movimentos fetais", "Contrações de Braxton-Hicks esporádicas sem modificação cervical", "Nenhuma das anteriores"], "answer": 1, "explanation": "O diagnóstico clínico de trabalho de parto verdadeiro exige a presença de contrações uterinas regulares e rítmicas (≥ 2 a 3 em 10 minutos) associadas a modificações cervicais progressivas (apagamento e dilatação do colo uterino)."}, {"id": 90, "theme": "Diabetes Gestacional", "source": "Banco N2 - DMG Q1", "stem": "Gestante com diagnóstico de diabetes mellitus gestacional, idade gestacional 30 semanas, realizou dieta e atividade física durante 15 dias sem sucesso, apresentando glicemias capilares acima de 95 mg/dL em jejum e acima de 140 mg/dL 1 hora pós-prandial. Diante deste quadro está indicado:", "options": ["Uso de metformina como primeira escolha absoluta", "Uso de glibenclamida", "Realização de USG morfológico apenas e manter dieta", "Uso de Insulina"], "answer": 3, "explanation": "No Diabetes Mellitus Gestacional (DMG), quando as metas glicêmicas (jejum ≤ 95 mg/dL, 1h pós-prandial ≤ 140 mg/dL e 2h pós-prandial ≤ 120 mg/dL) não são atingidas após 1 a 2 semanas de terapia nutricional e atividade física, a insulinoterapia é o tratamento farmacológico de primeira escolha."}, {"id": 91, "theme": "Diabetes Gestacional", "source": "Banco N2 - DMG Q2", "stem": "O rastreamento e diagnóstico de Diabetes mellitus gestacional (DMG) e Diabetes diagnosticado na gestação recomendado pela FEBRASGO / SBD / Ministério da Saúde (em locais com viabilidade técnica) propõe a utilização de:", "options": ["Hemoglobina glicada como método de eleição para o rastreamento até 20 semanas", "Apenas glicemia de jejum se o início do pré-natal for tardio", "Glicemia de jejum até 20 semanas e, caso seja menor que 92 mg/dL, deve-se realizar o TOTG (Teste oral de tolerância à glicose) com 75 g de glicose de 24 a 28 semanas", "Apenas glicemia de jejum até 20 semanas para todas as gestantes"], "answer": 2, "explanation": "Segundo o consenso do Ministério da Saúde, FEBRASGO e SBD (em cenários com viabilidade técnica), solicita-se glicemia de jejum até 20 semanas para todas as gestantes; se o resultado for < 92 mg/dL, realiza-se o TOTG 75 g entre 24 e 28 semanas."}, {"id": 92, "theme": "Diabetes Gestacional", "source": "Banco N2 - DMG Q4", "stem": "Gestante com 27 semanas, sem fatores de risco, em exame de rotina do Pré-Natal, colheu TOTG 75 gramas (Teste Oral de Tolerância à Glicose), que apresentou os seguintes resultados: Jejum: 93 mg/dL; 1 hora: 168 mg/dL; 2 horas: 135 mg/dL. Considerando que a técnica de coleta foi adequada, qual o diagnóstico e conduta inicial?", "options": ["Diabetes Gestacional / Iniciar dieta para diabetes e atividades físicas", "Diabetes Gestacional / Iniciar Insulina imediatamente", "Diabetes Gestacional / Iniciar Hipoglicemiante Oral", "Exame normal / Segue pré-natal de risco habitual (baixo risco)", "Exame normal / Repetir exame entre 28 e 34 semanas"], "answer": 0, "explanation": "No TOTG 75 g, os pontos de corte diagnósticos para DMG são: jejum ≥ 92 mg/dL, 1h ≥ 180 mg/dL ou 2h ≥ 153 mg/dL (basta 1 valor alterado). Como a glicemia de jejum foi de 93 mg/dL, confirma-se o diagnóstico de DMG, iniciando-se o tratamento com dieta fracionada e atividade física."}, {"id": 93, "theme": "Diabetes Gestacional", "source": "Banco N2 - DMG Q6", "stem": "O rastreio e diagnóstico de diabetes gestacional no Brasil deve ser realizado da seguinte maneira, havendo viabilidade financeira e disponibilidade técnica:", "options": ["Solicitar apenas glicemia de jejum no 1º trimestre e repetir glicemia de jejum no 2º trimestre", "A hemoglobina glicada na gestação é superior à glicemia de jejum e ao teste oral de tolerância à glicose", "Glicemia de jejum no 1º trimestre em todas as gestantes; se a glicemia de jejum for < 92 mg/dL, solicitar teste oral de tolerância à glicose (dextrosol 75 g) entre 24 e 28 semanas", "Glicemia de jejum no 1º trimestre apenas nas pacientes com fatores de risco (sobrepeso, obesidade, antecedentes familiares)"], "answer": 2, "explanation": "O rastreamento universal no Brasil (havendo disponibilidade técnica e financeira) consiste na glicemia de jejum no 1º trimestre para todas as gestantes e, caso esteja < 92 mg/dL, na realização do TOTG com 75 g de glicose entre 24 e 28 semanas."}, {"id": 94, "theme": "Diabetes Gestacional", "source": "Banco N2 - DMG Q7", "stem": "Gestante primigesta, sem queixas, 32 semanas, altura 1,71 m, peso 70 kg. História familiar normal, glicemia de jejum na 1ª consulta de 81 mg/dL. TOTG de 75 g com 26 semanas foi: jejum 78 mg/dL, após 1h de sobrecarga 128 mg/dL e após 2h 115 mg/dL. Realizou USG obstétrico de rotina hoje e evidenciou PEF no percentil 90 e a circunferência abdominal no percentil 79. Diante destes achados clínicos e laboratoriais, assinale a alternativa correta:", "options": ["Está indicada a insulinização pelo critério circunferência abdominal acima do percentil 75", "Está indicada dieta rigorosa + atividade física e então iniciar insulina", "Está indicado uso de metformina ao invés de insulina", "Baseado nos dados do caso clínico, não existe indicação de insulina (rastreamento glicêmico normal)", "Está indicado uso de betametasona"], "answer": 3, "explanation": "A paciente apresenta rastreamento glicêmico totalmente normal tanto no 1º trimestre (jejum 81 mg/dL) quanto no TOTG 75 g entre 24 e 28 semanas (78 / 128 / 115 mg/dL). Não havendo diagnóstico de diabetes gestacional, não existe indicação de insulinoterapia."}, {"id": 95, "theme": "Diabetes Gestacional", "source": "Banco N2 - DMG Q8", "stem": "Sobre o diabetes gestacional, analise as proposições: I - Glicemia de jejum ≥ 92 mg/dL (e < 126 mg/dL) em qualquer IG é diagnóstico de DMG II - Basta 1 ponto alterado no TOTG de 75 g para diagnóstico de DMG III - Glicemia de jejum ≥ 126 mg/dL é classificada como overt diabetes (diabetes franco diagnosticado na gravidez, que se comporta como diabetes prévio) IV - A metformina é a droga de 1ª escolha no DMG V - A restrição de crescimento intrauterino está fortemente associada a DMG leve", "options": ["Corretas I e III", "Corretas II e IV", "Corretas I, II e III", "Todas corretas", "Todas erradas"], "answer": 2, "explanation": "I - Verdadeira: glicemia de jejum entre 92 e 125 mg/dL diagnostica DMG. II - Verdadeira: apenas 1 ponto alterado no TOTG 75 g confirma DMG. III - Verdadeira: glicemia de jejum ≥ 126 mg/dL caracteriza diabetes franco diagnosticado na gestação (overt diabetes). IV - Falsa (insulina é 1ª escolha). V - Falsa (DMG associa-se a macrossomia). Corretas: I, II e III."}, {"id": 96, "theme": "Diabetes Gestacional", "source": "Banco N2 - DMG Q9", "stem": "Entre as intercorrências clínicas na gestação, o diabetes tem um papel importante, seja pela incidência ou pelas possíveis repercussões. Em relação à doença, é correto afirmar:", "options": ["O diabetes gestacional (surgido no 2º/3º trimestre) é a principal causa de malformações congênitas fetais", "A gestante com glicemia de jejum de 94 mg/dL na 1ª consulta deve fazer teste de sobrecarga à glicose na 24ª semana", "Se fizer TOTG e tiver somente 1 valor alterado, deverá repetir o exame em 4 semanas", "Se a glicemia de jejum for 126 mg/dL ou mais na gestação será considerada como portadora de DM diagnosticado na gestação (overt diabetes) e não DMG", "O rastreamento do DMG deverá ser feito apenas nas gestantes que possuam fatores de risco"], "answer": 3, "explanation": "Conforme critérios da OMS/MS/FEBRASGO, glicemia de jejum ≥ 126 mg/dL em qualquer momento da gestação define Diabetes Mellitus diagnosticado na gestação (overt diabetes), comportando-se como diabetes prévio (com maior risco de malformações se presente no 1º trimestre)."}, {"id": 97, "theme": "Pré-Eclâmpsia e Eclâmpsia", "source": "Banco N2 - PE Q1", "stem": "Gesta I, idade gestacional de 34 semanas, procura atendimento de emergência por cefaleia intensa de início há 1 hora associada a epigastralgia intensa. Na admissão encontra-se com pressão arterial de 170x120 mmHg que se mantém após 15 minutos de repouso. Pré- natal sem intercorrências até o momento. Nega comorbidades, vícios e alergias. Diante da crise hipertensiva na gestação, qual a medicação de escolha para a diminuição rápida dos níveis pressóricos?", "options": ["Hidralazina (endovenosa)", "Captopril", "Escopolamina", "Metildopa"], "answer": 0, "explanation": "Diante de emergência hipertensiva na gestação (PA ≥ 160×110 mmHg com sinais premonitórios como cefaleia e epigastralgia), os anti-hipertensivos de ação rápida indicados para redução gradual e segura da pressão arterial são a Hidralazina endovenosa ou o Nifedipino oral. Captopril (IECA) é contraindicado na gravidez."}, {"id": 98, "theme": "Pré-Eclâmpsia e Eclâmpsia", "source": "Banco N2 - PE Q2", "stem": "Gesta 3, com 2 cesáreas anteriores pré-termo por Pré-Eclâmpsia. Idade Gestacional de 12 semanas e 5 dias, em uso de ácido fólico 5 mg. Nega comorbidades, vícios e alergias. Qual a medicação deve ser iniciada no pré-natal para a prevenção da pré-eclâmpsia?", "options": ["Sulfato de Magnésio", "Metildopa", "Ácido Acetilsalicílico (AAS em baixa dose)", "Hidralazina"], "answer": 2, "explanation": "Gestante com antecedente de pré-eclâmpsia pré-termo possui alto risco de recorrência, estando formalmente indicada a profilaxia com Ácido Acetilsalicílico (AAS) em baixa dose (100 a 150 mg/dia à noite), iniciada idealmente entre 12 e 16 semanas de gestação."}, {"id": 99, "theme": "Pré-Eclâmpsia e Eclâmpsia", "source": "Banco N2 - PE Q3", "stem": "Gestante, 39 anos, IG 31 semanas, apresentando elevação dos níveis pressóricos acima de 140x90 mmHg há 4 semanas (surgida após 20 semanas), com relação proteína/creatinina em amostra isolada de urina de 0,56 mg/mg. Qual o diagnóstico provável?", "options": ["Crise Hipertensiva isolada", "Pré-eclâmpsia", "Hipertensão Gestacional", "Pré-Eclâmpsia sobreposta à hipertensão crônica"], "answer": 1, "explanation": "O surgimento de hipertensão arterial (PA ≥ 140×90 mmHg) após a 20ª semana de gestação associado à proteinúria significativa (relação proteína/creatinina urinária ≥ 0,3 mg/mg; no caso, 0,56 mg/mg) estabelece o diagnóstico de pré-eclâmpsia."}, {"id": 100, "theme": "Pré-Eclâmpsia e Eclâmpsia", "source": "Banco N1 / N2 - PE Q4", "stem": "LSF, 23 anos, primigesta com 30 sem de gestação, teve 5 consultas de pré-natal sem intercorrências até então. Procurou o hospital porque faz 3 dias que está sentindo dor de cabeça, que agora está mais forte, percebe \"visão turva\" e leve sensação de náusea. Ao exame físico apresenta edema de face, sacral e membros inferiores +3/+4, PA: 160x110 mmHg, reflexo tendinoso exacerbado. Altura uterina: 26 cm, apresentação cefálica, dorso à esquerda, BCF 140 bpm, contrações uterinas ausentes; ao toque: colo fechado e bolsa íntegra. Considerando a hipótese diagnóstica mais provável (iminência de eclâmpsia), qual seria a conduta CORRETA:", "options": ["Agir no sentido de estimular o parto vaginal imediatamente antes de qualquer medicação", "Prescrever sulfato de magnésio para prevenção de convulsões (além de anti-hipertensivo para a crise hipertensiva)", "Orientar que a paciente agende exame de USG obstétrico com Doppler ambulatorial e retorne em 7 dias", "Encaminhar a paciente para a UTI e prescrever apenas anti-hipertensivos sem sulfato de magnésio"], "answer": 1, "explanation": "A presença de hipertensão grave (160×110 mmHg) associada a sinais premonitórios (cefaleia intensa, escotomas/visão turva, náuseas e hiperreflexia) caracteriza iminência de eclâmpsia. A conduta prioritária imediata é a administração de Sulfato de Magnésio para neuroproteção e prevenção de convulsões, associada ao controle pressórico."}, {"id": 101, "theme": "Pré-Eclâmpsia e Eclâmpsia", "source": "Banco N1 / N2 - PE Q5", "stem": "A.M.P., 17 anos, G1P0, IG 35s4d por eco de primeiro trimestre, deu entrada no HMDR com PA 130x90 mmHg, com hemiparesia à esquerda, disartria e queixa de cefaleia e náuseas há 01 dia. Ao exame físico: REG, confusa, eupneica; AFU: 35 cm; BCF: 140 bpm; TV: colo amolecido, centralizado, pérvio 02 cm, bolsa íntegra, apresentação cefálica em -1 de Lee. Baseado no caso clínico, marque a alternativa correta quanto à conduta: I. Iniciar administração de sulfato de magnésio, solicitar exames laboratoriais e avaliar vitalidade fetal II. Indicar cesariana III. Corticoterapia, sulfato de magnésio, solicitar exames laboratoriais e avaliar vitalidade fetal IV. Controle pressórico agressivo com nitroprussiato, sulfato de magnésio e aguardar 48h", "options": ["Estão corretas I, II e III", "Estão corretas II, III e IV", "Estão corretas I e II", "Somente a II está correta", "Nenhuma está correta"], "answer": 0, "explanation": "Gestante de 35 semanas e 4 dias com quadro neurológico focal grave e confusão mental (complicação cerebrovascular/eclâmpsia atípica): impõe-se estabilização imediata com sulfato de magnésio, investigação laboratorial completa, avaliação da vitalidade fetal, corticoterapia conforme protocolo e resolução imediata da gestação por cesariana. Corretas: I, II e III."}, {"id": 102, "theme": "Pré-Eclâmpsia e Eclâmpsia", "source": "Banco N2 - PE Q6", "stem": "Entre as alternativas abaixo, qual NÃO se encaixa como critério de gravidade ou complicação na pré-eclâmpsia?", "options": ["RCIU / comprometimento placentário importante", "Presença de sinais premonitórios de eclâmpsia (cefaleia, escotomas, epigastralgia)", "Ganho de peso acima do esperado / edema de membros inferiores", "Hipertensão grave (PA ≥ 160x110 mmHg) refratária ao uso de anti-hipertensivos"], "answer": 2, "explanation": "Ganho ponderal excessivo e edema de membros inferiores são achados frequentes na gestação normal e não fazem parte dos critérios diagnósticos nem dos critérios de gravidade da pré-eclâmpsia."}, {"id": 103, "theme": "Pré-Eclâmpsia e Eclâmpsia", "source": "Banco N2 - PE Q7", "stem": "J.G.A., 37 anos, G5P4nA0, negra, chega à primeira consulta de pré-natal no 1º trimestre sem queixas. Nega patologia prévia. Refere que nas últimas duas gestações teve que usar anti-hipertensivo na gestação, sendo que seu último parto fora prematuro por eclâmpsia. Ela mostra-se preocupada, pois teme que o quadro se repita nesta gestação. Das alternativas abaixo, qual NÃO se encontra adequada para esse quadro?", "options": ["Deve ser iniciado o uso de AAS e carbonato de cálcio", "Essa paciente apresenta vários fatores de risco para recorrência de pré-eclâmpsia", "Essa paciente deve ser encaminhada para o pré-natal de alto risco", "Orientar quanto a exames de predição e aguardar alterações laboratoriais/Doppler para só então iniciar a profilaxia"], "answer": 3, "explanation": "A alternativa INADEQUADA é a D: na presença de fatores de risco clínicos inequívocos (dois episódios prévios de hipertensão gestacional e eclâmpsia prematura), deve-se iniciar imediatamente a profilaxia com AAS (12–16 semanas) e suplementação de cálcio (se baixa ingesta), sem aguardar exames preditivos ou alterações no Doppler."}, {"id": 104, "theme": "Pré-Eclâmpsia e Eclâmpsia", "source": "Banco N2 - PE Q8", "stem": "Marque a alternativa correta sobre síndromes hipertensivas na gestação: I. Pré-eclâmpsia é a presença de hipertensão na gestação associada obrigatoriamente a edema generalizado e proteinúria. II. Os anti-hipertensivos atravessam a barreira placentária, mas drogas selecionadas (como metildopa, nifedipino e hidralazina) têm uso seguro durante a gestação. III. Após diagnóstico de pré-eclâmpsia sem sinais de gravidade, a paciente deve permanecer internada continuamente até o final da gestação com anti-hipertensivo VO obrigatório. IV. Hipertensão crônica é a presença de hipertensão antes de 20 semanas, e se acompanhada de proteinúria de início recente (ou piora súbita/disfunção orgânica) podemos dizer que há pré-eclâmpsia sobreposta.", "options": ["Somente a I está correta", "Somente a II está correta", "Somente a III está correta", "Todas estão corretas", "Estão corretas a II e IV"], "answer": 4, "explanation": "I - Falsa: edema não é critério diagnóstico e proteinúria não é obrigatória se houver disfunção de órgão-alvo. II - Verdadeira: metildopa, nifedipino e hidralazina têm perfil seguro na gestação. III - Falsa: PE sem gravidade pode ser acompanhada ambulatorialmente com vigilância rigorosa até 37 semanas. IV - Verdadeira: hipertensão prévia/antes de 20 semanas com proteinúria nova ou piora clínica/laboratorial define PE sobreposta. Corretas: II e IV."}, {"id": 105, "theme": "Gemelaridade", "source": "Banco N2 - Obstetrícia Q1", "stem": "O advento da ultrassonografia representou um grande avanço na área materno-fetal, permitindo uma visão não só do ambiente intrauterino, mas também do feto como paciente. A ultrassonografia do 1º trimestre é realizada antes da 12ª–14ª semana de idade gestacional. A alternativa INADEQUADA que NÃO constitui uma indicação/definição definitiva desta época é:", "options": ["Avaliar e firmar a localização definitiva da placenta (diagnóstico final de placenta prévia)", "Determinar a viabilidade do concepto (atividade cardíaca embrionária/fetal)", "Determinação precoce da localização tópica ou ectópica da gestação", "Determinação de gravidez única ou gemelar (bem como a corionicidade e amnionicidade)"], "answer": 0, "explanation": "A alternativa INADEQUADA é a A: a ultrassonografia do 1º trimestre (11 a 14 semanas) não firma o diagnóstico definitivo de placenta prévia devido ao fenômeno de 'migração placentária' decorrente do crescimento do segmento inferior uterino ao longo da gestação, devendo a localização ser reavaliada no 3º trimestre."}, {"id": 106, "theme": "Gemelaridade", "source": "Banco N1 - TPP/Gemelaridade Q11", "stem": "Em relação ao manejo obstétrico da gestação gemelar diante de ameaça ou trabalho de parto prematuro (por exemplo, gestação gemelar de 28 semanas com dinâmica uterina regular e bolsa íntegra), assinale a afirmativa correta:", "options": ["A gestação gemelar é contraindicação absoluta para tocólise em qualquer idade gestacional", "A gestação gemelar não contraindica a tocólise antes de 34 semanas para permitir a ação da corticoterapia antenatal, porém exige monitorização rigorosa pelo maior risco materno de edema agudo de pulmão", "Está indicada a tocólise profilática contínua com nifedipino desde 20 semanas em toda gestação gemelar", "Não há indicação de corticoterapia antenatal para maturação pulmonar fetal em gestações gemelares"], "answer": 1, "explanation": "A gestação gemelar não constitui contraindicação absoluta à tocólise antes de 34 semanas quando necessária para permitir a ação da corticoterapia antenatal, mas exige monitorização rigorosa do balanço hídrico e da função cardiorrespiratória devido ao risco elevado de edema agudo de pulmão materno."}];
+
+    // =========================================================================
+    // ESTADO DA APLICAÇÃO
+    // =========================================================================
+    let userId = localStorage.getItem("simulado_current_user") || "visitante";
+    let userAnswers = {}; // { [questionId]: selectedOptionIndex }
+    let currentStatusFilter = "all";
+    let currentThemeFilter = "all";
+    let currentSearch = "";
+
+    const letters = ["A", "B", "C", "D", "E"];
+
+    // Elementos DOM
+    const userIdInput = document.getElementById("userIdInput");
+    const activeUserLabel = document.getElementById("activeUserLabel");
+    const syncBadge = document.getElementById("syncBadge");
+    const syncText = document.getElementById("syncText");
+    const statAnswered = document.getElementById("statAnswered");
+    const statCorrect = document.getElementById("statCorrect");
+    const statWrong = document.getElementById("statWrong");
+    const statRate = document.getElementById("statRate");
+    const progressFill = document.getElementById("progressFill");
+    const searchInput = document.getElementById("searchInput");
+    const statusFilters = document.getElementById("statusFilters");
+    const themeFilters = document.getElementById("themeFilters");
+    const showingCount = document.getElementById("showingCount");
+    const questionsContainer = document.getElementById("questionsContainer");
+
+    // =========================================================================
+    // PERSISTÊNCIA HÍBRIDA (LOCALSTORAGE + GOOGLE SHEETS)
+    // =========================================================================
+    function getStorageKey() {
+      return `${QUIZ_ID}_${userId}`;
+    }
+
+    function setSyncStatus(state, text) {
+      syncBadge.className = `sync-badge ${state}`;
+      syncText.textContent = text;
+    }
+
+    function loadLocalProgress() {
+      try {
+        const raw = localStorage.getItem(getStorageKey());
+        userAnswers = raw ? JSON.parse(raw) : {};
+      } catch (e) {
+        userAnswers = {};
+      }
+    }
+
+    function saveLocalProgress() {
+      try {
+        localStorage.setItem(getStorageKey(), JSON.stringify(userAnswers));
+      } catch (e) {
+        console.warn("Falha ao salvar no localStorage:", e);
+      }
+    }
+
+    async function loadCloudProgress() {
+      const url = getScriptUrl();
+      if (!url) {
+        setSyncStatus("local", "Salvo localmente");
+        return;
+      }
+      setSyncStatus("syncing", "Sincronizando...");
+      try {
+        const res = await fetch(`${url}?userId=${encodeURIComponent(userId)}&quizId=${encodeURIComponent(QUIZ_ID)}`);
+        const data = await res.json();
+        if (data && data.status === "ok" && data.progress) {
+          userAnswers = { ...userAnswers, ...data.progress };
+          saveLocalProgress();
+          renderAll();
+          setSyncStatus("synced", "Salvo na nuvem");
+        } else {
+          setSyncStatus("local", "Salvo localmente");
+        }
+      } catch (err) {
+        console.warn("Erro ao carregar da nuvem:", err);
+        setSyncStatus("local", "Salvo localmente (offline)");
+      }
+    }
+
+    async function saveCloudProgress() {
+      saveLocalProgress();
+      const url = getScriptUrl();
+      if (!url) {
+        setSyncStatus("local", "Salvo localmente");
+        return;
+      }
+      setSyncStatus("syncing", "Sincronizando...");
+      try {
+        const res = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            userId: userId,
+            quizId: QUIZ_ID,
+            progress: userAnswers
+          })
+        });
+        const data = await res.json();
+        if (data && data.status === "ok") {
+          setSyncStatus("synced", "Salvo na nuvem");
+        } else {
+          setSyncStatus("local", "Salvo localmente");
+        }
+      } catch (err) {
+        console.warn("Erro ao salvar na nuvem:", err);
+        setSyncStatus("local", "Salvo localmente (erro nuvem)");
+      }
+    }
+
+    // =========================================================================
+    // RENDERIZAÇÃO E CÁLCULOS
+    // =========================================================================
+    function updateStats() {
+      const total = QUESTIONS.length;
+      let answered = 0;
+      let correct = 0;
+      let wrong = 0;
+
+      QUESTIONS.forEach(q => {
+        if (userAnswers[q.id] !== undefined) {
+          answered++;
+          if (userAnswers[q.id] === q.answer) correct++;
+          else wrong++;
+        }
+      });
+
+      const rate = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+      const pct = Math.round((answered / total) * 100);
+
+      statAnswered.textContent = `${answered}/${total}`;
+      statCorrect.textContent = correct;
+      statWrong.textContent = wrong;
+      statRate.textContent = `${rate}%`;
+      progressFill.style.width = `${pct}%`;
+
+      // Atualiza contadores dos filtros de status
+      const pending = total - answered;
+      statusFilters.querySelector('[data-status="all"]').textContent = `Todas (${total})`;
+      statusFilters.querySelector('[data-status="pending"]').textContent = `Pendentes (${pending})`;
+      statusFilters.querySelector('[data-status="wrong"]').textContent = `Erradas (${wrong})`;
+      statusFilters.querySelector('[data-status="correct"]').textContent = `Acertos (${correct})`;
+    }
+
+    function buildThemeFilters() {
+      const counts = {};
+      QUESTIONS.forEach(q => {
+        counts[q.theme] = (counts[q.theme] || 0) + 1;
+      });
+
+      const themes = [
+        "Dor Pélvica Crônica",
+        "Sangramento Uterino Anormal",
+        "RUPREMA",
+        "ISTs e Vulvovaginites",
+        "Trabalho de Parto Prematuro",
+        "Diabetes Gestacional",
+        "Pré-Eclâmpsia e Eclâmpsia",
+        "Gemelaridade"
+      ];
+
+      let html = `<button class="pill ${currentThemeFilter === "all" ? "active" : ""}" data-theme="all" type="button">Todos os Temas (${QUESTIONS.length})</button>`;
+      themes.forEach(t => {
+        const c = counts[t] || 0;
+        if (c > 0) {
+          html += `<button class="pill ${currentThemeFilter === t ? "active" : ""}" data-theme="${t}" type="button">${t} (${c})</button>`;
+        }
+      });
+      themeFilters.innerHTML = html;
+    }
+
+    function renderQuestions() {
+      const query = currentSearch.toLowerCase().trim();
+
+      const filtered = QUESTIONS.filter(q => {
+        const chosen = userAnswers[q.id];
+        const isAnswered = chosen !== undefined;
+        const isCorrect = isAnswered && chosen === q.answer;
+
+        if (currentStatusFilter === "pending" && isAnswered) return false;
+        if (currentStatusFilter === "correct" && !isCorrect) return false;
+        if (currentStatusFilter === "wrong" && (!isAnswered || isCorrect)) return false;
+
+        if (currentThemeFilter !== "all" && q.theme !== currentThemeFilter) return false;
+
+        if (query) {
+          const hay = `${q.id} ${q.theme} ${q.source} ${q.stem} ${q.options.join(" ")} ${q.explanation}`.toLowerCase();
+          if (!hay.includes(query)) return false;
+        }
+
+        return true;
+      });
+
+      showingCount.textContent = `Exibindo ${filtered.length} de ${QUESTIONS.length} questões`;
+      activeUserLabel.textContent = `Perfil ativo: ${userId}`;
+
+      if (filtered.length === 0) {
+        questionsContainer.innerHTML = `<div class="empty-state">Nenhuma questão encontrada com os filtros atuais.</div>`;
+        return;
+      }
+
+      const fragment = document.createDocumentFragment();
+
+      filtered.forEach(q => {
+        const chosen = userAnswers[q.id];
+        const isAnswered = chosen !== undefined;
+        const isCorrect = isAnswered && chosen === q.answer;
+
+        const card = document.createElement("article");
+        card.className = "question-card" + (isAnswered ? (isCorrect ? " answered-correct" : " answered-wrong") : "");
+
+        let statusBadge = "";
+        if (isAnswered) {
+          statusBadge = isCorrect
+            ? `<span class="q-status-tag correct">✓ Resposta Correta</span>`
+            : `<span class="q-status-tag wrong">✕ Resposta Incorreta</span>`;
+        }
+
+        const optionsHtml = q.options.map((optText, idx) => {
+          let btnClass = "option-btn";
+          if (isAnswered) {
+            if (idx === q.answer) btnClass += " correct";
+            else if (idx === chosen) btnClass += " wrong";
+          }
+          return `
+            <button class="${btnClass}" data-qid="${q.id}" data-opt="${idx}" ${isAnswered ? "disabled" : ""} type="button">
+              <span class="opt-letter">${letters[idx]}</span>
+              <span>${optText}</span>
+            </button>
+          `;
+        }).join("");
+
+        const explanationHtml = isAnswered ? `
+          <div class="explanation-box">
+            <strong>Justificativa / Comentário (Gabarito: ${letters[q.answer]})</strong>
+            <div>${q.explanation}</div>
+          </div>
+        ` : "";
+
+        card.innerHTML = `
+          <div class="q-header">
+            <div class="q-badges">
+              <span class="q-num">Questão ${q.id}</span>
+              <span class="q-theme">${q.theme}</span>
+              <span class="q-source">${q.source}</span>
+            </div>
+            ${statusBadge}
+          </div>
+          <div class="q-stem">${q.stem}</div>
+          <div class="options-list">${optionsHtml}</div>
+          ${explanationHtml}
+        `;
+
+        fragment.appendChild(card);
+      });
+
+      questionsContainer.innerHTML = "";
+      questionsContainer.appendChild(fragment);
+    }
+
+    function renderAll() {
+      updateStats();
+      renderQuestions();
+    }
+
+    // =========================================================================
+    // EVENTOS DE INTERAÇÃO
+    // =========================================================================
+    questionsContainer.addEventListener("click", (e) => {
+      const btn = e.target.closest(".option-btn");
+      if (!btn || btn.disabled) return;
+      const qid = Number(btn.dataset.qid);
+      const optIdx = Number(btn.dataset.opt);
+      if (userAnswers[qid] !== undefined) return;
+
+      userAnswers[qid] = optIdx;
+      renderAll();
+      saveCloudProgress();
+    });
+
+    searchInput.addEventListener("input", (e) => {
+      currentSearch = e.target.value;
+      renderQuestions();
+    });
+
+    statusFilters.addEventListener("click", (e) => {
+      const pill = e.target.closest(".pill");
+      if (!pill) return;
+      currentStatusFilter = pill.dataset.status;
+      statusFilters.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
+      pill.classList.add("active");
+      renderQuestions();
+    });
+
+    themeFilters.addEventListener("click", (e) => {
+      const pill = e.target.closest(".pill");
+      if (!pill) return;
+      currentThemeFilter = pill.dataset.theme;
+      themeFilters.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
+      pill.classList.add("active");
+      renderQuestions();
+    });
+
+    document.getElementById("btnSaveUser").addEventListener("click", () => {
+      const val = userIdInput.value.trim();
+      userId = val || "visitante";
+      localStorage.setItem("simulado_current_user", userId);
+      loadLocalProgress();
+      renderAll();
+      loadCloudProgress();
+    });
+
+    userIdInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") document.getElementById("btnSaveUser").click();
+    });
+
+    document.getElementById("btnReset").addEventListener("click", () => {
+      if (!confirm(`Deseja realmente apagar todo o progresso de "${userId}" neste simulado?`)) return;
+      userAnswers = {};
+      renderAll();
+      saveCloudProgress();
+    });
+
+    // Inicialização
+    localStorage.removeItem("simulado_cloud_script_url");
+    userIdInput.value = userId;
+    buildThemeFilters();
+    loadLocalProgress();
+    renderAll();
+    loadCloudProgress();
+  </script>
+</body>
+</html>

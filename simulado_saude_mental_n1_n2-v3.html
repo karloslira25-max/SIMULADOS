@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simulado Interativo — Saúde Mental (N1 e N2)</title>
+  <style>
+    :root {
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #263348;
+      --bg-card: #1e293b;
+      --border-color: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --success: #22c55e;
+      --success-bg: rgba(34, 197, 94, 0.14);
+      --success-border: rgba(34, 197, 94, 0.5);
+      --danger: #ef4444;
+      --danger-bg: rgba(239, 68, 68, 0.14);
+      --danger-border: rgba(239, 68, 68, 0.5);
+      --warning: #f59e0b;
+      --warning-bg: rgba(245, 158, 11, 0.14);
+      --case-bg: rgba(56, 189, 248, 0.08);
+      --case-border: rgba(56, 189, 248, 0.35);
+      --radius: 12px;
+      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      padding-bottom: 4rem;
+    }
+
+    /* Sticky Top Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 0.9rem 1.25rem;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+    }
+
+    .header-inner {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .header-top {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.7rem;
+    }
+
+    .title-group h1 {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+
+    .title-group p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .user-sync-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .user-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      padding: 0.35rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      color: var(--text-secondary);
+    }
+
+    .user-badge strong {
+      color: var(--accent);
+      max-width: 170px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .btn-sm {
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      padding: 0.35rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-sm:hover {
+      background: #334155;
+      border-color: var(--accent);
+    }
+
+    .btn-danger-outline {
+      color: #fca5a5;
+      border-color: rgba(239, 68, 68, 0.4);
+    }
+
+    .btn-danger-outline:hover {
+      background: var(--danger-bg);
+      border-color: var(--danger);
+      color: #fecaca;
+    }
+
+    .sync-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(148, 163, 184, 0.12);
+      color: var(--text-muted);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .sync-status.cloud-ok {
+      background: var(--success-bg);
+      color: #86efac;
+      border-color: var(--success-border);
+    }
+
+    .sync-status.syncing {
+      background: var(--warning-bg);
+      color: #fcd34d;
+      border-color: rgba(245, 158, 11, 0.4);
+    }
+
+    .sync-status.cloud-err {
+      background: var(--danger-bg);
+      color: #fca5a5;
+      border-color: var(--danger-border);
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    /* Stats & Progress Bar */
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      margin-bottom: 0.45rem;
+    }
+
+    .stats-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+    }
+
+    .stat-pill {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-weight: 600;
+    }
+
+    .stat-pill.hit { color: #4ade80; border-color: rgba(34, 197, 94, 0.35); }
+    .stat-pill.miss { color: #f87171; border-color: rgba(239, 68, 68, 0.35); }
+    .stat-pill.pct { color: var(--accent); border-color: rgba(56, 189, 248, 0.35); }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: var(--bg-secondary);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #0284c7, #38bdf8, #22c55e);
+      transition: width 0.3s ease;
+    }
+
+    /* Main Container */
+    main {
+      max-width: 980px;
+      margin: 1.5rem auto 0;
+      padding: 0 1.25rem;
+    }
+
+    /* Controls / Filter Bar */
+    .controls-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1.2fr;
+      gap: 0.75rem;
+    }
+
+    @media (max-width: 768px) {
+      .controls-card {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .control-group label {
+      display: block;
+      font-size: 0.74rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .control-group select,
+    .control-group input {
+      width: 100%;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.5rem 0.75rem;
+      font-size: 0.88rem;
+      outline: none;
+    }
+
+    .control-group select:focus,
+    .control-group input:focus {
+      border-color: var(--accent);
+    }
+
+    /* Question Card */
+    .q-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 1.4rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s ease;
+    }
+
+    .q-card.answered-correct {
+      border-left: 4px solid var(--success);
+    }
+
+    .q-card.answered-wrong {
+      border-left: 4px solid var(--danger);
+    }
+
+    .q-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+      padding-bottom: 0.65rem;
+      border-bottom: 1px solid rgba(51, 65, 85, 0.7);
+    }
+
+    .q-number {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--accent);
+    }
+
+    .q-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .tag {
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(56, 189, 248, 0.12);
+      color: #7dd3fc;
+      border: 1px solid rgba(56, 189, 248, 0.28);
+    }
+
+    .tag.source-tag {
+      background: rgba(148, 163, 184, 0.12);
+      color: var(--text-muted);
+      border-color: rgba(148, 163, 184, 0.25);
+    }
+
+    .clinical-case {
+      background: var(--case-bg);
+      border: 1px solid var(--case-border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      color: #e2e8f0;
+    }
+
+    .clinical-case-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: var(--accent);
+      margin-bottom: 0.35rem;
+    }
+
+    .q-text {
+      font-size: 0.98rem;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 1.1rem;
+      white-space: pre-line;
+    }
+
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .option-btn {
+      width: 100%;
+      text-align: left;
+      background: var(--bg-primary);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 0.8rem 1rem;
+      font-size: 0.93rem;
+      line-height: 1.45;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      background: var(--bg-tertiary);
+      border-color: var(--accent);
+      color: var(--text-primary);
+      transform: translateX(2px);
+    }
+
+    .option-btn:disabled {
+      cursor: default;
+    }
+
+    .option-btn.correct {
+      background: var(--success-bg);
+      border-color: var(--success);
+      color: #dcfce7;
+      font-weight: 600;
+    }
+
+    .option-btn.wrong {
+      background: var(--danger-bg);
+      border-color: var(--danger);
+      color: #fee2e2;
+    }
+
+    .option-indicator {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      border: 1.5px solid var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      margin-top: 1px;
+    }
+
+    .option-btn.correct .option-indicator {
+      background: var(--success);
+      border-color: var(--success);
+      color: #052e16;
+    }
+
+    .option-btn.wrong .option-indicator {
+      background: var(--danger);
+      border-color: var(--danger);
+      color: #450a0a;
+    }
+
+    /* Explanation Box */
+    .explanation-box {
+      margin-top: 1rem;
+      padding: 1rem 1.1rem;
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid var(--border-color);
+      border-left: 4px solid var(--success);
+      animation: fadeIn 0.25s ease;
+    }
+
+    .explanation-box.is-wrong {
+      border-left-color: var(--warning);
+    }
+
+    .explanation-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: #4ade80;
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .explanation-box.is-wrong .explanation-title {
+      color: #fbbf24;
+    }
+
+    .explanation-text {
+      font-size: 0.91rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Modal Backdrop */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.82);
+      backdrop-filter: blur(6px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 1rem;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      max-width: 440px;
+      width: 100%;
+      padding: 1.5rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    }
+
+    .modal-card h2 {
+      font-size: 1.15rem;
+      margin-bottom: 0.45rem;
+      color: var(--text-primary);
+    }
+
+    .modal-card p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .modal-card input {
+      width: 100%;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 0.65rem 0.85rem;
+      font-size: 0.95rem;
+      margin-bottom: 1rem;
+      outline: none;
+    }
+
+    .modal-card input:focus {
+      border-color: var(--accent);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 0.6rem;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #082f49;
+      border: none;
+      padding: 0.6rem 1.1rem;
+      border-radius: 8px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background: #7dd3fc;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      background: var(--bg-secondary);
+      border: 1px dashed var(--border-color);
+      border-radius: var(--radius);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-inner">
+      <div class="header-top">
+        <div class="title-group">
+          <h1>Simulado Interativo — Saúde Mental (N1 e N2)</h1>
+          <p>Banco Completo Comentado • 74 Questões (77 Itens) • 6 Eixos Temáticos</p>
+        </div>
+
+        <div class="user-sync-bar">
+          <div class="user-badge" title="Identificador do estudante para isolamento na planilha">
+            <span>Usuário:</span>
+            <strong id="displayUserId">Visitante</strong>
+          </div>
+          <button type="button" class="btn-sm" id="btnSwitchUser">Trocar Usuário</button>
+          <button type="button" class="btn-sm" id="btnCloudConfig">Configurar Nuvem</button>
+          <button type="button" class="btn-sm btn-danger-outline" id="btnOpenReset">Resetar Progresso</button>
+          <span class="sync-status" id="syncStatus">
+            <span class="dot"></span>
+            <span id="syncStatusText">Salvo localmente</span>
+          </span>
+        </div>
+      </div>
+
+      <div class="stats-row">
+        <div class="stats-pills">
+          <span class="stat-pill" id="statAnswered">Respondidas: 0 / 77</span>
+          <span class="stat-pill hit" id="statHits">Acertos: 0</span>
+          <span class="stat-pill miss" id="statMisses">Erros: 0</span>
+          <span class="stat-pill pct" id="statAccuracy">Aproveitamento: 0%</span>
+        </div>
+        <span id="filteredCount" style="color: var(--text-muted); font-size: 0.78rem;">Exibindo 77 itens</span>
+      </div>
+
+      <div class="progress-track">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section class="controls-card" aria-label="Filtros do Simulado">
+      <div class="control-group">
+        <label for="filterEixo">Filtrar por Eixo Temático</label>
+        <select id="filterEixo">
+          <option value="ALL">Todos os Eixos Temáticos</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="filterStatus">Filtrar por Status</label>
+        <select id="filterStatus">
+          <option value="ALL">Todas as Questões</option>
+          <option value="UNANSWERED">Não Respondidas</option>
+          <option value="WRONG">Erradas (Revisão)</option>
+          <option value="CORRECT">Acertadas</option>
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="searchInput">Buscar no Enunciado ou Caso</label>
+        <input type="search" id="searchInput" placeholder="Ex: lítio, delirium, borderline, pânico..." />
+      </div>
+    </section>
+
+    <div id="questionsContainer"></div>
+  </main>
+
+  <!-- Modal Identificação do Usuário -->
+  <div class="modal-backdrop" id="userModal">
+    <div class="modal-card">
+      <h2>Identificação do Estudante</h2>
+      <p>Informe seu e-mail, matrícula ou apelido único para isolar seu progresso na nuvem (Google Sheets) e neste navegador.</p>
+      <input type="text" id="userIdInput" placeholder="ex: maria.silva@email.com ou aluno01" />
+      <div class="modal-actions">
+        <button type="button" class="btn-sm" id="btnCancelUser">Cancelar</button>
+        <button type="button" class="btn-primary" id="btnSaveUser">Salvar e Carregar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Configuração da Nuvem (URL Apps Script) -->
+  <div class="modal-backdrop" id="cloudModal">
+    <div class="modal-card">
+      <h2>Sincronização na Nuvem (Google Sheets)</h2>
+      <p>Cole abaixo a URL do seu Web App do Google Apps Script (terminada em <strong>/exec</strong>). Ela ficará salva neste navegador e conectará suas respostas à planilha.</p>
+      <input type="url" id="cloudUrlInput" placeholder="https://script.google.com/macros/s/.../exec" />
+      <div id="cloudTestFeedback" style="font-size:0.82rem; margin-bottom:0.85rem; min-height:1.2rem; color:#94a3b8;"></div>
+      <div class="modal-actions" style="justify-content: space-between;">
+        <button type="button" class="btn-sm btn-danger-outline" id="btnClearCloudUrl">Remover Link</button>
+        <div style="display:flex; gap:0.5rem;">
+          <button type="button" class="btn-sm" id="btnCancelCloud">Cancelar</button>
+          <button type="button" class="btn-primary" id="btnSaveCloud">Testar e Conectar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Confirmação de Reset -->
+  <div class="modal-backdrop" id="resetModal">
+    <div class="modal-card">
+      <h2>Resetar Progresso?</h2>
+      <p>Isso apagará todas as suas respostas salvas para o usuário <strong id="resetUserLabel" style="color:#f8fafc;"></strong> tanto localmente quanto na planilha em nuvem.</p>
+      <div class="modal-actions">
+        <button type="button" class="btn-sm" id="btnCancelReset">Cancelar</button>
+        <button type="button" class="btn-primary" style="background:#ef4444; color:#fff;" id="btnConfirmReset">Confirmar Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // =========================================================================
+    // CONFIGURAÇÃO DE SINCRONIZAÇÃO COM GOOGLE APPS SCRIPT
+    // Cole abaixo a URL do seu Web App (/exec) publicada no Google Apps Script:
+    // =========================================================================
+    const DEFAULT_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx_JFZSQmONF6u65q62hSAUe51H86taMlqPfik9LfqnBgRy4FeF_CZ2WCa6t4J-HP6Adw/exec";
+    const QUIZ_ID = "saude_mental_n1_n2";
+    const CLOUD_URL_STORAGE_KEY = `${QUIZ_ID}_script_url`;
+
+    function getScriptUrl() {
+      const saved = (localStorage.getItem(CLOUD_URL_STORAGE_KEY) || "").trim();
+      return saved || DEFAULT_SCRIPT_URL;
+    }
+
+    const CLINICAL_CASES = {"caso02": "Caso Clínico 02 (M25 - Pinheiro): Homem de 72 anos, pedreiro, casado, procedente de Miranorte. Há 3 dias agitado, o que fez a família levá-lo ao pronto-socorro. Sua esposa relatou que há 3 dias o paciente não para de caminhar em casa e às vezes fica agressivo. Tem apresentado muitos tremores. Confunde datas e os locais onde está. Faz 2 dias que tem suado muito. Começou a se queixar que aranhas estão andando no cômodo onde está ou em seu corpo, o que não é visto pela família. Há um dia com náuseas e vômitos. Tem hipertensão arterial, mas não utiliza medicações. Utilizava 200ml de bebida destilada todos os dias, mas parou há 5 dias. Com 30 anos, fez tratamento por depressão com amitriptilina por 6 meses. Na família, um irmão tem esquizofrenia.", "caso03": "Caso Clínico 03 (M25 - Pinheiro): Uma mulher de 35 anos relatou que aos 23 anos passou 30 dias chorando, sem levantar-se da cama, emagreceu, não dormia, não tomava banho. Melhorou após o uso de medicação que não soube o nome, a qual usou por 60 dias. Há 1 mês voltou a ficar assim e utilizou sertralina da amiga. Há 51 dias, eufórica, desinibida. Tem saído com 3 rapazes por dia. Tem gastado muito dinheiro. Anda com roupas coloridas e curtas. Fala muito rápido. Diz que é superdotada e milionária (o que não foi confirmado por acompanhantes). Dorme somente 3 horas por noite. Na avaliação, não parava quieta e falava muito rápido.", "casoZ": "Caso Z (M25): Um homem de 29 anos foi admitido no pronto-socorro do Hospital Geral de Palmas com queixa de estar agitado há 30 dias. Familiares informaram que nesse período o paciente tem queixado de ouvir vozes e que elas revelam que pessoas querem matá-lo. Passou a isolar-se em casa e guardar facas abaixo do seu travesseiro. Hoje ele saiu na rua e ameaçou um homem, dizendo que ele estava roubando seus pensamentos. Foi necessário condução para a emergência pela polícia e SAMU. Na avaliação estava corado e hidratado. Eupneico. Estava inquieto e fazia constantes ameaças às pessoas ao redor. Não quis entrar no consultório e não quis conversar com o médico. Tentou fugir do pronto-socorro duas vezes.", "casoX": "Caso X (M25): Mulher de 29 anos com queixas de dificuldade para dormir há 6 meses. Referiu ter dificuldade para iniciar o sono na cama das 0h às 1h30min. Tira um cochilo, acorda no meio da madrugada para ir ao banheiro e depois consegue dormir cerca de 4 horas. Durante o dia, sente-se cansada, com pouca concentração e boceja frequentemente. Trabalha em escritório como auxiliar contábil em um ambiente com pouca luz e ar-condicionado. À noite, assiste séries no computador das 19h até dormir e, mesmo dormindo, mantém a tela ligada. Além disso, é sedentária. Utiliza café 2 vezes pela manhã, 2 vezes à tarde e 2 vezes à noite.", "casoW": "Caso W (M25): Mulher de 43 anos chegou ao pronto-socorro após desmaio em casa. Após o marido chegar violento e embriagado em casa, ela caiu no chão e passou a apresentar movimentos de mãos e braços, aos quais o filho se referiu como 'convulsão'. Na avaliação, estava bem. Quando o marido chegou, apresentou um episódio em que caiu lentamente no chão, seguido por abalos nas mãos e braços, espuma na boca, olhar para cima, com reflexos preservados e sem liberação de esfíncteres. Após 30 segundos, cessaram os episódios, e ela se levantou sozinha, conversando normalmente. A paciente relatou nunca ter experimentado algo semelhante em sua vida e nunca ter recebido tratamento para transtorno mental.", "casoL": "Caso L (M25): Um homem de 35 anos, desempregado, relatou que nenhum médico consegue descobrir o que tem. Há 10 anos sente que sua mão tem perda de força, mas os exames sempre mostram que não há nada alterado. Também apresenta redução da visão intermitente, mas exame oftalmológico sempre está normal. Queixou ainda de dor abdominal constante e tosse. Também há queixas que não apresentam alterações na avaliação clínica e nem exames complementares. Fez diversas investigações e tem uma pilha de exames. Veio novamente para saber se tem algo grave e quer fazer novos exames. Quanto à dor abdominal pediu que faça uma laparotomia exploradora, pois acha que ainda não foi descoberto o que tem. No exame psíquico consciente, orientado, atenção e memória preservadas, pensamento agregado, eutímico, com crítica."};
+    const QUESTIONS = [{"id": "Q01", "num": "Questão 01", "source": "M25 - Pinheiro / Caso 02-A", "eixo": "Emergências Psiquiátricas & Agitação", "caseKey": "caso02", "text": "Qual o exame psíquico mais compatível com a história acima?", "options": ["a) Aparência desleixada, consciente, orientado, pensamento desorganizado com delírio persecutório, irritado, tremores, coprolalia, hipervolia, lentificado, sem crítica.", "b) Aparência adequada, sonolento, orientado no tempo, mas não no espaço; memória diminuída, pensamento agregado, eutímico, agitado com tremores, alucinações auditivas com vozes que fazem comentários, crítica preservada.", "c) Aparência desleixada, desatento, hipomnésia, desorientado, delírio de infestação, alucinações visuais, ansioso, inquieto com tremores, sem crítica.", "d) Aparência com higiene precária, desatento, memória preservada, desorientado, com delírio de ciúmes, hipertímico, inquieto, desinibido, sem crítica."], "correct": 2, "explanation": "Alternativa C. O quadro confusional agudo de abstinência grave cursa com rebaixamento/flutuação da consciência, desatenção, desorientação temporoespacial, hipomnésia, alucinações visuais típicas de pequenos animais (zoopsias — 'aranhas andando no cômodo'), delírio de infestação secundário, inquietação/agitação psicomotora com tremores e ausência de crítica."}, {"id": "Q02", "num": "Questão 02", "source": "M25 - Pinheiro / Caso 02-B", "eixo": "Emergências Psiquiátricas & Agitação", "caseKey": "caso02", "text": "Quais as hipóteses diagnósticas?", "options": ["a) Esquizofrenia e transtorno bipolar", "b) Doença de Alzheimer e demência vascular", "c) Depressão e distimia", "d) Delirium tremens e delirium misto"], "correct": 3, "explanation": "Alternativa D. A interrupção súbita do consumo diário de destilado há 5 dias seguida por agitação, confusão mental, desorientação, hiperatividade autonômica (sudorese profusa), tremores intensos e zoopsias caracteriza o Delirium Tremens (forma mais grave da abstinência alcoólica, emergência médica com risco de óbito)."}, {"id": "Q03", "num": "Questão 03", "source": "M25 - Pinheiro / Caso 02-C", "eixo": "Emergências Psiquiátricas & Agitação", "caseKey": "caso02", "text": "Qual o tratamento?", "options": ["a) Risperidona ou carbonato de lítio", "b) Clonazepam ou amitriptilina", "c) Reverter a causa e diazepam", "d) Donepezila e Memantina"], "correct": 2, "explanation": "Alternativa C. O manejo do delirium tremens exige reversão/suporte das alterações orgânicas (hidratação, correção hidroeletrolítica, reposição de tiamina) associado ao uso de benzodiazepínico de meia-vida longa (diazepam) para controle da hiperexcitabilidade do SNC e prevenção de convulsões."}, {"id": "Q04", "num": "Questão 04", "source": "M25 - Pinheiro / Caso 03-A", "eixo": "Bipolaridade", "caseKey": "caso03", "text": "Diagnóstico:", "options": ["a) Esquizofrenia", "b) Depressão recorrente", "c) Transtorno borderline", "d) Transtorno bipolar"], "correct": 3, "explanation": "Alternativa D. A paciente apresenta histórico prévio de episódio depressivo maior e atualmente cursa com episódio maníaco clássico (duração > 7 dias, humor eufórico, redução da necessidade de sono, pressão de fala, grandiosidade delirante, hipersexualidade, gastos excessivos e prejuízo funcional grave), fechando diagnóstico de Transtorno Afetivo Bipolar (Tipo I), possivelmente precipitado/virado pelo uso de antidepressivo (sertralina) em monoterapia."}, {"id": "Q05", "num": "Questão 05", "source": "M25 - Pinheiro / Caso 03-B", "eixo": "Bipolaridade", "caseKey": "caso03", "text": "Diagnóstico diferencial:", "options": ["a) Transtorno por uso de substâncias", "b) Depressão", "c) Transtorno de personalidade antissocial", "d) Transtorno de pânico"], "correct": 0, "explanation": "Alternativa A. Quadros de euforia, agitação, logorreia, grandiosidade, hipersexualidade e redução da necessidade de sono exigem exclusão obrigatória de intoxicação por substâncias estimulantes (como cocaína e anfetaminas), que mimetizam perfeitamente um episódio maníaco."}, {"id": "Q06", "num": "Questão 06", "source": "M25 - Pinheiro / Caso 03-C", "eixo": "Bipolaridade", "caseKey": "caso03", "text": "Tratamento e mecanismo de ação:", "options": ["a) Fluoxetina: Inibidor da recaptação de serotonina", "b) Carbonato de lítio: Atua na cascata do inositol", "c) Venlafaxina: Inibidor da recepção dual", "d) Diazepam: Agonista gabaérgico"], "correct": 1, "explanation": "Alternativa B. O carbonato de lítio é o estabilizador do humor de primeira escolha no transtorno bipolar (tanto na mania aguda quanto na profilaxia/manutenção). Seu mecanismo envolve a modulação de segundos mensageiros intracelulares, inibindo a enzima inositol monofosfatase e reduzindo a sinalização da cascata do fosfatidilinositol."}, {"id": "Q07", "num": "Questão 07", "source": "Outras Questões / Q2", "eixo": "Emergências Psiquiátricas & Agitação", "text": "Um homem de 25 anos chegou ao pronto-socorro com tremores de extremidade e língua, sudorese fria, taquicardia, crise hipertensiva, desorientação e agitação. Segundo familiares, nunca fez tratamento previamente e interrompeu há 3 dias o uso de cachaça que fazia diariamente. Também faz uso semanal de maconha. O paciente relatou que seu corpo estava coberto de baratas (zoopsia), o que não foi visualizado pela equipe. Qual o diagnóstico e a conduta mais apropriada dentre as abaixo?", "options": ["a) Episódio de mania – carbonato de lítio (estabilizador de humor) ou olanzapina (antipsicótico)", "b) Psicose induzida – haloperidol (antipsicótico)", "c) Delirium tremens – diazepam (benzodiazepínico, sedativo) e tiamina (complexo B1, indicado nutrição)", "d) Simulação – dar bronca no paciente"], "correct": 2, "explanation": "Alternativa C. Quadro clássico de Delirium Tremens (abstinência alcoólica grave iniciada 48–72h após cessação do etilismo crônico, com confusão mental, desorientação, agitação, tremores, hiperatividade autonômica e zoopsias). O tratamento exige diazepam para controle da abstinência e tiamina (vitamina B1) para prevenção da síndrome de Wernicke-Korsakoff."}, {"id": "Q08", "num": "Questão 08", "source": "Outras Questões / Q6", "eixo": "Bipolaridade", "text": "Há 15 dias um senhor de 60 anos tem apresentado euforia excessiva (não era assim antes), inclusive com certa jovialidade despreocupada e excitação quase incontrolável. A euforia era acompanhada pelo aumento da energia, resultando em excesso de atividade, pressão da fala e diminuição da necessidade de sono. Estava muito distraído, com autoestima muitas vezes inflada com ideias grandiosas (como falar que tem poderes especiais ou ser superdotado) e excesso de confiança. Chegou a sacar todo seu dinheiro do banco e distribuí-lo na rua. Tem estado desinibido e muitas vezes imprudente e inadequado. Há 10 anos relatou tratamento por depressão. O diagnóstico atual e tratamento mais apropriado é:", "options": ["a) Demência vascular – memantina", "b) Transtorno de ansiedade generalizada – clonazepam", "c) Episódio de mania no transtorno bipolar – carbonato de lítio", "d) É só um idoso tentando ser feliz – só orientar"], "correct": 2, "explanation": "Alternativa C. Presença de episódio maníaco típico com duração > 7 dias (15 dias), marcado por euforia, aumento de energia, pressão de fala, redução da necessidade de sono, grandiosidade, desinibição e comportamento de risco financeiro (distribuir dinheiro na rua) em paciente com histórico depressivo prévio, configurando Transtorno Bipolar Tipo I. O carbonato de lítio é o tratamento de primeira linha."}, {"id": "Q09", "num": "Questão 09", "source": "Outras Questões / Q11", "eixo": "Emergências Psiquiátricas & Agitação", "text": "Mulher de 32 anos, advogada, deu entrada no pronto-socorro após crise convulsiva com liberação esfincteriana e presenciada por colegas do trabalho. Tal episódio ocorrera há uma hora. Na avaliação apresenta frequência cardíaca de 130bpm, pressão arterial de 140x100mmHg. Estava inquieta, irritada, com pupilas midriáticas, sudorese quente e tremores de extremidades. Uma colega relatou que a paciente vinha fazendo tratamento para emagrecer e sabe que também fazia uso de drogas, mas não sabe quais. Podendo se tratar de uma intoxicação, qual a substância que pode estar envolvida e qual a conduta?", "options": ["a) Cocaína e/ou estimulantes – benzodiazepínicos", "b) Álcool – antipsicótico", "c) Maconha – benzodiazepínico", "d) Alucinógenos – antipsicótico"], "correct": 0, "explanation": "Alternativa A. A síndrome simpaticomimética aguda — taquicardia, hipertensão, midríase, sudorese quente, agitação/irritabilidade, tremores e crise convulsiva associada a drogas de abuso ou anorexígenos — indica intoxicação por cocaína e/ou estimulantes. A conduta de escolha é a administração de benzodiazepínicos (como diazepam ou lorazepam) e suporte clínico."}, {"id": "Q10", "num": "Questão 10", "source": "Outras Questões / Q12", "eixo": "Emergências Psiquiátricas & Agitação", "text": "Um paciente do sexo masculino, com 32 anos, queixa-se de tristeza e irritabilidade há 3 meses. Nesse período tem apresentado redução de energia e diminuição das atividades corriqueiras. Relatou perda de prazer pelas atividades que gostava, tais como jogar futebol ou cartas com os amigos. Tem se queixado de falta de concentração, cansaço e que tem dormido muito pouco (acorda antes do horário e não consegue mais dormir). Tem comido pouco e chegou a perder 2 kg. Disse que se sente um inútil e que todos os problemas de sua família são devido à sua incompetência. Na avaliação estava consciente, orientado, com o pensamento lentificado, bem choroso e relatou vontade de acabar com a própria vida, inclusive tem feito planos para tal. Qual o diagnóstico e tratamento mais apropriado?", "options": ["a) Esquizofrenia paranóide – risperidona", "b) Transtorno bipolar – episódio misto – ácido valpróico", "c) Episódio depressivo grave – internação – amitriptilina", "d) Delirium – internação – investigação clínica"], "correct": 2, "explanation": "Alternativa C. O paciente reúne critérios completos para Episódio Depressivo Maior Grave (humor deprimido, anedonia, perda de energia, insônia terminal, perda ponderal, culpa excessiva/inutilidade e lentificação psicomotora por 3 meses). A presença de ideação suicida estruturada com planejamento representa emergência psiquiátrica com indicação absoluta de internação hospitalar para proteção da vida, associada à terapia antidepressiva."}, {"id": "Q11", "num": "Questão 11", "source": "Outras Questões / Q13", "eixo": "Transtornos Ansiosos & Estresse", "text": "A característica essencial são os ataques recorrentes de ansiedade grave, que não se restringem a nenhuma situação ou conjunto de circunstâncias particulares e, portanto, são imprevisíveis. Como acontece com outros transtornos de ansiedade, os sintomas dominantes incluem o início repentino de palpitações, dor no peito, sensações de asfixia, tonturas e sentimentos de irrealidade (despersonalização ou desrealização). Muitas vezes há também um medo secundário de morrer, perder o controle ou enlouquecer. Qual é esse transtorno?", "options": ["a) Transtorno de ansiedade generalizada", "b) Transtorno do estresse pós-traumático", "c) Fobia social", "d) Transtorno de pânico"], "correct": 3, "explanation": "Alternativa D. A definição descreve exatamente os critérios do Transtorno de Pânico: ataques de pânico recorrentes e inesperados (não restritos a gatilhos específicos), com pico rápido de sintomas autonômicos cardiorrespiratórios, despersonalização/desrealização e medo de morrer, enlouquecer ou perder o controle."}, {"id": "Q12", "num": "Questão 12", "source": "Outras Questões / Q16", "eixo": "Transtornos Somatoformes & Dissociativos", "text": "Produção deliberada de sintomas com a intenção de se colocar no lugar de doente por carência ou necessidade de acolhimento emocional:", "options": ["a) Simulação", "b) Transtorno factício", "c) Transtorno somatoforme", "d) Transtorno dissociativo"], "correct": 1, "explanation": "Alternativa B. No Transtorno Factício (como na Síndrome de Münchausen), a produção ou falsificação de sinais/sintomas é intencional/deliberada, mas a motivação é psicológica interna — assumir o papel de enfermo e obter cuidado/acolhimento afetivo — sem ganho externo material ou legal (o que o diferencia da simulação)."}, {"id": "Q13", "num": "Questão 13", "source": "Outras Questões / Q17", "eixo": "Transtornos Somatoformes & Dissociativos", "text": "Não é sinal de crise convulsiva verdadeira:", "options": ["a) Sinais de traumas e liberação de esfíncteres", "b) História prévia de epilepsia e uso de anticonvulsivante", "c) Evento estressor antes da crise, olhar para cima, exame físico normal", "d) Tumor cerebral, distúrbio hidroeletrolítico, febre"], "correct": 2, "explanation": "Alternativa C. Crises não epilépticas psicogênicas (pseudocrises dissociativas/conversivas) são tipicamente precipitadas por estresse emocional agudo, cursam com resistência à abertura ocular ou desvio do olhar para cima, preservação de reflexos, ausência de liberação esfincteriana, ausência de trauma grave na queda e exames físicos/neurológicos normais."}, {"id": "Q14", "num": "Questão 14", "source": "Outras Questões / Q18", "eixo": "Transtornos Ansiosos & Estresse", "text": "Os inibidores seletivos da recaptação de serotonina (fluoxetina, sertralina, citalopram, escitalopram, paroxetina e fluvoxamina) fazem parte de que grupo de medicações e estão indicados para quais transtornos dos abaixo?", "options": ["a) Antipsicóticos / Esquizofrenia e transtorno bipolar", "b) Estabilizadores do humor / transtorno bipolar e transtornos de personalidade", "c) Ansiolíticos / Demência e transtornos ansiosos", "d) Antidepressivos / Transtorno depressivo e transtornos de ansiedade"], "correct": 3, "explanation": "Alternativa D. Os ISRS pertencem à classe dos antidepressivos (inibem seletivamente a bomba de recaptação pré-sináptica de serotonina) e constituem a primeira linha farmacológica tanto para os transtornos depressivos quanto para os transtornos de ansiedade (TAG, pânico, fobia social, agorafobia) e TEPT."}, {"id": "Q15", "num": "Questão 15", "source": "M24 / Q135", "eixo": "Transtornos Ansiosos & Estresse", "text": "O transtorno da adaptação é diagnosticado em uma mulher de 45 anos que foi despedida de um emprego que tinha há 20 anos. Ela está em psicoterapia de apoio. Nove meses mais tarde, foi atendida pelo médico, mas nenhum dos sintomas se resolveu. Durante esse período, ela encontrou outro emprego semelhante ao primeiro em tarefas e salários. Qual é o diagnóstico mais provável?", "options": ["a) Transtorno de Adaptação.", "b) TEPT.", "c) Transtorno depressivo maior.", "d) Transtorno bipolar.", "e) Transtorno esquizoafetivo."], "correct": 2, "explanation": "Alternativa C. Por definição diagnóstica (DSM-5/CID-10), os sintomas do Transtorno de Adaptação não devem persistir por mais de 6 meses após o término do fator estressor ou de suas consequências. Como a paciente já obteve novo emprego equivalente e mantém o quadro sintomático completo 9 meses depois, o diagnóstico evolui para Transtorno Depressivo Maior."}, {"id": "Q16", "num": "Questão 16", "source": "M24 / Q136", "eixo": "Transtornos Somatoformes & Dissociativos", "text": "Qual das seguintes é a motivação mais provável por trás do comportamento apresentado no transtorno factício?", "options": ["a) A motivação é inconsciente e, portanto, o paciente não a percebe.", "b) Desejo de evitar a prisão.", "c) Desejo de ser cuidado.", "d) Desejo de obter compensação.", "e) Desejo de obter narcóticos."], "correct": 2, "explanation": "Alternativa C. No transtorno factício, o paciente produz ou simula sintomas conscientemente para assumir o papel de doente e satisfazer uma necessidade psicológica de receber atenção médica, cuidado e acolhimento afetivo (diferente da simulação, motivada por ganhos externos como evitar prisão, obter indenização/afastamento ou conseguir opioides)."}, {"id": "Q17", "num": "Questão 17", "source": "M24 / Q137", "eixo": "Transtornos Alimentares & Sono", "text": "Um médico de 33 anos, casado, consulta seu clínico geral com queixas de 'depressão'. Durante a entrevista, nega sentimentos dominantes de tristeza e anedonia, e não há alterações de apetite, de peso, nem problemas de concentração. Nas últimas seis semanas, sente-se cansado a maior parte do tempo e vem despertando várias vezes durante a noite. No decorrer da entrevista, revela que essas dificuldades tiveram início quando esteve envolvido em uma ação judicial por imperícia após a morte de um paciente. Ele 'não tirava o processo da cabeça' antes do julgamento, quando sua perturbação do sono começou. Embora a ação tenha sido cancelada, ele continua a acordar frequentemente durante a noite, preocupado em não conseguir voltar a dormir. Nega problemas de saúde, uso de álcool e drogas. Qual diagnóstico a seguir é o mais provável?", "options": ["a) Distúrbio respiratório do sono.", "b) Transtorno do ritmo circadiano do sono.", "c) Transtorno depressivo maior.", "d) Insônia primária.", "e) Narcolepsia."], "correct": 3, "explanation": "Alternativa D. O paciente não preenche critérios para depressão maior (nega tristeza persistente e anedonia). O distúrbio iniciou-se por um estressor agudo, mas cronificou-se e perpetuou-se pelo próprio condicionamento negativo e ansiedade antecipatória de não conseguir dormir ('preocupado em não conseguir voltar a dormir'), caracterizando Insônia Primária (psicofisiológica)."}, {"id": "Q18", "num": "Questão 18", "source": "M24 / Q138", "eixo": "Transtornos Somatoformes & Dissociativos", "text": "Uma mulher de 35 anos com transtorno de somatização procura um novo médico. Antes da consulta, fez avaliações completas com pelo menos quatro outros. Qual é a parte mais importante do plano de tratamento para essa paciente?", "options": ["a) Tentativa com analgésicos.", "b) Medicamento antidepressivo.", "c) Estabelecer um esquema regular de consultas.", "d) Explicar que os sintomas são decorrentes de fatores psicológicos.", "e) Psicoterapia psicodinâmica intensiva."], "correct": 2, "explanation": "Alternativa C. A medida terapêutica central no transtorno de somatização é estabelecer consultas médicas regulares e agendadas (independentemente do surgimento de novas queixas) com um único médico assistente, reduzindo a peregrinação por especialistas, exames desnecessários e iatrogenias."}, {"id": "Q19", "num": "Questão 19", "source": "M24 / Q139", "eixo": "Transtornos Ansiosos & Estresse", "text": "Um homem de 62 anos com história de diabetes melito, DPOC, hepatite C, neuropatia periférica e um marca-passo para controle de arritmias cardíacas queixa-se de ansiedade episódica de início recente ocorrido nas últimas três semanas. Ele não tem história de sintomas de ansiedade. Episódios de intensa ansiedade tendem a ocorrer durante o dia, duram de 30 a 60 minutos e são acompanhados por hiperventilação e sensação de 'palpitações' assim como certa confusão e desorientação. Dos seguintes, qual diagnóstico que deve ser descartado de seu diagnóstico diferencial?", "options": ["a) Transtorno de pânico.", "b) Hipoglicemia episódica.", "c) Hipóxia devida a DPOC.", "d) Hipóxia devida a arritmia.", "e) Encefalopatia hepática."], "correct": 0, "explanation": "Alternativa A. O início tardio (62 anos), sem história psiquiátrica prévia, com episódios prolongados (30–60 min) acompanhados de confusão e desorientação em paciente multimórbido (DM, DPOC, hepatite C, arritmia) aponta fortemente para etiologia orgânica (hipoglicemia, hipóxia, encefalopatia hepática), devendo-se descartar o Transtorno de Pânico primário antes de confirmar uma causa médica."}, {"id": "Q20", "num": "Questão 20", "source": "M24 / Q140", "eixo": "Transtornos Alimentares & Sono", "text": "Uma adolescente de 16 anos foi levada ao médico por sua mãe, a qual afirma que a filha vem perdendo peso de forma constante. A adolescente nega haver problema e declara que de modo algum está abaixo do peso. O médico estabelece que a menina mede 1,70 m e pesa 41 kg. Qual dos seguintes testes laboratoriais é mais útil para avaliar a gravidade da inanição nessa paciente?", "options": ["a) Hemograma completo e contagem diferencial de leucócitos.", "b) Testes da função da tireoide.", "c) Nível sérico de potássio.", "d) Determinação do nível de albumina.", "e) Testes da função hepática."], "correct": 2, "explanation": "Alternativa C. Com IMC de 14,18 kg/m² e negação da magreza, a paciente apresenta Anorexia Nervosa grave. Na avaliação laboratorial de emergência e gravidade clínica da inanição/purgação, a dosagem de eletrólitos — especialmente o potássio sérico — é crítica pelo risco imediato de hipocalemia severa, arritmias cardíacas fatais e síndrome de realimentação."}, {"id": "Q21", "num": "Questão 21", "source": "M24 / Q143", "eixo": "Transtornos Somatoformes & Dissociativos", "text": "Um jovem de 17 anos apresenta a queixa de que suas 'pernas estão bambas' há uma semana. Em cada episódio ele tem uma sensação generalizada de dor e logo em seguida, fica fraco e não consegue mover seus braços e pernas. Os episódios duram alguns minutos. O paciente está no segundo ano do ensino médio e só tira notas B e C. Seus pais se separaram recentemente após um longo período de discussões e xingamentos. Os exames físico e neurológico são normais, assim como os exames laboratoriais. Qual característica a seguir distingue melhor seu diagnóstico de outros transtornos somatoformes?", "options": ["a) Os sintomas não são completamente explicados por uma causa clínica.", "b) Os sintomas não são produzidos de modo intencional.", "c) Os sintomas envolvem apenas déficits motores ou sensoriais neurológicos.", "d) Fatores psicológicos estão relacionados à produção dos sintomas.", "e) Há motivação de ganho secundário."], "correct": 2, "explanation": "Alternativa C. O quadro ilustra um Transtorno Conversivo (Transtorno de Sintomas Neurológicos Funcionais) desencadeado pela separação conflituosa dos pais. O que o distingue especificamente dos demais transtornos somatoformes (como somatização ou hipocondria) é a restrição das manifestações a déficits motores ou sensoriais voluntários que simulam uma doença neurológica sem base anatômica."}, {"id": "Q22", "num": "Questão 22", "source": "M24 / Q144", "eixo": "Transtornos Somatoformes & Dissociativos", "text": "Qual das seguintes abordagens é a mais eficaz para o paciente da questão anterior (jovem de 17 anos com transtorno conversivo agudo)?", "options": ["a) Confrontação a respeito de sintomas produzidos intencionalmente.", "b) Explicar que os sintomas não são reais.", "c) Assegurar que será encontrada uma causa neurológica.", "d) Sugerir que os sintomas irão melhorar com o passar do tempo.", "e) Sugerir que a família faça terapia."], "correct": 3, "explanation": "Alternativa D. No transtorno conversivo agudo, a abordagem mais eficaz consiste em tranquilizar o paciente quanto à ausência de lesão neurológica estrutural grave e utilizar sugestão positiva/expectativa de melhora gradual com o tempo, evitando confrontação hostil (pois o sintoma não é simulado) ou reforço de invalidez."}, {"id": "Q23", "num": "Questão 23", "source": "M24 / Q146", "eixo": "Transtornos Ansiosos & Estresse", "text": "Em que aspecto a fobia social é diferente da fobia específica?", "options": ["a) Enfoque ou natureza do temor.", "b) Duração da doença.", "c) Ausência de ataques de pânico.", "d) Grau de esquiva da situação.", "e) Natureza recorrente do temor."], "correct": 0, "explanation": "Alternativa A. Ambas compartilham mecanismos de esquiva fóbica e possíveis ataques de pânico situacionais, mas distinguem-se fundamentalmente pelo enfoque/natureza do temor: na fobia social, o medo central é o escrutínio, julgamento negativo ou humilhação diante de outras pessoas; na fobia específica, o medo dirige-se a um objeto ou situação concreta (animais, sangue, altura, lugares fechados)."}, {"id": "Q24", "num": "Questão 24", "source": "M24 / Q148", "eixo": "Infância, TEA, TDAH & Personalidade", "text": "A família de uma garota de 14 anos a leva para tratamento contra sua vontade. A família relata que a menina se irrita com muita facilidade, discute diariamente com os pais e os professores, se recusa a fazer o que lhe é solicitado em casa e na escola e costuma culpar seus professores ou os pais pelo comportamento que demonstra. Nega estar deprimida, ansiosa ou qualquer outro sintoma psicótico. Com base nessas informações, qual seria o melhor diagnóstico?", "options": ["a) Transtorno da personalidade antissocial.", "b) Transtorno da personalidade borderline.", "c) Transtorno desafiador de oposição.", "d) Transtorno da conduta.", "e) Transtorno de estresse pós-traumático."], "correct": 2, "explanation": "Alternativa C. O padrão persistente de humor raivoso/irritável, comportamento questionador/desafiador diante de figuras de autoridade (pais e professores) e tendência a culpar os outros pelos próprios erros — sem violação grave dos direitos básicos de terceiros ou leis (o que caracterizaria Transtorno de Conduta) — define o Transtorno Desafiador de Oposição (TDO)."}, {"id": "Q25", "num": "Questão 25", "source": "M24 / Q149", "eixo": "Transtornos Alimentares & Sono", "text": "A principal medida para combater distúrbios do sono, principalmente insônia ou hipersonia é:", "options": ["a) Fototerapia", "b) Droga Z em baixa dose", "c) Higiene do sono", "d) Melatonina", "e) Estimulantes"], "correct": 2, "explanation": "Alternativa C. As medidas comportamentais e ambientais de higiene do sono representam a intervenção inicial fundamental para regular o ciclo sono-vigília antes de qualquer abordagem farmacológica."}, {"id": "Q26", "num": "Questão 26", "source": "M24 / Q150", "eixo": "Transtornos Alimentares & Sono", "text": "Qual tratamento para a insônia em um paciente com esquizofrenia?", "options": ["a) Lítio.", "b) Zolpidem.", "c) Melatonina.", "d) Olanzapina.", "e) Fluoxetina."], "correct": 3, "explanation": "Alternativa D. Em pacientes com esquizofrenia, opta-se por ajustar ou utilizar um antipsicótico com perfil sedativo (bloqueio histaminérgico H1), como a olanzapina (ou quetiapina/clorpromazina), tratando simultaneamente a psicose de base e a insônia, evitando polifarmácia desnecessária."}, {"id": "Q27", "num": "Questão 27", "source": "M24 / Q151", "eixo": "Infância, TEA, TDAH & Personalidade", "text": "Uma criança de 8 anos foi levada pela mãe. Não interage com colegas da sala. Não olha outras pessoas nos olhos. Emite palavras aleatórias. Não sabe nem ler nem escrever. Gosta de brincar com papéis, pedaços de madeira, pedras, mas não com brinquedos. Faz movimentos estranhos (estereotipias). Não veste e não come nada de cor vermelha. Não olha nos olhos dos pais. Quando está contrariado dá gritos ou se machuca. Diante do caso qual a hipótese mais provável?", "options": ["a) Esquizofrenia", "b) Autismo", "c) Transtorno bipolar", "d) Deficiência mental", "e) Atraso leve da linguagem"], "correct": 1, "explanation": "Alternativa B. O caso reúne a díade nuclear do Transtorno do Espectro Autista (TEA): (1) déficits persistentes na comunicação e interação social (ausência de contato visual, falha na interação com pares e fala não funcional) e (2) padrões restritos e repetitivos de comportamento e interesses (estereotipias motoras, interesse atípico por objetos inanimados como pedras/papéis, rigidez sensorial extrema com a cor vermelha e autoagressão quando contrariado)."}, {"id": "Q28", "num": "Questão 28", "source": "M24 / Q153", "eixo": "Transtornos Ansiosos & Estresse", "text": "Ansiedade que é global e persistente, mas não restrita a, ou mesmo forte predominantemente, em quaisquer circunstâncias ambientais particulares (ou seja, é 'flutuante livremente'). Os sintomas dominantes são variáveis, mas incluem queixas de nervosismo persistente, tremores, tensões musculares, sudorese, tontura, palpitações e desconforto epigástrico. Os temores de que o paciente ou um parente adoeça em breve ou sofra um acidente são frequentemente expressos.", "options": ["a) T. de pânico.", "b) TAG", "c) Burnout.", "d) Fobia social", "e) Agorafobia."], "correct": 1, "explanation": "Alternativa B. Descrição clássica da CID-10 para o Transtorno de Ansiedade Generalizada (TAG): ansiedade 'flutuante livremente', sem gatilho ambiental específico, acompanhada de apreensão crônica, tensão motora e hiperatividade autonômica."}, {"id": "Q29", "num": "Questão 29", "source": "M24 / Q154", "eixo": "Transtornos Ansiosos & Estresse", "text": "Medo de lugares abertos e desprotegidos, onde não há socorro:", "options": ["a) Pânico", "b) Fobia social", "c) Fobia específica", "d) Agorafobia", "e) Delírio persecutório"], "correct": 3, "explanation": "Alternativa D. Agorafobia é o medo ou ansiedade marcante acerca de espaços abertos, multidões, transporte público ou estar fora de casa sozinho, devido ao pensamento de que escapar pode ser difícil ou o auxílio pode não estar disponível."}, {"id": "Q30", "num": "Questão 30", "source": "M25 / Caso Z - Q156", "eixo": "Emergências Psiquiátricas & Agitação", "caseKey": "casoZ", "text": "Qual a melhor opção medicamentosa para a tranquilização rápida?", "options": ["a) Prometazina por via intramuscular.", "b) Diazepam por via intramuscular.", "c) Haloperidol por via intramuscular.", "d) Quetiapina VO", "e) Fluoxetina VO"], "correct": 2, "explanation": "Alternativa C. Em quadro de agitação psicomotora grave com sintomas psicóticos (delírios persecutórios, alucinações auditivas) e recusa à via oral, a tranquilização rápida de escolha é feita com antipsicótico de alta potência por via intramuscular (Haloperidol IM, podendo ser associado à prometazina IM para profilaxia de distonia aguda e potencialização sedativa). Diazepam IM tem absorção errática e não trata a psicose."}, {"id": "Q31", "num": "Questão 31", "source": "M25 / Caso Z - Q157", "eixo": "Infância, TEA, TDAH & Personalidade", "caseKey": "casoZ", "text": "No caso anterior, após 48 horas de observação o paciente remitiu totalmente seus sintomas. Relatou que estava usando cocaína diariamente. Nunca fez tratamento. Passou a usar há 2 anos, de forma esporádica, depois mensal, depois semanal. O uso aumentou depois de entrar para um grupo que comete assaltos. Apesar de já ter trabalhado não permanece em nenhum local por mais de poucas semanas, pois sempre se envolve em brigas. Por duas vezes foi demitido após furtar objetos no trabalho. Na infância não concluiu o ensino médio. Foi expulso várias vezes e constantemente os pais eram chamados por agressões ou desafios aos professores. Na adolescência manteve o comportamento e chegou a ficar em uma instituição após atear fogo em carro com amigos. Quando surpreendido relata que não fez nada, mesmo com todas as provas apresentadas. Qual a comorbidade associada ao transtorno por uso de substância pode ser um fator que dificulta seu tratamento?", "options": ["a) Transtorno bipolar.", "b) Transtorno de personalidade antissocial.", "c) Transtorno depressivo.", "d) Transtorno desafiador opositor.", "e) Transtorno de déficit de atenção com hiperatividade."], "correct": 1, "explanation": "Alternativa B. O paciente apresenta padrão invasivo de desrespeito e violação dos direitos alheios desde a idade adulta (assaltos, furtos, brigas recorrentes, impulsividade, mentiras e ausência total de remorso), precedido por evidências claras de Transtorno de Conduta antes dos 15 anos (expulsões escolares, agressões e incêndio deliberado de veículo), preenchendo todos os critérios para Transtorno de Personalidade Antissocial."}, {"id": "Q32", "num": "Questão 32", "source": "M25 / Caso Z - Q158", "eixo": "Infância, TEA, TDAH & Personalidade", "caseKey": "casoZ", "text": "No caso anterior (Transtorno de Personalidade Antissocial), qual a conduta mais apropriada para a comorbidade?", "options": ["a) Psicoterapia", "b) Risperidona", "c) Carbonato de lítio", "d) Amitriptilina", "e) Adesivo de nicotina"], "correct": 0, "explanation": "Alternativa A. Não existe farmacoterapia específica aprovada para curar os transtornos de personalidade em si; a base do manejo longitudinal dos transtornos de personalidade é a psicoterapia (reservando-se fármacos apenas para sintomas-alvo pontuais como agressividade impulsiva grave ou comorbidades)."}, {"id": "Q33", "num": "Questão 33", "source": "M25 / Caso X - Q161", "eixo": "Transtornos Alimentares & Sono", "caseKey": "casoX", "text": "Qual a primeira conduta nesse caso?", "options": ["a) Zolpidem", "b) Fototerapia", "c) Quetiapina", "d) Modafinila", "e) Higiene do sono"], "correct": 4, "explanation": "Alternativa E. A paciente apresenta múltiplos fatores comportamentais perpetuadores de insônia (uso de cafeína à noite, exposição à luz azul de telas até adormecer, TV/computador ligado durante o sono, cochilos diurnos e sedentarismo). A primeira linha de tratamento é sempre a Higiene do Sono."}, {"id": "Q34", "num": "Questão 34", "source": "M25 / Caso X - Q162", "eixo": "Transtornos Alimentares & Sono", "caseKey": "casoX", "text": "Após 4 meses a mesma paciente não conseguiu recuperar seu sono. Qual a próxima conduta é mais apropriada?", "options": ["a) Haloperidol", "b) Fluoxetina", "c) Sertralina", "d) Zopiclona", "e) Carbonato de lítio"], "correct": 3, "explanation": "Alternativa D. Diante da falha das medidas não farmacológicas (higiene do sono) na insônia primária persistente, indica-se um hipnótico não benzodiazepínico (Droga Z, como zopiclona ou zolpidem) por curto período para restabelecer o padrão do sono."}, {"id": "Q35", "num": "Questão 35", "source": "M25 / Caso X - Q163", "eixo": "Transtornos Alimentares & Sono", "caseKey": "casoX", "text": "Após 3 meses referiu sonolência excessiva, principalmente diurna. Melhorou o padrão de sono noturno. Parou de assistir séries à noite e o uso de cafeína. Nesse período passou a utilizar diariamente hidroxizine (anti-histamínico) para suposta rinite. Teve coceira e rinorreia por 10 dias, já remitido. Qual é a conduta?", "options": ["a) Uso de metilfenidato.", "b) Uso de lisdexanfetamina.", "c) Troca de Diazepam por clonazepam.", "d) Suspensão das medicações.", "e) Atividade física."], "correct": 3, "explanation": "Alternativa D. A sonolência diurna excessiva surgiu como efeito adverso iatrogênico do uso contínuo e desnecessário de anti-histamínico de primeira geração (hidroxizine), que atravessa a barreira hematoencefálica e bloqueia receptores H1 centrais. A conduta correta é suspender a medicação."}, {"id": "Q36", "num": "Questão 36", "source": "M25 / Caso X - Q164", "eixo": "Transtornos Alimentares & Sono", "caseKey": "casoX", "text": "Ao saber do bom resultado do caso anterior, a prima da paciente procurou você pelo mesmo problema. Relatou que também tem dificuldade para iniciar o sono e durante o dia fica com dificuldade para concentrar. A dificuldade de dormir iniciou há 4 meses, após divórcio e é acompanhada de choro fácil, isolamento, diminuição do apetite, abandono de atividades prazerosas e faltas ao trabalho. Ela quer uma medicação para dormir melhor e não quer fazer psicoterapia. Qual a melhor opção dentre as abaixo?", "options": ["a) Sertralina.", "b) Carbamazepina.", "c) Haloperidol.", "d) Zolpidem.", "e) Clonazepam."], "correct": 0, "explanation": "Alternativa A. Neste caso, a insônia é secundária a um Episódio Depressivo Maior (humor deprimido, choro fácil, anedonia, hiporexia, isolamento e prejuízo laboral há 4 meses). O tratamento deve abordar a doença de base com um antidepressivo ISRS (sertralina), e não apenas mascarar o sintoma com hipnóticos."}, {"id": "Q37", "num": "Questão 37", "source": "M25 / Caso X - Q165", "eixo": "Transtornos Alimentares & Sono", "caseKey": "casoX", "text": "Após 3 meses compareceu à UBS. Disse que melhorou um pouco, mas os sintomas continuam. Trouxe exames laboratoriais com hemograma sem alterações, transaminases hepáticas sem alterações, função renal normal e TSH = 18 (normal até 10). Diante dessas informações a conduta é:", "options": ["a) Aumentar a dose da medicação que está tomando", "b) Levotiroxina", "c) Troca por quetiapina 25mg à noite", "d) Fototerapia", "e) Atividade física"], "correct": 1, "explanation": "Alternativa B. A elevação significativa do TSH (18 mUI/L) confirma hipotireoidismo clínico como causa orgânica associada à fadiga, lentificação e alteração do sono, exigindo reposição hormonal com Levotiroxina."}, {"id": "Q38", "num": "Questão 38", "source": "M25 / Caso W - Q166", "eixo": "Transtornos Somatoformes & Dissociativos", "caseKey": "casoW", "text": "Diante do caso, qual é o diagnóstico mais provável?", "options": ["a) Simulação", "b) Crise convulsiva", "c) Transtorno de personalidade histriônico", "d) Transtorno dissociativo"], "correct": 3, "explanation": "Alternativa D. Trata-se de pseudocrise convulsiva (transtorno dissociativo/conversivo) desencadeada por estresse agudo (agressividade do marido): queda lenta sem trauma, movimentos atípicos, olhos voltados para cima, reflexos preservados, ausência de relaxamento esfincteriano e recuperação imediata sem confusão pós-ictal."}, {"id": "Q39", "num": "Questão 39", "source": "M25 / Caso W - Q167", "eixo": "Transtornos Somatoformes & Dissociativos", "caseKey": "casoW", "text": "A conduta é:", "options": ["a) Diazepam IV.", "b) Haloperidol IM.", "c) Orientação e encaminhamento para psicoterapia.", "d) Fenitoína.", "e) Explicar para paciente que pronto-socorro não é lugar para isso."], "correct": 2, "explanation": "Alternativa C. Como não há atividade epiléptica cerebral, anticonvulsivantes (fenitoína) e benzodiazepínicos IV são contraindicados. Após cessar a crise, oferece-se acolhimento, orientação empática (sem hostilidade ou julgamento) e encaminhamento para psicoterapia."}, {"id": "Q40", "num": "Questão 40", "source": "M25 / Caso W - Q168", "eixo": "Infância, TEA, TDAH & Personalidade", "caseKey": "casoW", "text": "Após início do caso anterior voltou após 2 anos; filhos trouxeram-na após ingerir várias medicações com intenção suicida. Desde o início da vida adulta, manifesta intolerância a frustrações. Quando contrariada agride terceiros física e verbalmente ou quebra objetos. Outras vezes se machuca (se escoria ou bate a cabeça na parede). O comportamento piorou após o casamento com o marido. Há dois anos teve o episódio relatado. Apresentou vários períodos na semana em que quando contrariada age de forma explosiva e agressiva. Depois passa, age sem remorso e como se nada tivesse ocorrido. Sempre se queixou da sensação de vazio crônico. Atualmente, divorciada. Diante das novas informações, qual a suspeita diagnóstica?", "options": ["a) T. depressivo.", "b) T. Bipolar.", "c) T. Dissociativo.", "d) T. de Personalidade com Instabilidade Emocional (Borderline)", "e) T. Psicótico"], "correct": 3, "explanation": "Alternativa D. A paciente apresenta padrão longitudinal desde o início da vida adulta de instabilidade afetiva reativa (oscilações rápidas diante de frustrações, diferente dos episódios sustentados do TAB), impulsividade, explosões de raiva intensa, automutilação, comportamento suicida recorrente, relacionamentos instáveis e sentimento crônico de vazio — critérios clássicos do Transtorno de Personalidade Borderline (Instabilidade Emocional)."}, {"id": "Q41", "num": "Questão 41", "source": "M25 / Caso W - Q169", "eixo": "Infância, TEA, TDAH & Personalidade", "caseKey": "casoW", "text": "Qual o melhor tratamento (para o Transtorno de Personalidade Borderline)?", "options": ["a) Amitriptilina", "b) Haloperidol.", "c) Lítio.", "d) Orientação.", "e) Psicoterapia"], "correct": 4, "explanation": "Alternativa E. A psicoterapia estruturada (como Terapia Comportamental Dialética — DBT ou TCC) é o tratamento de primeira linha e mais eficaz a longo prazo para o Transtorno de Personalidade Borderline."}, {"id": "Q42", "num": "Questão 42", "source": "M25 / Caso W - Q170", "eixo": "Emergências Psiquiátricas & Agitação", "caseKey": "casoW", "text": "Paciente do caso anterior após 2 horas ficou irritada por limites impostos pela enfermagem. Passou a jogar objetos na equipe, dar gritos e procurou objetos para se cortar. O médico tentou utilizar a abordagem verbal que falhou e pediu auxílio à equipe para proteger a paciente, pois a medicação estava sendo buscada em outro andar. Qual o nome da abordagem verbal e qual a conduta a ser feita até chegar à medicação?", "options": ["a) Desescalada verbal e contenção física.", "b) Citar as leis e imobilização de agressor.", "c) Comunicação gentilmente guiada e amarração no leito.", "d) Bate-papo e contenção agressiva.", "e) Conversa empática e imobilização humanizada."], "correct": 0, "explanation": "Alternativa A. No protocolo de manejo da agitação psicomotora e risco iminente de auto ou heteroagressão, tenta-se inicialmente o acolhimento e a desescalada verbal; quando esta falha e há risco físico imediato, indica-se a contenção física técnica por equipe treinada até que a contenção química faça efeito."}, {"id": "Q43", "num": "Questão 43", "source": "M25 / Caso L - Q171", "eixo": "Transtornos Somatoformes & Dissociativos", "caseKey": "casoL", "text": "Diante do Caso L, qual o provável diagnóstico?", "options": ["a) Transtorno dissociativo", "b) Transtorno somatoforme", "c) Transtorno psicótico", "d) Transtorno de personalidade histriônico", "e) Simulação"], "correct": 1, "explanation": "Alternativa B. História crônica (10 anos) de múltiplos sintomas somáticos recorrentes e variáveis (neurológicos, gastrointestinais, respiratórios) sem substrato orgânico após extensas investigações, acompanhada de preocupação persistente com doenças graves e solicitação de procedimentos invasivos (laparotomia), caracterizando Transtorno Somatoforme (Somatização / Hipocondríaco)."}, {"id": "Q44", "num": "Questão 44", "source": "M25 / Caso L - Q172", "eixo": "Transtornos Somatoformes & Dissociativos", "caseKey": "casoL", "text": "Qual a melhor forma de manejar casos como esse?", "options": ["a) Psicoterapia", "b) Haloperidol", "c) Acompanhar com o mesmo médico e não mudar", "d) Clomipramina em altas doses", "e) Terapia ocupacional"], "correct": 2, "explanation": "Alternativa C. A vinculação longitudinal a um único médico assistente, com retornos agendados periódicos, evita a fragmentação do cuidado e protege o paciente contra exames diagnósticos repetitivos e cirurgias exploradoras iatrogênicas."}, {"id": "Q45", "num": "Questão 45", "source": "M25 / Caso L - Q173", "eixo": "Transtornos Somatoformes & Dissociativos", "caseKey": "casoL", "text": "Durante a visita ao paciente de 28 anos, ouvi toda a história. Abordou-me como médico e disse que está enfrentando os mesmos problemas do outro paciente. Disse que não está conseguindo trabalhar. É funcionário público e pediu afastamento para coçar o torso, fazer exames de sangue e verificar algo sobre a barriga, além de relatar dor. No exame físico, nada foi corroborado. Para garantir, foi solicitada uma ultrassonografia que deu resultado negativo. Uma enfermeira alertou que esse paciente frequentemente vinha com queixas diversas ao pronto-socorro, sempre pedindo atestados. Qual o possível diagnóstico?", "options": ["a) Transtorno Somatoforme", "b) Transtorno Obsessivo-Compulsivo", "c) Transtorno Factício", "d) Transtorno Psicótico", "e) Simulação"], "correct": 4, "explanation": "Alternativa E. A produção ou exagero intencional de sintomas físicos motivado claramente por um ganho secundário externo e objetivo (obtenção reiterada de atestados médicos e afastamento laboral remunerado) caracteriza Simulação."}, {"id": "Q46", "num": "Questão 46", "source": "Banco N2 / Substâncias - Q1", "eixo": "Emergências Psiquiátricas & Agitação", "text": "Mulher de 32 anos, advogada, deu entrada no pronto-socorro após crise convulsiva com liberação esfincteriana e presenciada por colegas do trabalho. Tal episódio ocorrera há uma hora. Na avaliação apresenta frequência cardíaca de 130bpm, pressão arterial de 140x100mmHg. Estava inquieta, irritada, com pupilas midriáticas, sudorese quente e tremores de extremidades. Uma colega relatou que a paciente vinha fazendo tratamento para emagrecer e sabe que também fazia uso de drogas, mas não sabe quais. Podendo se tratar de uma intoxicação, qual a substância que pode estar envolvida e qual a conduta?", "options": ["a) Cocaína e/ou estimulantes – benzodiazepínicos", "b) Álcool – antipsicótico", "c) Maconha – benzodiazepínico", "d) Alucinógenos – antipsicótico"], "correct": 0, "explanation": "Alternativa A. Quadro clássico de intoxicação aguda por estimulantes/cocaína (taquicardia, crise hipertensiva, midríase, sudorese, agitação e convulsão), cuja conduta de emergência é suporte à vida e benzodiazepínicos para conter a hiperatividade simpática."}, {"id": "Q47", "num": "Questão 47", "source": "Banco N2 / Substâncias - Q4", "eixo": "Bipolaridade", "text": "Relacione o sintoma de intoxicação, a medicação e a conduta:\n• Sintomas: (A) Tremores, lentificação, diminuição de reflexos, hipotermia, insuficiência renal, ataxia | (B) Rigidez, marcha em bloco, sinal da roda denteada, tremores de repouso | (C) Sonolência, lentificação, quedas, cianose e insuficiência respiratória\n• Medicações: (D) Risperidona (antipsicótico) | (E) Carbonato de lítio (estabilizador de humor) | (F) Clonazepam (BZD)\n• Condutas: (G) Flumazenil (antagonista de BZD) | (H) Suspensão da medicação com hidratação | (I) Biperideno", "options": ["a) A – E – H | B – D – I | C – F – G", "b) A – D – I | B – E – H | C – F – G", "c) A – F – G | B – D – I | C – E – H", "d) A – E – G | B – F – I | C – D – H"], "correct": 0, "explanation": "Correlação correta: A – E – H | B – D – I | C – F – G. (A-E-H) A intoxicação por carbonato de lítio manifesta-se por neurotoxicidade (ataxia, tremores grosseiros, hiporreflexia), hipotermia e nefrotoxicidade, exigindo suspensão imediata e hidratação; (B-D-I) Parkinsonismo medicamentoso induzido por antipsicótico (risperidona) trata-se com anticolinérgico (biperideno); (C-F-G) Superdosagem de benzodiazepínico (clonazepam) causa sedação grave e depressão respiratória/cianose, revertida com Flumazenil."}, {"id": "Q48", "num": "Questão 48", "source": "Banco N2 / Substâncias - Q5", "eixo": "Transtornos Ansiosos & Estresse", "text": "São efeitos colaterais do uso agudo e recente de benzodiazepínicos, EXCETO:", "options": ["a) Taquicardia", "b) Amnésia", "c) Depressão respiratória", "d) Hipotensão", "e) Excitação"], "correct": 0, "explanation": "Alternativa A. Benzodiazepínicos promovem depressão do SNC e redução do tônus simpático (podendo causar hipotensão, depressão respiratória, amnésia anterógrada e, raramente, excitação paradoxal), não provocando taquicardia como efeito direto habitual."}, {"id": "Q49", "num": "Questão 49", "source": "Banco N2 / Substâncias - Q7", "eixo": "Transtornos Ansiosos & Estresse", "text": "Sobre o uso de benzodiazepínicos nos transtornos ansiosos:", "options": ["a) Atua nos receptores dopaminérgicos. Uso justificado por curto período pelo risco de dependência", "b) Atua nos receptores gabaérgicos. Uso justificado por curto período pelo risco de dependência", "c) Atua nos receptores serotoninérgicos. Uso justificado por pelo menos 1 ano", "d) Atua nos receptores noradrenérgicos. Uso justificado por pelo menos 1 ano", "e) Nda"], "correct": 1, "explanation": "Alternativa B. Nos transtornos ansiosos, os benzodiazepínicos (agonistas alostéricos GABA-A) devem ser restritos às primeiras semanas (ponte terapêutica enquanto o ISRS inicia seu efeito), devido ao elevado risco de tolerância, dependência e síndrome de abstinência."}, {"id": "Q50", "num": "Questão 50", "source": "Banco N2 / Substâncias - Q8", "eixo": "Emergências Psiquiátricas & Agitação", "text": "Dentre as opções abaixo, qual NÃO é sinal habitual da intoxicação por cocaína?", "options": ["a) Crise hipertensiva", "b) Bradicardia", "c) Crise convulsiva", "d) Hipertermia", "e) Midríase"], "correct": 1, "explanation": "Alternativa B. A cocaína bloqueia a recaptação de noradrenalina, dopamina e serotonina, desencadeando intensa resposta adrenérgica com taquicardia (e não bradicardia), crise hipertensiva, midríase, hipertermia e redução do limiar convulsivo."}, {"id": "Q51", "num": "Questão 51", "source": "Banco N2 / Substâncias - Q9", "eixo": "Emergências Psiquiátricas & Agitação", "text": "Qual é a medicação utilizada para reversão dos efeitos da intoxicação grave por benzodiazepínicos?", "options": ["a) Flumazenil", "b) Naloxona", "c) Acetilcisteína", "d) Diazepam", "e) Glucagon"], "correct": 0, "explanation": "Alternativa A. O Flumazenil é o antagonista específico do sítio benzodiazepínico no receptor GABA-A, revertendo rapidamente a sedação e a depressão respiratória causadas por benzodiazepínicos (enquanto naloxona reverte opioides e acetilcisteína reverte paracetamol)."}, {"id": "Q52", "num": "Questão 52", "source": "Banco N2 / Substâncias - Q10", "eixo": "Emergências Psiquiátricas & Agitação", "text": "O atendimento de um paciente em intoxicação aguda deve iniciar-se pelo seguinte passo:", "options": ["a) Antídoto", "b) Lavagem com carvão ativado", "c) Remoção da substância do organismo", "d) Averiguação da permeabilidade da via aérea", "e) Hidratação"], "correct": 3, "explanation": "Alternativa D. Em qualquer emergência toxicológica, aplica-se o protocolo ABCDE de suporte avançado de vida, iniciando-se obrigatoriamente pela avaliação e garantia da permeabilidade das vias aéreas (A) antes de medidas de descontaminação ou antídotos."}, {"id": "Q53", "num": "Questão 53", "source": "Banco N2 / Estresse - Q1", "eixo": "Transtornos Ansiosos & Estresse", "text": "A característica essencial são os ataques recorrentes de ansiedade grave, que não se restringem a nenhuma situação ou conjunto de circunstâncias particulares e, portanto, são imprevisíveis. Como acontece com outros transtornos de ansiedade, os sintomas dominantes incluem o início repentino de palpitações, dor no peito, sensações de asfixia, tonturas e sentimentos de irrealidade (despersonalização ou desrealização). Muitas vezes há também um medo secundário de morrer, perder o controle ou enlouquecer. Qual é esse transtorno?", "options": ["a) Transtorno de ansiedade generalizada", "b) Transtorno do estresse pós-traumático", "c) Fobia social", "d) Transtorno de pânico"], "correct": 3, "explanation": "Alternativa D. Ataques súbitos, recorrentes e imprevisíveis de ansiedade extrema com sintomas autonômicos cardiorrespiratórios, desrealização/despersonalização e medo iminente de morte ou perda de controle definem o Transtorno de Pânico."}, {"id": "Q54", "num": "Questão 54", "source": "Banco N2 / Estresse - Q2", "eixo": "Transtornos Ansiosos & Estresse", "text": "O transtorno de adaptação é diagnosticado em uma mulher de 45 anos que foi despedida de um emprego que tinha há 20 anos. Ela está em psicoterapia de apoio. 9 meses mais tarde, é atendida por seu médico, mas nenhum dos sintomas se resolveu. Durante esse período, ela encontrou outro emprego semelhante ao primeiro em termos de tarefas e salário. Qual é o diagnóstico mais provável?", "options": ["a) Transtorno de adaptação", "b) TEPT", "c) Transtorno depressivo maior", "d) Transtorno bipolar", "e) Transtorno esquizoafetivo"], "correct": 2, "explanation": "Alternativa C. A persistência dos sintomas por mais de 6 meses após a resolução do evento estressor (recolocação profissional equivalente) invalida o diagnóstico de Transtorno de Adaptação e confirma evolução para Transtorno Depressivo Maior."}, {"id": "Q55", "num": "Questão 55", "source": "Banco N2 / Somatoformes - Q1", "eixo": "Transtornos Somatoformes & Dissociativos", "text": "Produção deliberada de sintomas com a intenção de se colocar no lugar de doente por carência ou necessidade de acolhimento emocional:", "options": ["a) Simulação", "b) Transtorno factício", "c) Transtorno somatoforme", "d) Transtorno dissociativo"], "correct": 1, "explanation": "Alternativa B. O Transtorno Factício caracteriza-se pela fabricação intencional de sintomas físicos ou psíquicos visando assumir o papel de enfermo e receber cuidados médicos/afetivos, sem incentivos externos materiais."}, {"id": "Q56", "num": "Questão 56", "source": "Banco N2 / Somatoformes - Q2", "eixo": "Transtornos Somatoformes & Dissociativos", "text": "Não é sinal de crise convulsiva verdadeira:", "options": ["a) Sinais de traumas e liberação de esfíncteres", "b) História prévia de epilepsia e uso de anticonvulsivante", "c) Evento estressor antes da crise, olhar para cima, exame físico normal", "d) Tumor cerebral, distúrbio hidroeletrolítico, febre"], "correct": 2, "explanation": "Alternativa C. Gatilho emocional agudo imediato, olhar desviado para cima (resistência ocular) e exame físico/neurológico inteiramente normal são achados típicos de pseudocrise dissociativa, não de crise epiléptica orgânica."}, {"id": "Q57", "num": "Questão 57", "source": "Banco N2 / Somatoformes - Q3", "eixo": "Transtornos Somatoformes & Dissociativos", "text": "Qual das seguintes é a motivação mais provável por trás do comportamento apresentado no transtorno factício?", "options": ["a) A motivação é inconsciente e, portanto, o paciente não a percebe", "b) Desejo de evitar a prisão", "c) Desejo de ser cuidado", "d) Desejo de obter compensação", "e) Desejo de obter narcóticos"], "correct": 2, "explanation": "Alternativa C. A motivação subjacente ao transtorno factício é a necessidade psicológica de ser cuidado e acolhido no papel de paciente."}, {"id": "Q58", "num": "Questão 58", "source": "Banco N2 / Somatoformes - Q4", "eixo": "Transtornos Somatoformes & Dissociativos", "text": "Uma mulher de 35 anos com transtorno de somatização procura um novo médico. Antes da consulta, fez avaliações completas com pelo menos 4 outros. Qual é a parte mais importante do plano de tratamento para essa paciente?", "options": ["a) Tentativas com analgésicos", "b) Medicamento antidepressivo", "c) Estabelecer um esquema regular de consultas", "d) Explicar que os sintomas são decorrentes de fatores psicológicos", "e) Psicoterapia psicodinâmica intensiva"], "correct": 2, "explanation": "Alternativa C. Consultas regulares e programadas com um único médico de referência constituem o pilar terapêutico para conter a busca incessante por novos médicos e evitar exames/procedimentos invasivos."}, {"id": "Q59", "num": "Questão 59", "source": "Banco N2 / Somatoformes - Q5(10)", "eixo": "Transtornos Somatoformes & Dissociativos", "text": "Um jovem de 17 anos apresenta a queixa de que suas 'pernas estão bambas' há uma semana. Em cada episódio ele tem uma sensação generalizada de dor e logo em seguida, fica fraco e não consegue mover seus braços e pernas. Os episódios duram alguns minutos. O paciente está no segundo ano do ensino médio e só tira notas B e C. Seus pais se separaram recentemente após um longo período de discussões e xingamentos. Os exames físico e neurológico são normais, assim como os exames laboratoriais. Qual característica a seguir distingue melhor seu diagnóstico de outros transtornos somatoformes?", "options": ["a) Os sintomas não são completamente explicados por uma causa clínica.", "b) Os sintomas não são produzidos de modo intencional.", "c) Os sintomas envolvem apenas déficits motores ou sensoriais neurológicos.", "d) Fatores psicológicos estão relacionados à produção dos sintomas.", "e) Há motivação de ganho secundário."], "correct": 2, "explanation": "Alternativa C. A presença exclusiva de déficits motores (paralisia/fraqueza) ou sensoriais que mimetizam disfunção neurológica sem substrato anatômico é a característica distintiva do Transtorno Conversivo."}, {"id": "Q60", "num": "Questão 60", "source": "Banco N2 / Somatoformes - Q6", "eixo": "Transtornos Somatoformes & Dissociativos", "text": "Em qual dos transtornos abaixo o paciente sabe que não está doente e consegue controlar a produção de seus sintomas?", "options": ["a) Transtorno dissociativo", "b) Transtorno somatoforme", "c) Transtorno factício", "d) Esquizofrenia", "e) Transtorno de pânico"], "correct": 2, "explanation": "Alternativa C. Diferente dos transtornos somatoformes e dissociativos (nos quais os sintomas não são produzidos intencionalmente), no Transtorno Factício o indivíduo tem consciência de que não possui a doença orgânica e controla intencionalmente a produção ou simulação dos sinais."}, {"id": "Q61_1", "num": "Questão 61 (Parte 1 — Diagnóstico)", "source": "Banco N2 / Somatoformes - Q7", "eixo": "Transtornos Somatoformes & Dissociativos", "text": "Mulher de 45 anos, sem história prévia de tratamento por doença mental. Deu entrada no PS do HGP com queixa relatada por seus familiares de estar em crise há 20 minutos. Na avaliação apresentava contorções musculares. Olhos voltados para cima. Mantinha reflexos preservados e desviava de estímulos dolorosos. Não notou-se liberação de esfíncteres. Não tinha história de epilepsia. Não utilizava medicações. Negou uso de drogas. No dia do evento estava ansiosa por descobrir a traição do marido. Diante do histórico acima: 1) Qual o diagnóstico?", "options": ["a) Crise convulsiva tônico-clônica generalizada de causa emocional", "b) Estado confusional agudo ou delirium por possível intoxicação latente", "c) Simulação para tentar atrair atenção do marido traidor", "d) Possível trauma craniano por possível violência doméstica", "e) Episódio dissociativo"], "correct": 4, "explanation": "1) Alternativa E. Movimentos atípicos, olhos voltados para cima, reflexos preservados, defesa a estímulos dolorosos e ausência de liberação esfincteriana após trauma emocional agudo (descoberta de traição) configuram Episódio Dissociativo (pseudocrise)."}, {"id": "Q61_2", "num": "Questão 61 (Parte 2 — Conduta)", "source": "Banco N2 / Somatoformes - Q7", "eixo": "Transtornos Somatoformes & Dissociativos", "text": "Sobre a mesma paciente da Questão 61 (episódio dissociativo após descobrir traição do marido, com reflexos preservados e sem liberação esfincteriana): 2) Qual a melhor conduta?", "options": ["a) Apenas observar e após cessada a crise conversar com a paciente", "b) Medicá-la com fenitoína intravenosa para interromper a crise convulsiva", "c) Solicitar TC de crânio", "d) Solicitar toxicológico", "e) Solicitar parecer do neurologista e neurocirurgião"], "correct": 0, "explanation": "2) Alternativa A. A conduta adequada é observar, aguardar a resolução espontânea e acolher/conversar com a paciente sem intervenções invasivas desnecessárias."}, {"id": "Q62_1", "num": "Questão 62 (Parte 1 — Conduta)", "source": "Banco N2 / Somatoformes - Q8", "eixo": "Transtornos Somatoformes & Dissociativos", "text": "Paciente do sexo feminino, 23 anos, tem apresentado desmaio após discussões ou situações de estresse, às vezes se debate quando cai. Não apresenta durante as crises hipotonia muscular e nem liberação esfincteriana ou pós-ictal. As crises duram cerca de 5 minutos, olhos sempre voltados para cima e recupera-se em 30 segundos após abalos. Sintomas iniciaram há cerca de 6 meses após passar por uma série de estressores em sua vida. Paciente apresenta certa indiferença sobre a gravidade do quadro que vem apresentando, apesar dos prejuízos que tem tido, como não estar mais saindo sozinha e ter faltado no trabalho de que tanto gosta. Já passou por diversas especialidades médicas, realizado exames e não encontrando alterações que justifiquem o quadro, os exames sempre normais. 1) Qual a melhor conduta terapêutica?", "options": ["a) Prescrever antipsicótico", "b) Internar para realizar hemograma", "c) Iniciar psicoterapia", "d) Prescrever bzd de uso prolongado", "e) Realizar TC de crânio"], "correct": 2, "explanation": "1) Alternativa C. Crises motoras não epilépticas desencadeadas por estresse, sem pós-ictal, com exames normais e 'la belle indifférence' (aparente indiferença diante da gravidade do déficit) confirmam Transtorno Dissociativo/Conversivo, cujo tratamento definitivo é a psicoterapia."}, {"id": "Q62_2", "num": "Questão 62 (Parte 2 — Diagnóstico)", "source": "Banco N2 / Somatoformes - Q8", "eixo": "Transtornos Somatoformes & Dissociativos", "text": "Sobre a mesma paciente da Questão 62 (23 anos, desmaios e abalos após estresse, sem pós-ictal, 'la belle indifférence' e exames normais): 2) Qual o provável diagnóstico?", "options": ["a) Transtorno de somatização", "b) Transtorno dissociativo", "c) Transtorno de personalidade", "d) Epilepsia", "e) Esquizofrenia"], "correct": 1, "explanation": "2) Alternativa B. Crises não epilépticas psicogênicas desencadeadas por estresse com exames neurológicos normais e 'la belle indifférence' caracterizam Transtorno Dissociativo/Conversivo."}, {"id": "Q63", "num": "Questão 63", "source": "Banco N2 / Infância - Q1(5)", "eixo": "Infância, TEA, TDAH & Personalidade", "text": "Maicon, menino de 9 anos de idade, é trazido pela avó por estar com dificuldades de aprendizado. [...] No caso de Maicon ser um menino extremamente desobediente e irritável com sua avó e na escola, apesar de manter respeito às regras e leis gerais, você poderia pensar em um diagnóstico adicional de:", "options": ["a) Transtorno de Estresse Pós-traumático", "b) Transtorno de déficit de atenção/hiperatividade", "c) Transtorno Desafiador Opositor", "d) Transtorno de Conduta"], "correct": 2, "explanation": "Alternativa C. A desobediência, irritabilidade e desafio direcionados a figuras de autoridade (avó e professores), mas com preservação do respeito às normas sociais básicas e leis gerais (sem crueldade, furtos ou destruição grave), distingue o Transtorno Desafiador Opositor (TDO) do Transtorno de Conduta."}, {"id": "Q64", "num": "Questão 64", "source": "Banco N2 / Infância - Q4(14)", "eixo": "Infância, TEA, TDAH & Personalidade", "text": "A família de uma garota de 14 anos a leva para tratamento contra sua vontade. A família relata que a menina se irrita com muita facilidade, discute diariamente com os pais e os professores, se recusa a fazer o que lhe é solicitado em casa e na escola e costuma culpar seus professores ou os pais pelo comportamento que demonstra. Nega estar deprimida, ansiosa ou qualquer outro sintoma psicótico. Com base nessas informações, qual seria o melhor diagnóstico?", "options": ["a) Transtorno da personalidade antissocial.", "b) Transtorno da personalidade borderline.", "c) Transtorno desafiador de oposição.", "d) Transtorno da conduta.", "e) Transtorno de estresse pós-traumático."], "correct": 2, "explanation": "Alternativa C. Irritabilidade frequente, discussões diárias com adultos, recusa ativa em cumprir regras domésticas/escolares e externalização da culpa são critérios diagnósticos clássicos do Transtorno Desafiador de Oposição."}, {"id": "Q65", "num": "Questão 65", "source": "Banco N2 / Infância - Q5(17)", "eixo": "Infância, TEA, TDAH & Personalidade", "text": "Uma criança de 8 anos foi levada pela mãe. Não interage com colegas da sala. Não olha outras pessoas nos olhos. Emite palavras aleatórias. Não sabe nem ler e nem escrever. Gosta de brincar com papéis, pedaços de madeira, pedras, mas não com brinquedos. Faz movimentos estranhos (estereotipias). Não veste e não come nada de cor vermelha. Não olha nos olhos dos pais. Quando contrariado dá gritos ou se machuca. Diante do caso qual a hipótese mais provável?", "options": ["a) Esquizofrenia", "b) Autismo", "c) Transtorno bipolar", "d) Deficiência mental", "e) Atraso leve da linguagem"], "correct": 1, "explanation": "Alternativa B. Prejuízo acentuado da reciprocidade socioemocional e comunicação não verbal (ausência de contato visual e interação com pares), associado a estereotipias motoras, interesse restrito por objetos não funcionais e rigidez extrema às rotinas/estímulos sensoriais (recusa a itens vermelhos), caracterizam o Transtorno do Espectro Autista."}, {"id": "Q66", "num": "Questão 66", "source": "Banco N2 / Infância - Q10", "eixo": "Infância, TEA, TDAH & Personalidade", "text": "Marque a alternativa que NÃO corresponde a um sinal necessário para o autismo:", "options": ["a) Inteligência além da normal", "b) Falta de reciprocidade social", "c) Padrões restritivos e repetitivos de comportamento, interesses e atividades", "d) Incapacidade para desenvolver e manter relacionamentos de amizade apropriados para o estágio de desenvolvimento", "e) Déficits clinicamente significativos e persistentes na comunicação social"], "correct": 0, "explanation": "Alternativa A. Superdotação ou inteligência acima da média não é critério diagnóstico do TEA (o espectro abrange desde deficiência intelectual grave até inteligência preservada ou superior)."}, {"id": "Q67", "num": "Questão 67", "source": "Banco N2 / Sono - Q1(3)", "eixo": "Transtornos Alimentares & Sono", "text": "Um médico de 33 anos, casado, consulta seu clínico geral com queixas de 'depressão'. Durante a entrevista, nega sentimentos dominantes de tristeza e anedonia, e não há alterações de apetite, de peso, nem problemas de concentração. Nas últimas seis semanas, sente-se cansado a maior parte do tempo e vem despertando várias vezes durante a noite. No decorrer da entrevista, revela que essas dificuldades tiveram início quando esteve envolvido em uma ação judicial por imperícia após a morte de um paciente. Ele 'não tirava o processo da cabeça' antes do julgamento, quando sua perturbação do sono começou. Embora a ação tenha sido cancelada, ele continua a acordar frequentemente durante a noite, preocupado em não conseguir voltar a dormir. Nega problemas de saúde, uso de álcool e drogas. Qual diagnóstico a seguir é o mais provável?", "options": ["a) Distúrbio respiratório do sono.", "b) Transtorno do ritmo circadiano do sono.", "c) Transtorno depressivo maior.", "d) Insônia primária.", "e) Narcolepsia."], "correct": 3, "explanation": "Alternativa D. Insônia de manutenção com fadiga diurna que persiste após a resolução do estressor inicial devido à ansiedade condicionada em torno do próprio sono, na ausência de transtorno depressivo maior ou uso de substâncias, caracteriza Insônia Primária."}, {"id": "Q68", "num": "Questão 68", "source": "Banco N2 / Sono - Q2", "eixo": "Transtornos Alimentares & Sono", "text": "A principal medida para combater distúrbios do sono, principalmente insônia e hipersonia é:", "options": ["a) Fototerapia", "b) Droga Z em baixa dose", "c) Higiene do sono", "d) Melatonina", "e) Estimulantes"], "correct": 2, "explanation": "Alternativa C. A higiene do sono e a terapia cognitivo-comportamental para insônia são as intervenções de primeira escolha para distúrbios do sono."}, {"id": "Q69", "num": "Questão 69", "source": "Banco N2 / Sono - Q3", "eixo": "Transtornos Alimentares & Sono", "text": "Qual o tratamento para insônia em paciente com esquizofrenia?", "options": ["a) Lítio", "b) Zolpidem", "c) Melatonina", "d) Olanzapina", "e) Fluoxetina"], "correct": 3, "explanation": "Alternativa D. A olanzapina (antipsicótico atípico com forte ação anti-histamínica H1) controla tanto os sintomas psicóticos da esquizofrenia quanto a insônia associada."}, {"id": "Q70", "num": "Questão 70", "source": "Banco N2 / Sono - Q5", "eixo": "Transtornos Alimentares & Sono", "text": "Em qual das alternativas abaixo constam apenas causas de insônia?", "options": ["a) Cocaína, cannabis, clonazepam, insuficiência cardíaca, hipotireoidismo", "b) Uso de celular até tarde da noite, cafeína no período noturno, ansiedade, depressão", "c) Narcolepsia, apneia do sono, cafeína no período noturno, esquizofrenia", "d) Mania, cocaína, apneia obstrutiva do sono, anti-histamínico", "e) Insuficiência renal, melatonina, metilfenidato, zolpidem, termogênico"], "correct": 1, "explanation": "Alternativa B. Exposição à luz azul de telas à noite (inibe melatonina), consumo noturno de cafeína (antagonista de adenosina), transtornos ansiosos e depressão são todos fatores etiológicos diretos de insônia (enquanto clonazepam, narcolepsia, anti-histamínicos, melatonina e zolpidem induzem sono/sonolência)."}, {"id": "Q71", "num": "Questão 71", "source": "Banco N2 / Alimentar - Q1(7)", "eixo": "Transtornos Alimentares & Sono", "text": "Uma adolescente de 16 anos é levada ao médico por sua mãe, a qual afirma que a filha vem perdendo peso de forma constante. A adolescente nega haver problema e declara que de modo algum está abaixo do peso. O médico estabelece que a menina mede 1,70 m e pesa 41 kg. Qual dos seguintes testes laboratoriais é mais útil para avaliar a gravidade da inanição nessa paciente?", "options": ["a) Hemograma completo e contagem diferencial de leucócitos.", "b) Testes da função da tireoide.", "c) Nível sérico de potássio.", "d) Determinação do nível de albumina.", "e) Testes da função hepática."], "correct": 2, "explanation": "Alternativa C. Na anorexia nervosa grave (IMC 14,18 kg/m²), a avaliação eletrolítica — com destaque para o potássio sérico — é fundamental para detectar hipocalemia e prevenir arritmias cardíacas potencialmente fatais."}, {"id": "Q72", "num": "Questão 72", "source": "Banco N2 / Alimentar - Q3", "eixo": "Transtornos Alimentares & Sono", "text": "Transtorno caracterizado por distorção da imagem corporal, medo de engordar, com restrição alimentar exagerada chegando a desnutrição muitas vezes severa:", "options": ["a) Anorexia nervosa", "b) Dependência de cocaína", "c) Bulimia", "d) Transtorno obsessivo compulsivo", "e) Esquizofrenia"], "correct": 0, "explanation": "Alternativa A. Restrição energética severa motivada por distorção da imagem corporal e medo mórbido de ganhar peso, culminando em desnutrição grave, define a Anorexia Nervosa."}, {"id": "Q73_1", "num": "Questão 73 (Parte 1 — Diagnóstico e Medida Inicial)", "source": "Banco N2 / Alimentar - Q4", "eixo": "Transtornos Alimentares & Sono", "text": "Uma jovem de 14 anos apresenta restrição alimentar há 8 meses. Sente-se acima do peso apesar de estar bem magra (IMC 11). Tem apresentado amenorreia. Também apresenta perda de massa muscular e descamação da pele em todo o corpo. Quando é forçada a alimentar-se vai para o banheiro e provoca vômitos. 1) Qual o melhor diagnóstico e melhor medida inicial?", "options": ["a) Anorexia nervosa, internação", "b) Bulimia, sertralina", "c) Depressão, uso de IMAO", "d) Esquizofrenia, haloperidol", "e) Fobia alimentar, psicoterapia"], "correct": 0, "explanation": "1) Alternativa A. Trata-se de Anorexia Nervosa subtipo compulsão alimentar/purgação com desnutrição gravíssima (IMC 11 kg/m², bem abaixo do ponto de corte de 14 kg/m² que exige internação hospitalar imediata para estabilização clínica e realimentação monitorada)."}, {"id": "Q73_2", "num": "Questão 73 (Parte 2 — Seguimento)", "source": "Banco N2 / Alimentar - Q4", "eixo": "Transtornos Alimentares & Sono", "text": "Sobre a mesma paciente da Questão 73 (jovem de 14 anos com Anorexia Nervosa grave, IMC 11): 2) Qual outra medida auxiliaria no caso?", "options": ["a) Associação de carbonato de lítio", "b) Equipe multidisciplinar com nutricionista, psiquiatra e psicólogo", "c) Naltrexona", "d) Clomipramina em altas doses", "e) Terapia ocupacional"], "correct": 1, "explanation": "2) Alternativa B. O seguimento da Anorexia Nervosa exige abordagem multidisciplinar integrada (psiquiatra, psicólogo e nutricionista)."}, {"id": "Q74", "num": "Questão 74", "source": "Banco N2 / Diversas - Q1", "eixo": "Transtornos Ansiosos & Estresse", "text": "Relacione os sintomas ao diagnóstico:\n(1) Prejuízo da memória e mais outra função cognitiva, associado a prejuízo funcional\n(2) Exposição a fator traumático, seguido de revivência, esquiva e hiperatividade\n(3) Quadro estável que começa no início da idade adulta, caracterizado por baixo reconhecimento do indivíduo apesar dos problemas interpessoais, onde o indivíduo tem baixa empatia por terceiros e demonstra hábitos repetitivos de infrações às regras e de causar sofrimento a outrem\n\nSequência correta para: [ TEPT | Transtorno de personalidade antissocial | Demência ]", "options": ["a) 2 – 3 – 1", "b) 1 – 2 – 3", "c) 3 – 1 – 2", "d) 2 – 1 – 3"], "correct": 0, "explanation": "Sequência: TEPT (2) | Transtorno de personalidade antissocial (3) | Demência (1). (1) Múltiplos déficits cognitivos incluindo memória com prejuízo funcional definem Demência; (2) Tríade clássica pós-trauma (revivência, esquiva e hiperexcitabilidade autonômica) define TEPT; (3) Padrão estável adulto de falta de empatia, violação de regras e sofrimento causado a terceiros define TP Antissocial."}];
+
+    let currentUserId = "";
+    let userAnswers = {}; // { [questionId]: selectedOptionIndex }
+
+    // Elementos DOM
+    const questionsContainer = document.getElementById("questionsContainer");
+    const filterEixo = document.getElementById("filterEixo");
+    const filterStatus = document.getElementById("filterStatus");
+    const searchInput = document.getElementById("searchInput");
+
+    const displayUserId = document.getElementById("displayUserId");
+    const syncStatus = document.getElementById("syncStatus");
+    const syncStatusText = document.getElementById("syncStatusText");
+
+    const statAnswered = document.getElementById("statAnswered");
+    const statHits = document.getElementById("statHits");
+    const statMisses = document.getElementById("statMisses");
+    const statAccuracy = document.getElementById("statAccuracy");
+    const progressFill = document.getElementById("progressFill");
+    const filteredCount = document.getElementById("filteredCount");
+
+    function isCloudEnabled() {
+      const url = getScriptUrl();
+      return typeof url === "string" && url.startsWith("https://script.google.com/");
+    }
+
+    function setSyncBadge(state, text) {
+      syncStatus.className = "sync-status " + (state || "");
+      syncStatusText.textContent = text;
+    }
+
+    function getStorageKey(uid) {
+      return `${QUIZ_ID}_${uid}`;
+    }
+
+    function loadLocalProgress(uid) {
+      try {
+        const raw = localStorage.getItem(getStorageKey(uid));
+        return raw ? JSON.parse(raw) : {};
+      } catch (e) {
+        return {};
+      }
+    }
+
+    function saveLocalProgress(uid, data) {
+      try {
+        localStorage.setItem(getStorageKey(uid), JSON.stringify(data));
+      } catch (e) {
+        console.warn("Erro ao salvar no localStorage:", e);
+      }
+    }
+
+    async function syncFromCloud(uid) {
+      if (!isCloudEnabled()) {
+        setSyncBadge("", "Salvo localmente");
+        return;
+      }
+      setSyncBadge("syncing", "Sincronizando...");
+      try {
+        const url = `${getScriptUrl()}?userId=${encodeURIComponent(uid)}&quizId=${encodeURIComponent(QUIZ_ID)}`;
+        const resp = await fetch(url);
+        const json = await resp.json();
+        if (json.status === "ok" && json.progress) {
+          // Mescla progresso local e nuvem (priorizando nuvem se existir)
+          userAnswers = { ...userAnswers, ...json.progress };
+          saveLocalProgress(uid, userAnswers);
+          updateStats();
+          renderQuestions();
+          setSyncBadge("cloud-ok", "Salvo na nuvem");
+        } else {
+          setSyncBadge("cloud-err", "Erro na nuvem (local ativo)");
+        }
+      } catch (err) {
+        console.error("Erro GET Apps Script:", err);
+        setSyncBadge("cloud-err", "Offline (salvo local)");
+      }
+    }
+
+    async function syncToCloud(uid, progressObj) {
+      saveLocalProgress(uid, progressObj);
+      if (!isCloudEnabled()) {
+        setSyncBadge("", "Salvo localmente");
+        return;
+      }
+      setSyncBadge("syncing", "Sincronizando...");
+      try {
+        const resp = await fetch(getScriptUrl(), {
+          method: "POST",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify({
+            userId: uid,
+            quizId: QUIZ_ID,
+            progress: progressObj
+          })
+        });
+        const json = await resp.json();
+        if (json.status === "ok") {
+          setSyncBadge("cloud-ok", "Salvo na nuvem");
+        } else {
+          setSyncBadge("cloud-err", "Erro ao sincronizar");
+        }
+      } catch (err) {
+        console.error("Erro POST Apps Script:", err);
+        setSyncBadge("cloud-err", "Falha rede (salvo local)");
+      }
+    }
+
+    function populateEixoFilter() {
+      const eixos = [...new Set(QUESTIONS.map(q => q.eixo))];
+      eixos.forEach(eixo => {
+        const opt = document.createElement("option");
+        opt.value = eixo;
+        opt.textContent = eixo;
+        filterEixo.appendChild(opt);
+      });
+    }
+
+    function updateStats() {
+      const total = QUESTIONS.length;
+      let answered = 0;
+      let hits = 0;
+      let misses = 0;
+
+      QUESTIONS.forEach(q => {
+        if (Object.prototype.hasOwnProperty.call(userAnswers, q.id)) {
+          answered++;
+          if (userAnswers[q.id] === q.correct) {
+            hits++;
+          } else {
+            misses++;
+          }
+        }
+      });
+
+      const pct = answered > 0 ? Math.round((hits / answered) * 100) : 0;
+      const progressPct = Math.round((answered / total) * 100);
+
+      statAnswered.textContent = `Respondidas: ${answered} / ${total}`;
+      statHits.textContent = `Acertos: ${hits}`;
+      statMisses.textContent = `Erros: ${misses}`;
+      statAccuracy.textContent = `Aproveitamento: ${pct}%`;
+      progressFill.style.width = `${progressPct}%`;
+    }
+
+    function handleSelectOption(qId, optIndex) {
+      if (Object.prototype.hasOwnProperty.call(userAnswers, qId)) {
+        return; // Já respondida
+      }
+      userAnswers[qId] = optIndex;
+      updateStats();
+      renderQuestions();
+      syncToCloud(currentUserId, userAnswers);
+    }
+
+    function renderQuestions() {
+      const selectedEixo = filterEixo.value;
+      const selectedStatus = filterStatus.value;
+      const query = searchInput.value.trim().toLowerCase();
+
+      const filtered = QUESTIONS.filter(q => {
+        const isAnswered = Object.prototype.hasOwnProperty.call(userAnswers, q.id);
+        const isCorrect = isAnswered && userAnswers[q.id] === q.correct;
+
+        if (selectedEixo !== "ALL" && q.eixo !== selectedEixo) return false;
+        if (selectedStatus === "UNANSWERED" && isAnswered) return false;
+        if (selectedStatus === "WRONG" && (!isAnswered || isCorrect)) return false;
+        if (selectedStatus === "CORRECT" && !isCorrect) return false;
+
+        if (query) {
+          const caseText = q.caseKey ? CLINICAL_CASES[q.caseKey] : "";
+          const haystack = `${q.num} ${q.source} ${q.eixo} ${caseText} ${q.text} ${q.options.join(" ")} ${q.explanation}`.toLowerCase();
+          if (!haystack.includes(query)) return false;
+        }
+        return true;
+      });
+
+      filteredCount.textContent = `Exibindo ${filtered.length} de ${QUESTIONS.length} itens`;
+
+      if (filtered.length === 0) {
+        questionsContainer.innerHTML = `
+          <div class="empty-state">
+            <p style="font-size:1.05rem; font-weight:600; color:#e2e8f0; margin-bottom:0.4rem;">Nenhuma questão encontrada</p>
+            <p>Ajuste os filtros de eixo temático, status ou termo de busca.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const fragment = document.createDocumentFragment();
+
+      filtered.forEach(q => {
+        const isAnswered = Object.prototype.hasOwnProperty.call(userAnswers, q.id);
+        const selectedIdx = isAnswered ? userAnswers[q.id] : null;
+        const isCorrect = isAnswered && selectedIdx === q.correct;
+
+        const card = document.createElement("article");
+        card.className = "q-card" + (isAnswered ? (isCorrect ? " answered-correct" : " answered-wrong") : "");
+
+        // Meta header
+        const meta = document.createElement("div");
+        meta.className = "q-meta";
+        meta.innerHTML = `
+          <span class="q-number">${q.num}</span>
+          <div class="q-tags">
+            <span class="tag">${q.eixo}</span>
+            <span class="tag source-tag">${q.source}</span>
+          </div>
+        `;
+        card.appendChild(meta);
+
+        // Clinical case if present
+        if (q.caseKey && CLINICAL_CASES[q.caseKey]) {
+          const caseBox = document.createElement("div");
+          caseBox.className = "clinical-case";
+          caseBox.innerHTML = `
+            <div class="clinical-case-header">
+              <span>Vinheta Clínica Associada</span>
+            </div>
+            <div>${CLINICAL_CASES[q.caseKey]}</div>
+          `;
+          card.appendChild(caseBox);
+        }
+
+        // Question text
+        const qText = document.createElement("div");
+        qText.className = "q-text";
+        qText.textContent = q.text;
+        card.appendChild(qText);
+
+        // Options
+        const optsDiv = document.createElement("div");
+        optsDiv.className = "options-list";
+
+        q.options.forEach((optStr, idx) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "option-btn";
+
+          let indicatorSymbol = String.fromCharCode(65 + idx);
+          if (isAnswered) {
+            btn.disabled = true;
+            if (idx === q.correct) {
+              btn.classList.add("correct");
+              indicatorSymbol = "✓";
+            } else if (idx === selectedIdx) {
+              btn.classList.add("wrong");
+              indicatorSymbol = "✕";
+            }
+          } else {
+            btn.addEventListener("click", () => handleSelectOption(q.id, idx));
+          }
+
+          const ind = document.createElement("span");
+          ind.className = "option-indicator";
+          ind.textContent = indicatorSymbol;
+
+          const lbl = document.createElement("span");
+          lbl.textContent = optStr;
+
+          btn.appendChild(ind);
+          btn.appendChild(lbl);
+          optsDiv.appendChild(btn);
+        });
+
+        card.appendChild(optsDiv);
+
+        // Immediate Explanation Box
+        if (isAnswered) {
+          const expBox = document.createElement("div");
+          expBox.className = "explanation-box" + (isCorrect ? "" : " is-wrong");
+          expBox.innerHTML = `
+            <div class="explanation-title">
+              <span>${isCorrect ? "✓ Resposta Correta — Comentário" : "✕ Resposta Incorreta — Gabarito Comentado"}</span>
+            </div>
+            <div class="explanation-text">${q.explanation}</div>
+          `;
+          card.appendChild(expBox);
+        }
+
+        fragment.appendChild(card);
+      });
+
+      questionsContainer.innerHTML = "";
+      questionsContainer.appendChild(fragment);
+    }
+
+    function initUser(uid) {
+      currentUserId = uid.trim();
+      localStorage.setItem(`${QUIZ_ID}_active_user`, currentUserId);
+      displayUserId.textContent = currentUserId;
+      userAnswers = loadLocalProgress(currentUserId);
+      updateStats();
+      renderQuestions();
+      syncFromCloud(currentUserId);
+    }
+
+    // Event listeners de filtro
+    filterEixo.addEventListener("change", renderQuestions);
+    filterStatus.addEventListener("change", renderQuestions);
+    searchInput.addEventListener("input", renderQuestions);
+
+    // Modais de Usuário e Reset
+    const userModal = document.getElementById("userModal");
+    const userIdInput = document.getElementById("userIdInput");
+    const resetModal = document.getElementById("resetModal");
+    const resetUserLabel = document.getElementById("resetUserLabel");
+
+    document.getElementById("btnSwitchUser").addEventListener("click", () => {
+      userIdInput.value = currentUserId;
+      userModal.classList.add("open");
+      userIdInput.focus();
+    });
+
+    document.getElementById("btnCancelUser").addEventListener("click", () => {
+      if (currentUserId) userModal.classList.remove("open");
+    });
+
+    document.getElementById("btnSaveUser").addEventListener("click", () => {
+      const val = userIdInput.value.trim();
+      if (!val) return;
+      userModal.classList.remove("open");
+      initUser(val);
+    });
+
+    userIdInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        document.getElementById("btnSaveUser").click();
+      }
+    });
+
+    document.getElementById("btnOpenReset").addEventListener("click", () => {
+      resetUserLabel.textContent = currentUserId;
+      resetModal.classList.add("open");
+    });
+
+    document.getElementById("btnCancelReset").addEventListener("click", () => {
+      resetModal.classList.remove("open");
+    });
+
+    document.getElementById("btnConfirmReset").addEventListener("click", () => {
+      resetModal.classList.remove("open");
+      userAnswers = {};
+      updateStats();
+      renderQuestions();
+      syncToCloud(currentUserId, {});
+    });
+
+    // Modal Configuração Nuvem
+    const cloudModal = document.getElementById("cloudModal");
+    const cloudUrlInput = document.getElementById("cloudUrlInput");
+    const cloudTestFeedback = document.getElementById("cloudTestFeedback");
+
+    document.getElementById("btnCloudConfig").addEventListener("click", () => {
+      const current = localStorage.getItem(CLOUD_URL_STORAGE_KEY) || "";
+      cloudUrlInput.value = current;
+      cloudTestFeedback.textContent = "";
+      cloudModal.classList.add("open");
+      cloudUrlInput.focus();
+    });
+
+    document.getElementById("btnCancelCloud").addEventListener("click", () => {
+      cloudModal.classList.remove("open");
+    });
+
+    document.getElementById("btnClearCloudUrl").addEventListener("click", () => {
+      localStorage.removeItem(CLOUD_URL_STORAGE_KEY);
+      cloudUrlInput.value = "";
+      cloudTestFeedback.style.color = "#94a3b8";
+      cloudTestFeedback.textContent = "Link removido. Operando apenas localmente.";
+      setSyncBadge("", "Salvo localmente");
+      setTimeout(() => cloudModal.classList.remove("open"), 700);
+    });
+
+    document.getElementById("btnSaveCloud").addEventListener("click", async () => {
+      const rawUrl = cloudUrlInput.value.trim();
+      if (!rawUrl.startsWith("https://script.google.com/") || !rawUrl.endsWith("/exec")) {
+        cloudTestFeedback.style.color = "#f87171";
+        cloudTestFeedback.textContent = "URL inválida. Ela deve começar com https://script.google.com/ e terminar em /exec.";
+        return;
+      }
+
+      cloudTestFeedback.style.color = "#fbbf24";
+      cloudTestFeedback.textContent = "Testando conexão com a planilha...";
+
+      try {
+        const testUrl = `${rawUrl}?userId=${encodeURIComponent(currentUserId)}&quizId=${encodeURIComponent(QUIZ_ID)}`;
+        const resp = await fetch(testUrl);
+        const json = await resp.json();
+        if (json.status === "ok") {
+          localStorage.setItem(CLOUD_URL_STORAGE_KEY, rawUrl);
+          cloudTestFeedback.style.color = "#4ade80";
+          cloudTestFeedback.textContent = "Conectado com sucesso!";
+          await syncFromCloud(currentUserId);
+          await syncToCloud(currentUserId, userAnswers);
+          setTimeout(() => cloudModal.classList.remove("open"), 600);
+        } else {
+          cloudTestFeedback.style.color = "#f87171";
+          cloudTestFeedback.textContent = "O script respondeu com erro: " + (json.message || "verifique o código.");
+        }
+      } catch (err) {
+        cloudTestFeedback.style.color = "#f87171";
+        cloudTestFeedback.textContent = "Falha de acesso: verifique se 'Quem pode acessar' está como 'Qualquer pessoa' no Apps Script.";
+      }
+    });
+
+    // Boot
+    populateEixoFilter();
+    const savedUser = localStorage.getItem(`${QUIZ_ID}_active_user`);
+    if (savedUser) {
+      initUser(savedUser);
+    } else {
+      // Gera ID padrão inicial e abre modal amigável
+      const fallbackId = "estudante_" + Math.random().toString(36).substring(2, 7);
+      initUser(fallbackId);
+      userIdInput.value = "";
+      userModal.classList.add("open");
+    }
+  </script>
+</body>
+</html>
