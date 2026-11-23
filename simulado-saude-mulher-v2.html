@@ -1,29 +1,88 @@
 <!DOCTYPE html>
-<html lang="pt-BR" class="dark">
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Simulado Saúde da Mulher — Banco N1 &amp; N2 Comentado</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
   <style>
+    /* =========================================================================
+       VARIÁVEIS DE TEMA: MODO CLARO (PADRÃO) & MODO ESCURO
+       ========================================================================= */
     :root {
-      --bg-primary: #0f172a;
-      --bg-secondary: #1e293b;
-      --bg-tertiary: #263349;
-      --bg-hover: #334155;
-      --border-color: #334155;
+      --bg-page: #f4f7fb;
+      --bg-surface: #ffffff;
+      --bg-subtle: #f8fafc;
+      --bg-muted: #eef2f7;
+      --bg-hover: #e2e8f0;
+      --border-color: #dbe3ee;
+      --border-strong: #cbd5e1;
+      --text-primary: #0f172a;
+      --text-secondary: #334155;
+      --text-muted: #64748b;
+
+      --accent: #0284c7;
+      --accent-hover: #0369a1;
+      --accent-soft: #e0f2fe;
+      --accent-border: #bae6fd;
+
+      --success: #059669;
+      --success-text: #065f46;
+      --success-bg: #ecfdf5;
+      --success-border: #a7f3d0;
+
+      --danger: #dc2626;
+      --danger-text: #991b1b;
+      --danger-bg: #fef2f2;
+      --danger-border: #fecaca;
+
+      --warning: #d97706;
+      --warning-text: #92400e;
+      --warning-bg: #fffbeb;
+      --warning-border: #fde68a;
+
+      --shadow-card: 0 4px 16px -4px rgba(15, 23, 42, 0.06), 0 1px 3px rgba(15, 23, 42, 0.04);
+      --shadow-header: 0 10px 28px -8px rgba(15, 23, 42, 0.08);
+      --radius: 14px;
+      --radius-sm: 10px;
+    }
+
+    html.dark {
+      --bg-page: #0b1120;
+      --bg-surface: #111827;
+      --bg-subtle: #162033;
+      --bg-muted: #1e293b;
+      --bg-hover: #273549;
+      --border-color: #243146;
+      --border-strong: #334155;
       --text-primary: #f8fafc;
       --text-secondary: #cbd5e1;
       --text-muted: #94a3b8;
+
       --accent: #38bdf8;
-      --accent-hover: #0ea5e9;
+      --accent-hover: #7dd3fc;
+      --accent-soft: rgba(56, 189, 248, 0.14);
+      --accent-border: rgba(56, 189, 248, 0.32);
+
       --success: #10b981;
-      --success-bg: rgba(16, 185, 129, 0.14);
-      --danger: #ef4444;
-      --danger-bg: rgba(239, 68, 68, 0.14);
+      --success-text: #6ee7b7;
+      --success-bg: rgba(16, 185, 129, 0.13);
+      --success-border: rgba(16, 185, 129, 0.35);
+
+      --danger: #f43f5e;
+      --danger-text: #fda4af;
+      --danger-bg: rgba(244, 63, 94, 0.13);
+      --danger-border: rgba(244, 63, 94, 0.35);
+
       --warning: #f59e0b;
+      --warning-text: #fcd34d;
       --warning-bg: rgba(245, 158, 11, 0.14);
-      --radius: 12px;
-      --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.35);
+      --warning-border: rgba(245, 158, 11, 0.35);
+
+      --shadow-card: 0 6px 20px -6px rgba(0, 0, 0, 0.45);
+      --shadow-header: 0 14px 32px -10px rgba(0, 0, 0, 0.55);
     }
 
     * {
@@ -32,83 +91,117 @@
       padding: 0;
     }
 
+    html {
+      scroll-behavior: smooth;
+    }
+
     body {
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      background-color: var(--bg-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background-color: var(--bg-page);
       color: var(--text-primary);
       line-height: 1.6;
-      padding-bottom: 4rem;
+      padding-bottom: 4.5rem;
+      transition: background-color 0.2s ease, color 0.2s ease;
+      -webkit-font-smoothing: antialiased;
     }
 
     .container {
-      max-width: 1060px;
+      max-width: 1080px;
       margin: 0 auto;
       padding: 1.25rem;
     }
 
-    /* Header */
-    header {
-      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius);
-      padding: 1.5rem;
-      margin-bottom: 1.25rem;
-      box-shadow: var(--shadow);
-    }
-
-    .header-top {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 1rem;
-      margin-bottom: 1.25rem;
-    }
-
-    .title-group h1 {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--text-primary);
-      letter-spacing: -0.02em;
-    }
-
-    .title-group p {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-top: 0.25rem;
-    }
-
-    .header-actions {
+    /* =========================================================================
+       BARRA SUPERIOR DE UTILIDADES (MODO CLARO/ESCURO EM PRIMEIRO LUGAR)
+       ========================================================================= */
+    .top-utility-bar {
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 0.5rem;
+      justify-content: space-between;
+      gap: 0.75rem;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 0.7rem 1rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow-card);
     }
 
-    .btn {
+    .theme-switch-group {
+      display: inline-flex;
+      align-items: center;
+      background-color: var(--bg-muted);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 0.22rem;
+      gap: 0.2rem;
+    }
+
+    .theme-mode-btn {
       display: inline-flex;
       align-items: center;
       gap: 0.4rem;
-      padding: 0.5rem 0.9rem;
+      padding: 0.42rem 0.85rem;
       border-radius: 8px;
-      font-size: 0.85rem;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    .theme-mode-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .theme-mode-btn.active {
+      background-color: var(--bg-surface);
+      color: var(--accent);
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+    }
+
+    .top-right-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    /* Botões Gerais */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.42rem;
+      padding: 0.48rem 0.92rem;
+      border-radius: 9px;
+      font-family: inherit;
+      font-size: 0.83rem;
       font-weight: 600;
       cursor: pointer;
-      border: 1px solid var(--border-color);
-      background-color: var(--bg-tertiary);
+      border: 1px solid var(--border-strong);
+      background-color: var(--bg-subtle);
       color: var(--text-primary);
-      transition: all 0.15s ease;
+      transition: all 0.16s ease;
     }
 
     .btn:hover {
       background-color: var(--bg-hover);
-      border-color: #475569;
     }
 
     .btn-primary {
       background-color: var(--accent);
-      color: #0f172a;
+      color: #ffffff;
       border-color: var(--accent);
+      font-weight: 700;
+    }
+
+    html.dark .btn-primary {
+      color: #061826;
     }
 
     .btn-primary:hover {
@@ -117,16 +210,117 @@
     }
 
     .btn-danger {
-      color: #fca5a5;
-      border-color: rgba(239, 68, 68, 0.35);
-      background-color: rgba(239, 68, 68, 0.08);
+      color: var(--danger-text);
+      border-color: var(--danger-border);
+      background-color: var(--danger-bg);
     }
 
     .btn-danger:hover {
-      background-color: rgba(239, 68, 68, 0.2);
+      filter: brightness(0.95);
     }
 
-    /* User & Sync Bar */
+    /* Cronômetro */
+    .timer-box {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      padding: 0.28rem 0.45rem 0.28rem 0.75rem;
+      transition: all 0.2s ease;
+    }
+
+    .timer-box.running {
+      border-color: var(--success);
+      background-color: var(--success-bg);
+    }
+
+    .timer-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+    }
+
+    .timer-display {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-size: 0.96rem;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      color: var(--text-primary);
+      padding: 0 0.25rem;
+    }
+
+    .timer-box.running .timer-display {
+      color: var(--success-text);
+    }
+
+    .btn-timer {
+      padding: 0.34rem 0.7rem;
+      font-size: 0.78rem;
+      border-radius: 7px;
+    }
+
+    .btn-timer.running {
+      background-color: var(--warning-bg);
+      border-color: var(--warning-border);
+      color: var(--warning-text);
+    }
+
+    .btn-timer-reset {
+      padding: 0.34rem 0.52rem;
+      font-size: 0.82rem;
+      border-radius: 7px;
+      color: var(--text-muted);
+      background: transparent;
+      border-color: transparent;
+    }
+
+    .btn-timer-reset:hover {
+      background-color: var(--bg-muted);
+      color: var(--text-primary);
+    }
+
+    /* =========================================================================
+       CABEÇALHO E PAINEL DE DESEMPENHO
+       ========================================================================= */
+    header {
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow-header);
+    }
+
+    .header-title-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1rem;
+      padding-bottom: 1.15rem;
+      margin-bottom: 1.15rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .title-group h1 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      line-height: 1.25;
+    }
+
+    .title-group p {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    /* Barra de Usuário e Sincronização */
     .user-sync-bar {
       display: flex;
       flex-wrap: wrap;
@@ -134,9 +328,9 @@
       justify-content: space-between;
       gap: 0.75rem;
       padding: 0.75rem 1rem;
-      background-color: rgba(15, 23, 42, 0.65);
+      background-color: var(--bg-subtle);
       border: 1px solid var(--border-color);
-      border-radius: 10px;
+      border-radius: var(--radius-sm);
       margin-bottom: 1.25rem;
     }
 
@@ -144,41 +338,43 @@
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.55rem;
       flex: 1;
-      min-width: 240px;
+      min-width: 250px;
     }
 
     .user-input-wrap label {
-      font-size: 0.82rem;
-      font-weight: 600;
+      font-size: 0.83rem;
+      font-weight: 700;
       color: var(--text-secondary);
     }
 
     .user-input-wrap input {
-      background-color: var(--bg-secondary);
-      border: 1px solid var(--border-color);
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-strong);
       color: var(--text-primary);
-      padding: 0.4rem 0.7rem;
-      border-radius: 6px;
+      padding: 0.44rem 0.75rem;
+      border-radius: 8px;
+      font-family: inherit;
       font-size: 0.85rem;
-      min-width: 210px;
+      min-width: 215px;
     }
 
     .user-input-wrap input:focus {
       outline: none;
       border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
     }
 
     .sync-badge {
       display: inline-flex;
       align-items: center;
-      gap: 0.4rem;
-      font-size: 0.8rem;
+      gap: 0.45rem;
+      font-size: 0.79rem;
       font-weight: 600;
-      padding: 0.35rem 0.75rem;
+      padding: 0.38rem 0.8rem;
       border-radius: 999px;
-      background-color: var(--bg-secondary);
+      background-color: var(--bg-surface);
       border: 1px solid var(--border-color);
       color: var(--text-secondary);
     }
@@ -190,49 +386,110 @@
       background-color: var(--text-muted);
     }
 
+    .sync-badge.synced {
+      color: var(--success-text);
+      background-color: var(--success-bg);
+      border-color: var(--success-border);
+    }
     .sync-badge.synced .sync-dot { background-color: var(--success); }
-    .sync-badge.synced { color: #6ee7b7; border-color: rgba(16, 185, 129, 0.35); }
 
+    .sync-badge.syncing {
+      color: var(--warning-text);
+      background-color: var(--warning-bg);
+      border-color: var(--warning-border);
+    }
     .sync-badge.syncing .sync-dot { background-color: var(--warning); }
-    .sync-badge.syncing { color: #fcd34d; border-color: rgba(245, 158, 11, 0.35); }
 
+    .sync-badge.local {
+      color: var(--accent);
+      background-color: var(--accent-soft);
+      border-color: var(--accent-border);
+    }
     .sync-badge.local .sync-dot { background-color: var(--accent); }
-    .sync-badge.local { color: #7dd3fc; border-color: rgba(56, 189, 248, 0.35); }
 
-    /* Stats Grid */
+    /* Cards de Estatísticas (Clicáveis para redirecionar) */
     .stats-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 0.75rem;
-      margin-bottom: 1rem;
+      gap: 0.85rem;
+      margin-bottom: 1.1rem;
     }
 
-    @media (max-width: 680px) {
+    @media (max-width: 740px) {
       .stats-grid {
         grid-template-columns: repeat(2, 1fr);
       }
     }
 
     .stat-card {
-      background-color: var(--bg-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 10px;
-      padding: 0.85rem 1rem;
+      background-color: var(--bg-subtle);
+      border: 1.5px solid var(--border-color);
+      border-radius: 12px;
+      padding: 0.95rem 1.05rem;
+      text-align: left;
+      transition: all 0.18s ease;
+      position: relative;
+    }
+
+    .stat-card.clickable {
+      cursor: pointer;
+    }
+
+    .stat-card.clickable:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-card);
+      border-color: var(--border-strong);
+    }
+
+    .stat-card.card-correct.clickable:hover,
+    .stat-card.card-correct.active-filter {
+      border-color: var(--success);
+      background-color: var(--success-bg);
+    }
+
+    .stat-card.card-wrong.clickable:hover,
+    .stat-card.card-wrong.active-filter {
+      border-color: var(--danger);
+      background-color: var(--danger-bg);
+    }
+
+    .stat-card.card-answered.clickable:hover,
+    .stat-card.card-answered.active-filter {
+      border-color: var(--accent);
+      background-color: var(--accent-soft);
+    }
+
+    .stat-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.4rem;
     }
 
     .stat-label {
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
       color: var(--text-muted);
       font-weight: 700;
     }
 
+    .stat-link-hint {
+      font-size: 0.7rem;
+      font-weight: 700;
+      color: var(--accent);
+      opacity: 0.85;
+    }
+
+    .card-correct .stat-link-hint { color: var(--success-text); }
+    .card-wrong .stat-link-hint { color: var(--danger-text); }
+
     .stat-value {
-      font-size: 1.45rem;
+      font-size: 1.6rem;
       font-weight: 800;
-      margin-top: 0.15rem;
+      margin-top: 0.2rem;
       color: var(--text-primary);
+      line-height: 1.15;
     }
 
     .stat-value.green { color: var(--success); }
@@ -240,15 +497,26 @@
     .stat-value.blue { color: var(--accent); }
 
     .stat-sub {
-      font-size: 0.75rem;
+      font-size: 0.76rem;
       color: var(--text-muted);
+      margin-top: 0.2rem;
     }
 
-    /* Progress Bar */
+    /* Barra de Progresso Geral */
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+
     .progress-wrap {
       width: 100%;
       height: 10px;
-      background-color: var(--bg-primary);
+      background-color: var(--bg-muted);
       border-radius: 999px;
       overflow: hidden;
       border: 1px solid var(--border-color);
@@ -261,38 +529,44 @@
       transition: width 0.3s ease;
     }
 
-    /* Filters Panel */
+    /* =========================================================================
+       PAINEL DE FILTROS E TAXA POR ASSUNTO
+       ========================================================================= */
     .filters-panel {
-      background-color: var(--bg-secondary);
+      background-color: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: var(--radius);
-      padding: 1.15rem;
+      padding: 1.35rem;
       margin-bottom: 1.25rem;
+      box-shadow: var(--shadow-card);
     }
 
     .search-box {
       position: relative;
-      margin-bottom: 0.9rem;
+      margin-bottom: 1.15rem;
     }
 
     .search-box input {
       width: 100%;
-      background-color: var(--bg-primary);
-      border: 1px solid var(--border-color);
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--border-strong);
       color: var(--text-primary);
-      padding: 0.65rem 1rem 0.65rem 2.35rem;
-      border-radius: 8px;
+      padding: 0.7rem 1rem 0.7rem 2.5rem;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
       font-size: 0.9rem;
     }
 
     .search-box input:focus {
       outline: none;
       border-color: var(--accent);
+      background-color: var(--bg-surface);
+      box-shadow: 0 0 0 3px var(--accent-soft);
     }
 
     .search-icon {
       position: absolute;
-      left: 0.8rem;
+      left: 0.85rem;
       top: 50%;
       transform: translateY(-50%);
       color: var(--text-muted);
@@ -300,33 +574,41 @@
       pointer-events: none;
     }
 
+    .filter-block {
+      padding-top: 1rem;
+      margin-top: 1rem;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .filter-block:first-of-type {
+      padding-top: 0;
+      margin-top: 0;
+      border-top: none;
+    }
+
     .filter-section-title {
-      font-size: 0.75rem;
+      font-size: 0.76rem;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--text-muted);
-      margin-bottom: 0.45rem;
+      margin-bottom: 0.65rem;
     }
 
     .pill-row {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.45rem;
-      margin-bottom: 0.85rem;
-    }
-
-    .pill-row:last-child {
-      margin-bottom: 0;
+      gap: 0.5rem;
     }
 
     .pill {
-      background-color: var(--bg-primary);
-      border: 1px solid var(--border-color);
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--border-strong);
       color: var(--text-secondary);
-      padding: 0.35rem 0.75rem;
+      padding: 0.42rem 0.88rem;
       border-radius: 999px;
-      font-size: 0.8rem;
+      font-family: inherit;
+      font-size: 0.82rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.15s ease;
@@ -339,36 +621,193 @@
 
     .pill.active {
       background-color: var(--accent);
-      color: #0f172a;
+      color: #ffffff;
       border-color: var(--accent);
     }
 
+    html.dark .pill.active {
+      color: #061826;
+    }
+
+    /* Cards de Assuntos com Taxa de Acerto e Erro */
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 0.65rem;
+    }
+
+    .theme-card {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.45rem;
+      background-color: var(--bg-subtle);
+      border: 1.5px solid var(--border-color);
+      border-radius: 11px;
+      padding: 0.75rem 0.9rem;
+      text-align: left;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.16s ease;
+    }
+
+    .theme-card:hover {
+      border-color: var(--accent);
+      background-color: var(--bg-surface);
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-card);
+    }
+
+    .theme-card.active {
+      border-color: var(--accent);
+      background-color: var(--accent-soft);
+    }
+
+    .theme-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .theme-name {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.3;
+    }
+
+    .theme-total-badge {
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.14rem 0.5rem;
+      border-radius: 999px;
+      background-color: var(--bg-muted);
+      color: var(--text-secondary);
+      border: 1px solid var(--border-color);
+      flex-shrink: 0;
+    }
+
+    .theme-card.active .theme-total-badge {
+      background-color: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    html.dark .theme-card.active .theme-total-badge {
+      color: #061826;
+    }
+
+    .theme-metrics {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.4rem;
+      font-size: 0.74rem;
+      font-weight: 600;
+    }
+
+    .metric-ok {
+      color: var(--success-text);
+    }
+
+    .metric-err {
+      color: var(--danger-text);
+    }
+
+    .metric-empty {
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .theme-mini-bar {
+      width: 100%;
+      height: 5px;
+      background-color: var(--bg-muted);
+      border-radius: 999px;
+      overflow: hidden;
+      display: flex;
+    }
+
+    .theme-mini-bar-ok {
+      height: 100%;
+      background-color: var(--success);
+      transition: width 0.25s ease;
+    }
+
+    .theme-mini-bar-err {
+      height: 100%;
+      background-color: var(--danger);
+      transition: width 0.25s ease;
+    }
+
+    /* Barra de Resultados / Filtro Ativo */
     .results-info {
       display: flex;
+      flex-wrap: wrap;
       justify-content: space-between;
       align-items: center;
+      gap: 0.65rem;
       margin-bottom: 1rem;
-      font-size: 0.85rem;
+      padding: 0.65rem 1rem;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+    }
+
+    .results-left {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    #showingCount {
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .btn-clear-filter {
+      padding: 0.22rem 0.6rem;
+      font-size: 0.75rem;
+      border-radius: 6px;
+      background-color: var(--accent-soft);
+      border: 1px solid var(--accent-border);
+      color: var(--accent);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-clear-filter:hover {
+      filter: brightness(0.95);
+    }
+
+    #activeUserLabel {
+      font-weight: 600;
       color: var(--text-muted);
     }
 
-    /* Question Cards */
+    /* =========================================================================
+       CARDS DE QUESTÕES E DESCARTE INTEGRADO DE ALTERNATIVAS
+       ========================================================================= */
     .question-card {
-      background-color: var(--bg-secondary);
-      border: 1px solid var(--border-color);
+      background-color: var(--bg-surface);
+      border: 1.5px solid var(--border-color);
       border-radius: var(--radius);
-      padding: 1.35rem;
-      margin-bottom: 1.15rem;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      padding: 1.45rem;
+      margin-bottom: 1.2rem;
+      box-shadow: var(--shadow-card);
       transition: border-color 0.2s ease;
     }
 
     .question-card.answered-correct {
-      border-color: rgba(16, 185, 129, 0.45);
+      border-color: var(--success-border);
     }
 
     .question-card.answered-wrong {
-      border-color: rgba(239, 68, 68, 0.45);
+      border-color: var(--danger-border);
     }
 
     .q-header {
@@ -376,8 +815,10 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 0.5rem;
-      margin-bottom: 0.85rem;
+      gap: 0.55rem;
+      margin-bottom: 0.95rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-color);
     }
 
     .q-badges {
@@ -389,264 +830,237 @@
 
     .q-num {
       font-weight: 800;
-      font-size: 0.9rem;
+      font-size: 0.84rem;
       color: var(--accent);
-      background-color: rgba(56, 189, 248, 0.12);
-      padding: 0.2rem 0.6rem;
-      border-radius: 6px;
+      background-color: var(--accent-soft);
+      border: 1px solid var(--accent-border);
+      padding: 0.2rem 0.65rem;
+      border-radius: 7px;
     }
 
     .q-theme {
       font-size: 0.78rem;
-      font-weight: 600;
+      font-weight: 700;
       color: var(--text-secondary);
-      background-color: var(--bg-primary);
-      border: 1px solid var(--border-color);
-      padding: 0.2rem 0.6rem;
-      border-radius: 6px;
+      background-color: var(--bg-muted);
+      padding: 0.22rem 0.65rem;
+      border-radius: 7px;
     }
 
     .q-source {
-      font-size: 0.75rem;
+      font-size: 0.76rem;
       color: var(--text-muted);
     }
 
     .q-status-tag {
-      font-size: 0.75rem;
+      font-size: 0.76rem;
       font-weight: 700;
-      padding: 0.2rem 0.55rem;
-      border-radius: 6px;
+      padding: 0.24rem 0.68rem;
+      border-radius: 7px;
     }
 
     .q-status-tag.correct {
       background-color: var(--success-bg);
-      color: #6ee7b7;
+      border: 1px solid var(--success-border);
+      color: var(--success-text);
     }
 
     .q-status-tag.wrong {
       background-color: var(--danger-bg);
-      color: #fca5a5;
+      border: 1px solid var(--danger-border);
+      color: var(--danger-text);
     }
 
     .q-stem {
-      font-size: 0.97rem;
+      font-size: 0.98rem;
       color: var(--text-primary);
-      margin-bottom: 1.05rem;
+      margin-bottom: 1.15rem;
       white-space: pre-line;
+      line-height: 1.68;
     }
 
     .options-list {
       display: flex;
       flex-direction: column;
-      gap: 0.55rem;
+      gap: 0.6rem;
     }
 
-    .option-btn {
+    /* Container unificado da alternativa */
+    .option-item {
+      display: flex;
+      align-items: stretch;
+      background-color: var(--bg-subtle);
+      border: 1.5px solid var(--border-color);
+      border-radius: 11px;
+      overflow: hidden;
+      transition: all 0.18s ease;
+    }
+
+    .option-item:hover:not(.is-answered):not(.is-eliminated) {
+      border-color: var(--accent);
+      background-color: var(--bg-surface);
+      box-shadow: 0 2px 8px rgba(2, 132, 199, 0.08);
+    }
+
+    .option-item.is-eliminated:not(.is-answered) {
+      background-color: var(--bg-muted);
+      border-color: var(--border-color);
+      opacity: 0.62;
+    }
+
+    .option-item.is-correct {
+      background-color: var(--success-bg);
+      border-color: var(--success);
+    }
+
+    .option-item.is-wrong {
+      background-color: var(--danger-bg);
+      border-color: var(--danger);
+    }
+
+    .option-main-btn {
       display: flex;
       align-items: flex-start;
-      gap: 0.75rem;
-      width: 100%;
+      gap: 0.8rem;
+      flex: 1;
       text-align: left;
-      background-color: var(--bg-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 9px;
-      padding: 0.75rem 0.95rem;
-      color: var(--text-secondary);
-      font-size: 0.92rem;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .option-btn:hover:not(:disabled) {
-      background-color: var(--bg-tertiary);
-      border-color: var(--accent);
+      background: transparent;
+      border: none;
+      padding: 0.82rem 0.95rem;
       color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.93rem;
+      line-height: 1.52;
+      cursor: pointer;
     }
 
-    .option-btn:disabled {
+    .option-main-btn:disabled {
       cursor: default;
+    }
+
+    .option-item.is-eliminated:not(.is-answered) .option-main-btn {
+      cursor: not-allowed;
     }
 
     .opt-letter {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      min-width: 26px;
-      height: 26px;
-      border-radius: 6px;
-      background-color: var(--bg-secondary);
-      border: 1px solid var(--border-color);
-      font-weight: 700;
+      min-width: 28px;
+      height: 28px;
+      border-radius: 7px;
+      background-color: var(--bg-surface);
+      border: 1px solid var(--border-strong);
+      font-weight: 800;
       font-size: 0.8rem;
-      color: var(--text-primary);
+      color: var(--text-secondary);
       flex-shrink: 0;
       margin-top: 1px;
+      transition: all 0.16s ease;
     }
 
-    .option-btn.correct {
-      background-color: var(--success-bg);
-      border-color: var(--success);
-      color: #ecfdf5;
+    .option-item:hover:not(.is-answered):not(.is-eliminated) .opt-letter {
+      border-color: var(--accent);
+      color: var(--accent);
     }
 
-    .option-btn.correct .opt-letter {
+    .option-item.is-correct .opt-letter {
       background-color: var(--success);
       border-color: var(--success);
-      color: #064e3b;
+      color: #ffffff;
     }
 
-    .option-btn.wrong {
-      background-color: var(--danger-bg);
-      border-color: var(--danger);
-      color: #fef2f2;
-    }
-
-    .option-btn.wrong .opt-letter {
+    .option-item.is-wrong .opt-letter {
       background-color: var(--danger);
       border-color: var(--danger);
-      color: #fff;
+      color: #ffffff;
     }
 
-
-    /* Timer Widget */
-    .timer-box {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      background-color: var(--bg-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 8px;
-      padding: 0.3rem 0.55rem;
-    }
-
-    .timer-box.running {
-      border-color: var(--success);
-      box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.25);
-    }
-
-    .timer-display {
-      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-      font-size: 0.92rem;
-      font-weight: 700;
-      font-variant-numeric: tabular-nums;
-      color: var(--text-primary);
-      padding: 0 0.25rem;
-      letter-spacing: 0.03em;
-    }
-
-    .timer-box.running .timer-display {
-      color: #6ee7b7;
-    }
-
-    .btn-timer {
-      padding: 0.35rem 0.65rem;
-      font-size: 0.8rem;
-      border-radius: 6px;
-    }
-
-    .btn-timer.running {
-      background-color: rgba(245, 158, 11, 0.16);
-      border-color: rgba(245, 158, 11, 0.45);
-      color: #fcd34d;
-    }
-
-    .btn-timer-reset {
-      padding: 0.35rem 0.5rem;
-      font-size: 0.8rem;
-      border-radius: 6px;
-      color: var(--text-muted);
-    }
-
-    .btn-timer-reset:hover {
-      color: var(--text-primary);
-    }
-
-    /* Option Row & Scissors Elimination */
-    .option-row {
-      display: flex;
-      align-items: stretch;
-      gap: 0.45rem;
-    }
-
-    .option-row .option-btn {
-      flex: 1;
-    }
-
-    .scissor-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 38px;
-      flex-shrink: 0;
-      background-color: var(--bg-primary);
-      border: 1px solid var(--border-color);
-      border-radius: 9px;
-      color: var(--text-muted);
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-
-    .scissor-btn:hover:not(:disabled) {
-      background-color: rgba(239, 68, 68, 0.12);
-      border-color: rgba(239, 68, 68, 0.45);
-      color: #fca5a5;
-    }
-
-    .scissor-btn.active {
-      background-color: rgba(239, 68, 68, 0.18);
-      border-color: var(--danger);
-      color: #fca5a5;
-    }
-
-    .scissor-btn:disabled {
-      opacity: 0.35;
-      cursor: default;
-    }
-
-    .option-btn.eliminated:not(.correct):not(.wrong) {
-      opacity: 0.45;
-      background-color: rgba(15, 23, 42, 0.55);
-      border-style: dashed;
-      border-color: #475569;
-    }
-
-    .option-btn.eliminated:not(.correct):not(.wrong) .opt-text {
+    .option-item.is-eliminated:not(.is-answered) .opt-text {
       text-decoration: line-through;
+      text-decoration-thickness: 1.5px;
+      text-decoration-color: var(--text-muted);
       color: var(--text-muted);
     }
 
-    .option-btn.eliminated:not(.correct):not(.wrong) .opt-letter {
-      opacity: 0.6;
+    /* Botão elegante e integrado de descartar/restaurar */
+    .eliminate-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.32rem;
+      padding: 0 0.85rem;
+      background: transparent;
+      border: none;
+      border-left: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-family: inherit;
+      font-size: 0.74rem;
+      font-weight: 600;
+      cursor: pointer;
+      flex-shrink: 0;
+      opacity: 0.65;
+      transition: all 0.16s ease;
     }
 
-    /* Explanation Box */
+    .option-item:hover .eliminate-toggle,
+    .eliminate-toggle.active {
+      opacity: 1;
+    }
+
+    .eliminate-toggle:hover {
+      background-color: var(--danger-bg);
+      color: var(--danger-text);
+    }
+
+    .eliminate-toggle.active {
+      background-color: var(--bg-surface);
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .eliminate-toggle.active:hover {
+      background-color: var(--accent-soft);
+    }
+
+    @media (max-width: 560px) {
+      .eliminate-label {
+        display: none;
+      }
+      .eliminate-toggle {
+        padding: 0 0.7rem;
+      }
+    }
+
+    /* Box de Justificativa */
     .explanation-box {
-      margin-top: 1rem;
-      padding: 0.95rem 1.1rem;
-      background-color: rgba(15, 23, 42, 0.85);
+      margin-top: 1.15rem;
+      padding: 1.05rem 1.2rem;
+      background-color: var(--bg-subtle);
+      border: 1px solid var(--accent-border);
       border-left: 4px solid var(--accent);
-      border-radius: 0 8px 8px 0;
-      font-size: 0.9rem;
+      border-radius: 10px;
+      font-size: 0.91rem;
       color: var(--text-secondary);
+      line-height: 1.65;
     }
 
     .explanation-box strong {
       display: block;
       color: var(--accent);
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 0.04em;
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.35rem;
     }
 
     .empty-state {
       text-align: center;
       padding: 3rem 1rem;
-      background-color: var(--bg-secondary);
-      border: 1px dashed var(--border-color);
+      background-color: var(--bg-surface);
+      border: 1.5px dashed var(--border-strong);
       border-radius: var(--radius);
       color: var(--text-muted);
+      font-size: 0.95rem;
     }
 
     footer {
@@ -659,26 +1073,36 @@
 </head>
 <body>
   <div class="container">
+    <!-- 1. MODO CLARO E ESCURO EM PRIMEIRO LUGAR + CRONÔMETRO E REINICIAR -->
+    <div class="top-utility-bar">
+      <div class="theme-switch-group" role="group" aria-label="Alternar tema visual">
+        <button class="theme-mode-btn active" id="btnLightMode" type="button">☀️ Modo Claro</button>
+        <button class="theme-mode-btn" id="btnDarkMode" type="button">🌙 Modo Escuro</button>
+      </div>
+
+      <div class="top-right-controls">
+        <div class="timer-box" id="timerBox" title="Cronômetro sincronizado na nuvem">
+          <span class="timer-label">⏱️ Tempo</span>
+          <span class="timer-display" id="timerDisplay">00:00:00</span>
+          <button class="btn btn-primary btn-timer" id="btnTimerToggle" type="button">▶ Iniciar</button>
+          <button class="btn btn-timer-reset" id="btnTimerReset" type="button" title="Zerar cronômetro">⟲</button>
+        </div>
+        <button class="btn btn-danger" id="btnReset" type="button">↺ Reiniciar</button>
+      </div>
+    </div>
+
+    <!-- 2. CABEÇALHO E PAINEL DE INFORMAÇÕES -->
     <header>
-      <div class="header-top">
+      <div class="header-title-row">
         <div class="title-group">
           <h1>Simulado Saúde da Mulher</h1>
-          <p>Banco N1 &amp; N2 Ginecologia e Obstetrícia Comentada (FEBRASGO • FIGO • Ministério da Saúde)</p>
-        </div>
-        <div class="header-actions">
-          <div class="timer-box" id="timerBox" title="Cronômetro sincronizado na nuvem">
-            <span>⏱️</span>
-            <span class="timer-display" id="timerDisplay">00:00:00</span>
-            <button class="btn btn-primary btn-timer" id="btnTimerToggle" type="button">▶ Iniciar</button>
-            <button class="btn btn-timer-reset" id="btnTimerReset" type="button" title="Zerar cronômetro">⟲</button>
-          </div>
-          <button class="btn btn-danger" id="btnReset" type="button">↺ Reiniciar</button>
+          <p>Banco N1 &amp; N2 Ginecologia e Obstetrícia Comentada • FEBRASGO • FIGO • Ministério da Saúde</p>
         </div>
       </div>
 
       <div class="user-sync-bar">
         <div class="user-input-wrap">
-          <label for="userIdInput">Usuário (E-mail / Matrícula):</label>
+          <label for="userIdInput">👤 Usuário (E-mail / Matrícula):</label>
           <input type="text" id="userIdInput" placeholder="ex.: aluno@med.br ou 2026001" />
           <button class="btn btn-primary" id="btnSaveUser" type="button">Carregar</button>
         </div>
@@ -689,57 +1113,86 @@
       </div>
 
       <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-label">Respondidas</div>
+        <button class="stat-card card-answered clickable" id="cardAnswered" type="button" title="Clique para ver todas as questões">
+          <div class="stat-top">
+            <span class="stat-label">Respondidas</span>
+            <span class="stat-link-hint">Ver todas →</span>
+          </div>
           <div class="stat-value" id="statAnswered">0/106</div>
-          <div class="stat-sub">Progresso geral</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Acertos</div>
+          <div class="stat-sub" id="statPendingSub">106 pendentes</div>
+        </button>
+
+        <button class="stat-card card-correct clickable" id="cardCorrect" type="button" title="Clique para filtrar apenas os seus acertos">
+          <div class="stat-top">
+            <span class="stat-label">Acertos</span>
+            <span class="stat-link-hint">Filtrar acertos →</span>
+          </div>
           <div class="stat-value green" id="statCorrect">0</div>
-          <div class="stat-sub">Questões corretas</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Erros</div>
+          <div class="stat-sub">Clique para revisar</div>
+        </button>
+
+        <button class="stat-card card-wrong clickable" id="cardWrong" type="button" title="Clique para filtrar apenas os seus erros">
+          <div class="stat-top">
+            <span class="stat-label">Erros</span>
+            <span class="stat-link-hint">Filtrar erros →</span>
+          </div>
           <div class="stat-value red" id="statWrong">0</div>
-          <div class="stat-sub">Revisar justificativa</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-label">Aproveitamento</div>
+          <div class="stat-sub">Clique para revisar</div>
+        </button>
+
+        <div class="stat-card card-rate">
+          <div class="stat-top">
+            <span class="stat-label">Aproveitamento</span>
+          </div>
           <div class="stat-value blue" id="statRate">0%</div>
-          <div class="stat-sub">Taxa sobre respondidas</div>
+          <div class="stat-sub" id="statErrorRateSub">Taxa de erro: 0%</div>
         </div>
       </div>
 
+      <div class="progress-header">
+        <span>Progresso total do simulado</span>
+        <span id="progressPctText">0% concluído</span>
+      </div>
       <div class="progress-wrap" title="Barra de progresso do simulado">
         <div class="progress-fill" id="progressFill"></div>
       </div>
     </header>
 
+    <!-- 3. BUSCA, STATUS E ASSUNTOS COM TAXA DE ACERTO/ERRO -->
     <section class="filters-panel">
       <div class="search-box">
         <span class="search-icon">🔍</span>
         <input type="text" id="searchInput" placeholder="Buscar por palavra-chave (ex.: nifedipina, clue cells, sulfato, adenomiose, TOTG)..." />
       </div>
 
-      <div class="filter-section-title">Filtrar por Status</div>
-      <div class="pill-row" id="statusFilters">
-        <button class="pill active" data-status="all" type="button">Todas (106)</button>
-        <button class="pill" data-status="pending" type="button">Pendentes</button>
-        <button class="pill" data-status="wrong" type="button">Erradas</button>
-        <button class="pill" data-status="correct" type="button">Acertos</button>
+      <div class="filter-block">
+        <div class="filter-section-title">Filtrar por Status</div>
+        <div class="pill-row" id="statusFilters">
+          <button class="pill active" data-status="all" type="button">Todas (106)</button>
+          <button class="pill" data-status="pending" type="button">Pendentes</button>
+          <button class="pill" data-status="wrong" type="button">Erradas</button>
+          <button class="pill" data-status="correct" type="button">Acertos</button>
+        </div>
       </div>
 
-      <div class="filter-section-title">Filtrar por Especialidade / Tema</div>
-      <div class="pill-row" id="themeFilters"></div>
+      <div class="filter-block">
+        <div class="filter-section-title">Filtrar por Assunto (com Taxa de Acerto e Erro)</div>
+        <div class="theme-grid" id="themeFilters"></div>
+      </div>
     </section>
 
-    <div class="results-info">
-      <span id="showingCount">Exibindo 106 questões</span>
-      <span id="activeUserLabel"></span>
-    </div>
+    <!-- 4. LISTA DE QUESTÕES -->
+    <div id="questionsSection">
+      <div class="results-info">
+        <div class="results-left">
+          <span id="showingCount">Exibindo 106 questões</span>
+          <button class="btn-clear-filter" id="btnClearFilters" type="button" style="display: none;">✕ Limpar filtros</button>
+        </div>
+        <span id="activeUserLabel"></span>
+      </div>
 
-    <main id="questionsContainer"></main>
+      <main id="questionsContainer"></main>
+    </div>
 
     <footer>
       Simulado de Ginecologia e Obstetrícia • Questões extraídas dos Bancos N1 e N2 de Saúde da Mulher com comentários baseados em FEBRASGO, FIGO e Ministério da Saúde.
@@ -779,6 +1232,8 @@
     const letters = ["A", "B", "C", "D", "E"];
 
     // Elementos DOM
+    const btnLightMode = document.getElementById("btnLightMode");
+    const btnDarkMode = document.getElementById("btnDarkMode");
     const userIdInput = document.getElementById("userIdInput");
     const activeUserLabel = document.getElementById("activeUserLabel");
     const syncBadge = document.getElementById("syncBadge");
@@ -787,16 +1242,44 @@
     const timerDisplay = document.getElementById("timerDisplay");
     const btnTimerToggle = document.getElementById("btnTimerToggle");
     const btnTimerReset = document.getElementById("btnTimerReset");
+
+    const cardAnswered = document.getElementById("cardAnswered");
+    const cardCorrect = document.getElementById("cardCorrect");
+    const cardWrong = document.getElementById("cardWrong");
     const statAnswered = document.getElementById("statAnswered");
+    const statPendingSub = document.getElementById("statPendingSub");
     const statCorrect = document.getElementById("statCorrect");
     const statWrong = document.getElementById("statWrong");
     const statRate = document.getElementById("statRate");
+    const statErrorRateSub = document.getElementById("statErrorRateSub");
+    const progressPctText = document.getElementById("progressPctText");
     const progressFill = document.getElementById("progressFill");
+
     const searchInput = document.getElementById("searchInput");
     const statusFilters = document.getElementById("statusFilters");
     const themeFilters = document.getElementById("themeFilters");
+    const questionsSection = document.getElementById("questionsSection");
     const showingCount = document.getElementById("showingCount");
+    const btnClearFilters = document.getElementById("btnClearFilters");
     const questionsContainer = document.getElementById("questionsContainer");
+
+    // =========================================================================
+    // ALTERNÂNCIA DE MODO CLARO / MODO ESCURO
+    // =========================================================================
+    function applyColorMode(mode) {
+      const isDark = mode === "dark";
+      document.documentElement.classList.toggle("dark", isDark);
+      btnLightMode.classList.toggle("active", !isDark);
+      btnDarkMode.classList.toggle("active", isDark);
+      localStorage.setItem("simulado_color_mode", isDark ? "dark" : "light");
+    }
+
+    btnLightMode.addEventListener("click", () => applyColorMode("light"));
+    btnDarkMode.addEventListener("click", () => applyColorMode("dark"));
+
+    // Inicia no Modo Claro por padrão (ou respeita escolha salva)
+    const savedColorMode = localStorage.getItem("simulado_color_mode") || "light";
+    applyColorMode(savedColorMode);
 
     // =========================================================================
     // CRONÔMETRO
@@ -976,7 +1459,28 @@
     }
 
     // =========================================================================
-    // RENDERIZAÇÃO E CÁLCULOS
+    // NAVEGAÇÃO POR STATUS E FILTROS
+    // =========================================================================
+    function setStatusFilterAndScroll(status, shouldScroll = true) {
+      currentStatusFilter = status;
+      statusFilters.querySelectorAll(".pill").forEach(p => {
+        p.classList.toggle("active", p.dataset.status === status);
+      });
+      cardCorrect.classList.toggle("active-filter", status === "correct");
+      cardWrong.classList.toggle("active-filter", status === "wrong");
+      cardAnswered.classList.toggle("active-filter", status === "all");
+      renderQuestions();
+      if (shouldScroll && questionsSection) {
+        questionsSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    cardAnswered.addEventListener("click", () => setStatusFilterAndScroll("all", true));
+    cardCorrect.addEventListener("click", () => setStatusFilterAndScroll("correct", true));
+    cardWrong.addEventListener("click", () => setStatusFilterAndScroll("wrong", true));
+
+    // =========================================================================
+    // RENDERIZAÇÃO DE ESTATÍSTICAS E ASSUNTOS (COM TAXA DE ACERTO/ERRO)
     // =========================================================================
     function updateStats() {
       const total = QUESTIONS.length;
@@ -992,27 +1496,50 @@
         }
       });
 
+      const pending = total - answered;
       const rate = answered > 0 ? Math.round((correct / answered) * 100) : 0;
+      const errRate = answered > 0 ? 100 - rate : 0;
       const pct = Math.round((answered / total) * 100);
 
       statAnswered.textContent = `${answered}/${total}`;
+      statPendingSub.textContent = `${pending} pendentes`;
       statCorrect.textContent = correct;
       statWrong.textContent = wrong;
       statRate.textContent = `${rate}%`;
+      statErrorRateSub.textContent = `Taxa de erro: ${errRate}%`;
+      progressPctText.textContent = `${pct}% concluído`;
       progressFill.style.width = `${pct}%`;
 
       // Atualiza contadores dos filtros de status
-      const pending = total - answered;
       statusFilters.querySelector('[data-status="all"]').textContent = `Todas (${total})`;
       statusFilters.querySelector('[data-status="pending"]').textContent = `Pendentes (${pending})`;
       statusFilters.querySelector('[data-status="wrong"]').textContent = `Erradas (${wrong})`;
       statusFilters.querySelector('[data-status="correct"]').textContent = `Acertos (${correct})`;
+
+      // Atualiza também os cards de assuntos com as taxas de acerto e erro
+      buildThemeFilters();
     }
 
     function buildThemeFilters() {
-      const counts = {};
+      const statsByTheme = {};
+      let totalCorrect = 0;
+      let totalWrong = 0;
+
       QUESTIONS.forEach(q => {
-        counts[q.theme] = (counts[q.theme] || 0) + 1;
+        if (!statsByTheme[q.theme]) {
+          statsByTheme[q.theme] = { total: 0, answered: 0, correct: 0, wrong: 0 };
+        }
+        statsByTheme[q.theme].total++;
+        if (userAnswers[q.id] !== undefined) {
+          statsByTheme[q.theme].answered++;
+          if (userAnswers[q.id] === q.answer) {
+            statsByTheme[q.theme].correct++;
+            totalCorrect++;
+          } else {
+            statsByTheme[q.theme].wrong++;
+            totalWrong++;
+          }
+        }
       });
 
       const themes = [
@@ -1026,11 +1553,48 @@
         "Gemelaridade"
       ];
 
-      let html = `<button class="pill ${currentThemeFilter === "all" ? "active" : ""}" data-theme="all" type="button">Todos os Temas (${QUESTIONS.length})</button>`;
+      function renderThemeCardHtml(themeKey, label, st) {
+        const isActive = currentThemeFilter === themeKey;
+        const hasAnswers = st.answered > 0;
+        const okPct = hasAnswers ? Math.round((st.correct / st.answered) * 100) : 0;
+        const errPct = hasAnswers ? 100 - okPct : 0;
+
+        const metricsHtml = hasAnswers
+          ? `<span class="metric-ok">✓ ${st.correct} (${okPct}%)</span>
+             <span class="metric-err">✕ ${st.wrong} (${errPct}%)</span>`
+          : `<span class="metric-empty">0/${st.total} respondidas</span>`;
+
+        const barHtml = hasAnswers
+          ? `<div class="theme-mini-bar" title="Acertos: ${okPct}% | Erros: ${errPct}%">
+               <div class="theme-mini-bar-ok" style="width: ${okPct}%"></div>
+               <div class="theme-mini-bar-err" style="width: ${errPct}%"></div>
+             </div>`
+          : `<div class="theme-mini-bar"></div>`;
+
+        return `
+          <button class="theme-card ${isActive ? "active" : ""}" data-theme="${themeKey}" type="button">
+            <div class="theme-card-top">
+              <span class="theme-name">${label}</span>
+              <span class="theme-total-badge">${st.total}</span>
+            </div>
+            <div class="theme-metrics">${metricsHtml}</div>
+            ${barHtml}
+          </button>
+        `;
+      }
+
+      const allStats = {
+        total: QUESTIONS.length,
+        answered: totalCorrect + totalWrong,
+        correct: totalCorrect,
+        wrong: totalWrong
+      };
+
+      let html = renderThemeCardHtml("all", "Todos os Assuntos", allStats);
       themes.forEach(t => {
-        const c = counts[t] || 0;
-        if (c > 0) {
-          html += `<button class="pill ${currentThemeFilter === t ? "active" : ""}" data-theme="${t}" type="button">${t} (${c})</button>`;
+        const st = statsByTheme[t];
+        if (st && st.total > 0) {
+          html += renderThemeCardHtml(t, t, st);
         }
       });
       themeFilters.innerHTML = html;
@@ -1058,7 +1622,27 @@
         return true;
       });
 
-      showingCount.textContent = `Exibindo ${filtered.length} de ${QUESTIONS.length} questões`;
+      const statusNames = {
+        all: "Todas",
+        pending: "Pendentes",
+        wrong: "Erradas",
+        correct: "Acertos"
+      };
+
+      let filterSummary = `Exibindo ${filtered.length} de ${QUESTIONS.length} questões`;
+      const activeTags = [];
+      if (currentStatusFilter !== "all") activeTags.push(`Status: ${statusNames[currentStatusFilter]}`);
+      if (currentThemeFilter !== "all") activeTags.push(`Assunto: ${currentThemeFilter}`);
+      if (query) activeTags.push(`Busca: "${currentSearch.trim()}"`);
+
+      if (activeTags.length > 0) {
+        filterSummary += ` (${activeTags.join(" • ")})`;
+        btnClearFilters.style.display = "inline-flex";
+      } else {
+        btnClearFilters.style.display = "none";
+      }
+
+      showingCount.textContent = filterSummary;
       activeUserLabel.textContent = `Perfil ativo: ${userId}`;
 
       if (filtered.length === 0) {
@@ -1086,27 +1670,41 @@
         const qEliminated = eliminatedOptions[q.id] || {};
         const optionsHtml = q.options.map((optText, idx) => {
           const isEliminated = !!qEliminated[idx];
-          let btnClass = "option-btn";
-          if (isEliminated) btnClass += " eliminated";
+          let itemClass = "option-item";
+          if (isEliminated && !isAnswered) itemClass += " is-eliminated";
           if (isAnswered) {
-            if (idx === q.answer) btnClass += " correct";
-            else if (idx === chosen) btnClass += " wrong";
+            itemClass += " is-answered";
+            if (idx === q.answer) itemClass += " is-correct";
+            else if (idx === chosen) itemClass += " is-wrong";
           }
+
+          const eliminateBtnHtml = !isAnswered ? `
+            <button
+              class="eliminate-toggle ${isEliminated ? "active" : ""}"
+              data-qid="${q.id}"
+              data-opt="${idx}"
+              type="button"
+              title="${isEliminated ? "Restaurar alternativa" : "Descartar esta alternativa"}"
+              aria-label="${isEliminated ? "Restaurar alternativa" : "Descartar esta alternativa"}"
+            >
+              <span>${isEliminated ? "↺" : "✂"}</span>
+              <span class="eliminate-label">${isEliminated ? "Restaurar" : "Descartar"}</span>
+            </button>
+          ` : "";
+
           return `
-            <div class="option-row">
-              <button class="${btnClass}" data-qid="${q.id}" data-opt="${idx}" ${isAnswered ? "disabled" : ""} type="button">
+            <div class="${itemClass}">
+              <button
+                class="option-main-btn"
+                data-qid="${q.id}"
+                data-opt="${idx}"
+                ${isAnswered || isEliminated ? "disabled" : ""}
+                type="button"
+              >
                 <span class="opt-letter">${letters[idx]}</span>
                 <span class="opt-text">${optText}</span>
               </button>
-              <button
-                class="scissor-btn ${isEliminated ? "active" : ""}"
-                data-qid="${q.id}"
-                data-opt="${idx}"
-                ${isAnswered ? "disabled" : ""}
-                type="button"
-                title="${isEliminated ? "Restaurar alternativa" : "Cortar alternativa errada"}"
-                aria-label="${isEliminated ? "Restaurar alternativa" : "Cortar alternativa errada"}"
-              >✂</button>
+              ${eliminateBtnHtml}
             </div>
           `;
         }).join("");
@@ -1148,11 +1746,10 @@
     // EVENTOS DE INTERAÇÃO
     // =========================================================================
     questionsContainer.addEventListener("click", (e) => {
-      const scissorBtn = e.target.closest(".scissor-btn");
-      if (scissorBtn) {
-        if (scissorBtn.disabled) return;
-        const qid = Number(scissorBtn.dataset.qid);
-        const optIdx = Number(scissorBtn.dataset.opt);
+      const elimBtn = e.target.closest(".eliminate-toggle");
+      if (elimBtn) {
+        const qid = Number(elimBtn.dataset.qid);
+        const optIdx = Number(elimBtn.dataset.opt);
         if (userAnswers[qid] !== undefined) return;
 
         if (!eliminatedOptions[qid]) eliminatedOptions[qid] = {};
@@ -1169,7 +1766,7 @@
         return;
       }
 
-      const btn = e.target.closest(".option-btn");
+      const btn = e.target.closest(".option-main-btn");
       if (!btn || btn.disabled) return;
       const qid = Number(btn.dataset.qid);
       const optIdx = Number(btn.dataset.opt);
@@ -1212,19 +1809,24 @@
     statusFilters.addEventListener("click", (e) => {
       const pill = e.target.closest(".pill");
       if (!pill) return;
-      currentStatusFilter = pill.dataset.status;
-      statusFilters.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
-      pill.classList.add("active");
-      renderQuestions();
+      setStatusFilterAndScroll(pill.dataset.status, false);
     });
 
     themeFilters.addEventListener("click", (e) => {
-      const pill = e.target.closest(".pill");
-      if (!pill) return;
-      currentThemeFilter = pill.dataset.theme;
-      themeFilters.querySelectorAll(".pill").forEach(p => p.classList.remove("active"));
-      pill.classList.add("active");
+      const card = e.target.closest(".theme-card");
+      if (!card) return;
+      currentThemeFilter = card.dataset.theme;
+      themeFilters.querySelectorAll(".theme-card").forEach(c => c.classList.remove("active"));
+      card.classList.add("active");
       renderQuestions();
+    });
+
+    btnClearFilters.addEventListener("click", () => {
+      currentSearch = "";
+      searchInput.value = "";
+      currentThemeFilter = "all";
+      buildThemeFilters();
+      setStatusFilterAndScroll("all", false);
     });
 
     document.getElementById("btnSaveUser").addEventListener("click", () => {
@@ -1242,7 +1844,7 @@
     });
 
     document.getElementById("btnReset").addEventListener("click", () => {
-      if (!confirm(`Deseja realmente apagar todo o progresso (respostas, cortes e tempo) de "${userId}" neste simulado?`)) return;
+      if (!confirm(`Deseja realmente apagar todo o progresso (respostas, descartes e tempo) de "${userId}" neste simulado?`)) return;
       pauseTimer(false);
       userAnswers = {};
       eliminatedOptions = {};
@@ -1255,7 +1857,6 @@
     // Inicialização
     localStorage.removeItem("simulado_cloud_script_url");
     userIdInput.value = userId;
-    buildThemeFilters();
     loadLocalProgress();
     renderAll();
     loadCloudProgress();
