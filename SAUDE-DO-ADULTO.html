@@ -932,6 +932,9 @@
       color: var(--text-primary);
       margin-bottom: 16px;
       white-space: pre-line;
+      -webkit-user-select: text;
+      user-select: text;
+      -webkit-touch-callout: default;
     }
 
     .neg-word {
@@ -951,8 +954,12 @@
     mark.hl-mark[data-color="yellow"] { background: #fef08a; }
     mark.hl-mark[data-color="green"] { background: #bbf7d0; }
     mark.hl-mark[data-color="pink"] { background: #fbcfe8; }
+    ::highlight(pen-live-preview) {
+      background-color: rgba(250, 204, 21, 0.55);
+      color: #0f172a;
+    }
 
-    /* Mini-Popover Flutuante de Marca-Texto */
+    /* Mini-Popover Flutuante de Marca-Texto (Mouse + Touch) */
     .selection-popover {
       display: none;
       position: fixed;
@@ -960,19 +967,118 @@
       background: var(--bg-surface);
       border: 1px solid var(--border);
       border-radius: 999px;
-      padding: 5px 9px;
+      padding: 6px 12px;
       box-shadow: var(--shadow-md);
       align-items: center;
-      gap: 7px;
+      gap: 10px;
+      touch-action: manipulation;
     }
     .selection-popover.visible {
       display: inline-flex;
     }
     .selection-popover-label {
-      font-size: 11px;
+      font-size: 11.5px;
       font-weight: 600;
       color: var(--text-secondary);
       padding-right: 2px;
+    }
+    .selection-popover .hl-dot {
+      width: 22px;
+      height: 22px;
+    }
+    .card-hl-group {
+      touch-action: manipulation;
+    }
+    .hl-pen-btn {
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text-secondary);
+      padding: 2px 5px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      font-size: 11px;
+      font-weight: 600;
+      transition: all var(--transition);
+    }
+    .hl-pen-btn svg.icon {
+      width: 13px;
+      height: 13px;
+    }
+    .hl-pen-btn:hover {
+      color: var(--text-primary);
+      background: var(--bg-surface);
+    }
+    .hl-pen-btn.active {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      box-shadow: 0 1px 3px rgba(29, 78, 216, 0.35);
+    }
+
+    /* Quando o Modo Caneta Marca-Texto esta ativo, deslizar o dedo/mouse pinta direto sem rolar */
+    body.pen-mode-active .q-stem {
+      touch-action: none;
+      -webkit-user-select: none;
+      user-select: none;
+      cursor: crosshair;
+      border-radius: 6px;
+      outline: 1.5px dashed var(--accent);
+      outline-offset: 4px;
+    }
+
+    /* Barra flutuante discreta indicando modo caneta ativo */
+    .pen-mode-banner {
+      display: none;
+      position: fixed;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 65;
+      background: var(--bg-surface);
+      border: 1.5px solid var(--accent);
+      border-radius: 999px;
+      padding: 7px 14px;
+      box-shadow: var(--shadow-md);
+      align-items: center;
+      gap: 10px;
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+    }
+    .pen-mode-banner.visible {
+      display: inline-flex;
+    }
+    body.has-focus-bar .pen-mode-banner.visible {
+      bottom: 72px;
+    }
+    .pen-banner-close {
+      border: none;
+      background: var(--accent);
+      color: #ffffff;
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    @media (pointer: coarse) {
+      .card-hl-group .hl-dot {
+        width: 18px;
+        height: 18px;
+      }
+      .card-hl-group {
+        gap: 7px;
+        height: 32px;
+      }
+      .hl-pen-btn {
+        padding: 3px 6px;
+      }
     }
 
     /* =========================================================================
@@ -1600,6 +1706,16 @@
     <button type="button" class="hl-dot pink" data-pop-color="pink" title="Grifar em rosa"></button>
   </div>
 
+  <!-- INDICADOR FLUTUANTE DO MODO CANETA MARCA-TEXTO -->
+  <div class="pen-mode-banner" id="penModeBanner" role="status" aria-live="polite">
+    <svg class="icon" style="color:var(--accent);" viewBox="0 0 24 24"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>
+    <span>Modo Caneta: passe o dedo no texto</span>
+    <button type="button" class="hl-dot yellow active" data-banner-color="yellow" title="Amarelo"></button>
+    <button type="button" class="hl-dot green" data-banner-color="green" title="Verde"></button>
+    <button type="button" class="hl-dot pink" data-banner-color="pink" title="Rosa"></button>
+    <button type="button" class="pen-banner-close" id="disablePenBannerBtn">Concluir</button>
+  </div>
+
   <!-- BARRA INFERIOR DO MODO FOCO -->
   <div class="focus-nav-bar" id="focusNavBar">
     <div class="focus-nav-inner">
@@ -1679,6 +1795,7 @@
       star: '<svg class="icon" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>',
       note: '<svg class="icon" viewBox="0 0 24 24"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
       redo: '<svg class="icon" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>',
+      highlighter: '<svg class="icon" viewBox="0 0 24 24"><path d="m9 11-6 6v3h9l3-3"/><path d="m22 12-4.6 4.6a2 2 0 0 1-2.8 0l-5.2-5.2a2 2 0 0 1 0-2.8L14 4"/></svg>',
       eraser: '<svg class="icon" viewBox="0 0 24 24"><path d="m7 21-4.3-4.3c-1-1-1-2.5 0-3.4l9.6-9.6c1-1 2.5-1 3.4 0l5.6 5.6c1 1 1 2.5 0 3.4L13 21"/><path d="M22 21H7"/><path d="m5 11 9 9"/></svg>',
       scissors: '<svg class="icon" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><path d="M8.12 8.12 12 12"/><path d="M20 4 8.12 15.88"/><circle cx="6" cy="18" r="3"/><path d="M14.8 14.8 20 20"/></svg>',
       history: '<svg class="icon" style="width:12px;height:12px;" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M12 7v5l3 3"/></svg>',
@@ -1709,7 +1826,7 @@
       subjectFilter: null,
       professorFilter: null,
       searchQuery: "",
-      activeHlColor: "yellow",   // "yellow" | "green" | "pink"
+      activeHlColor: "yellow", penMode: false,   // "yellow" | "green" | "pink"
       fontSize: 16,
       showAllAnswers: false,
       focusMode: false,
@@ -2176,10 +2293,11 @@
             </div>
 
             <div class="q-actions-right">
-              <div class="card-hl-group" title="Selecione um trecho do enunciado e clique na cor para grifar">
-                <button type="button" class="hl-dot yellow ${ui.activeHlColor === "yellow" ? "active" : ""}" data-action="hl-color" data-qid="${q.id}" data-color="yellow" title="Grifar em amarelo" aria-label="Grifar em amarelo"></button>
-                <button type="button" class="hl-dot green ${ui.activeHlColor === "green" ? "active" : ""}" data-action="hl-color" data-qid="${q.id}" data-color="green" title="Grifar em verde" aria-label="Grifar em verde"></button>
-                <button type="button" class="hl-dot pink ${ui.activeHlColor === "pink" ? "active" : ""}" data-action="hl-color" data-qid="${q.id}" data-color="pink" title="Grifar em rosa" aria-label="Grifar em rosa"></button>
+              <div class="card-hl-group" title="Ative a caneta e passe o dedo para grifar direto, ou selecione um trecho">
+                <button type="button" class="hl-pen-btn ${ui.penMode ? "active" : ""}" data-action="hl-pen" data-qid="${q.id}" title="Ativar/Desativar Caneta Marca-Texto (passe o dedo para grifar)">${ICONS.highlighter}</button>
+                <button type="button" class="hl-dot yellow ${ui.activeHlColor === "yellow" ? "active" : ""}" data-action="hl-color" data-qid="${q.id}" data-color="yellow" title="Cor amarela" aria-label="Cor amarela"></button>
+                <button type="button" class="hl-dot green ${ui.activeHlColor === "green" ? "active" : ""}" data-action="hl-color" data-qid="${q.id}" data-color="green" title="Cor verde" aria-label="Cor verde"></button>
+                <button type="button" class="hl-dot pink ${ui.activeHlColor === "pink" ? "active" : ""}" data-action="hl-color" data-qid="${q.id}" data-color="pink" title="Cor rosa" aria-label="Cor rosa"></button>
                 <button type="button" class="hl-clear-btn" data-action="hl-clear" data-qid="${q.id}" title="Limpar grifos desta questão" aria-label="Limpar grifos desta questão">${ICONS.eraser}</button>
               </div>
 
@@ -2238,7 +2356,7 @@
             <button type="button" class="btn-primary" onclick="clearAllFilters()">Mostrar Todas as Questões</button>
           </div>
         `;
-        focusNav.classList.remove("visible");
+        focusNav.classList.remove("visible"); document.body.classList.remove("has-focus-bar");
         return;
       }
 
@@ -2247,12 +2365,12 @@
         if (ui.focusIndex < 0) ui.focusIndex = 0;
         const currentQ = filtered[ui.focusIndex];
         container.innerHTML = buildQuestionCardHtml(currentQ);
-        focusNav.classList.add("visible");
+        focusNav.classList.add("visible"); document.body.classList.add("has-focus-bar");
         document.getElementById("focusCounter").textContent = `Questão ${ui.focusIndex + 1} de ${filtered.length} (#${String(currentQ.num).padStart(2, "0")})`;
         document.getElementById("focusPrevBtn").disabled = (ui.focusIndex === 0);
         document.getElementById("focusNextBtn").disabled = (ui.focusIndex === filtered.length - 1);
       } else {
-        focusNav.classList.remove("visible");
+        focusNav.classList.remove("visible"); document.body.classList.remove("has-focus-bar");
         container.innerHTML = filtered.map(q => buildQuestionCardHtml(q)).join("");
       }
     }
@@ -2352,6 +2470,11 @@
       }
 
       const range = sel.getRangeAt(0);
+      if (!range.toString().trim()) {
+        hideSelectionPopover();
+        return;
+      }
+
       const ancestor = range.commonAncestorContainer;
       const stemEl = ancestor.nodeType === 1
         ? ancestor.closest(".q-stem")
@@ -2376,9 +2499,23 @@
 
       const pop = document.getElementById("selectionPopover");
       pop.classList.add("visible");
-      const popWidth = pop.offsetWidth || 132;
-      const popHeight = pop.offsetHeight || 32;
-      const top = Math.max(8, rect.top - popHeight - 8);
+      const popWidth = pop.offsetWidth || 168;
+      const popHeight = pop.offsetHeight || 40;
+      const isTouch = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+
+      // Em telas touch, posiciona abaixo da selecao (ou bem acima) para nao colidir com o menu nativo (Copiar/Compartilhar)
+      let top;
+      if (isTouch) {
+        const spaceBelow = window.innerHeight - rect.bottom;
+        if (spaceBelow >= popHeight + 28) {
+          top = rect.bottom + 14;
+        } else {
+          top = Math.max(64, rect.top - popHeight - 54);
+        }
+      } else {
+        top = Math.max(8, rect.top - popHeight - 8);
+      }
+
       const left = Math.min(window.innerWidth - popWidth - 12, Math.max(12, rect.left + rect.width / 2 - popWidth / 2));
       pop.style.top = `${top}px`;
       pop.style.left = `${left}px`;
@@ -2415,6 +2552,188 @@
       updateSingleCard(qId);
       scheduleCloudSync();
       hideSelectionPopover();
+    }
+
+    // =========================================================================
+    // MODO CANETA MARCA-TEXTO DIRETA (DESLIZAR O DEDO/MOUSE E GRIFAR NA HORA)
+    // =========================================================================
+    let penStroke = null; // { qId, stemEl, startCaret, lastCaret, latestRange }
+
+    function setActiveHighlightColor(color) {
+      ui.activeHlColor = color;
+      document.querySelectorAll(".hl-dot[data-color], .hl-dot[data-banner-color]").forEach(dot => {
+        const c = dot.dataset.color || dot.dataset.bannerColor;
+        dot.classList.toggle("active", c === color);
+      });
+    }
+
+    function togglePenMode(forceState) {
+      ui.penMode = typeof forceState === "boolean" ? forceState : !ui.penMode;
+      document.body.classList.toggle("pen-mode-active", ui.penMode);
+      const banner = document.getElementById("penModeBanner");
+      if (banner) {
+        banner.classList.toggle("visible", ui.penMode);
+      }
+      document.querySelectorAll(".hl-pen-btn").forEach(btn => {
+        btn.classList.toggle("active", ui.penMode);
+      });
+      if (ui.penMode) {
+        setActiveHighlightColor(ui.activeHlColor);
+        const sel = window.getSelection();
+        if (sel) sel.removeAllRanges();
+        hideSelectionPopover();
+      }
+    }
+
+    function getCaretPointFromCoords(x, y) {
+      if (document.caretPositionFromPoint) {
+        const pos = document.caretPositionFromPoint(x, y);
+        if (pos && pos.offsetNode) {
+          return { node: pos.offsetNode, offset: pos.offset };
+        }
+      }
+      if (document.caretRangeFromPoint) {
+        const range = document.caretRangeFromPoint(x, y);
+        if (range && range.startContainer) {
+          return { node: range.startContainer, offset: range.startOffset };
+        }
+      }
+      return null;
+    }
+
+    function expandRangeToWordBoundaries(range) {
+      if (!range || range.collapsed) return range;
+      const isWordChar = (ch) => /[\p{L}\p{N}_-]/u.test(ch);
+
+      if (range.startContainer.nodeType === Node.TEXT_NODE) {
+        const txt = range.startContainer.textContent || "";
+        let s = range.startOffset;
+        while (s > 0 && isWordChar(txt[s - 1])) s--;
+        range.setStart(range.startContainer, s);
+      }
+      if (range.endContainer.nodeType === Node.TEXT_NODE) {
+        const txt = range.endContainer.textContent || "";
+        let e = range.endOffset;
+        while (e < txt.length && isWordChar(txt[e])) e++;
+        range.setEnd(range.endContainer, e);
+      }
+      return range;
+    }
+
+    function getTextNodesInRange(range, rootEl) {
+      const nodes = [];
+      const walker = document.createTreeWalker(rootEl, NodeFilter.SHOW_TEXT, null);
+      let current;
+      while ((current = walker.nextNode())) {
+        if (!current.textContent || !current.textContent.trim()) continue;
+        if (range.intersectsNode(current)) {
+          nodes.push(current);
+        }
+      }
+      return nodes;
+    }
+
+    function applySafeHighlightRange(range, stemEl, qId, color) {
+      if (!range || range.collapsed || !stemEl || !qId) return false;
+      expandRangeToWordBoundaries(range);
+
+      const textNodes = getTextNodesInRange(range, stemEl);
+      if (textNodes.length === 0) return false;
+
+      let paintedAny = false;
+      for (const textNode of textNodes) {
+        const len = textNode.textContent.length;
+        const start = (textNode === range.startContainer) ? range.startOffset : 0;
+        const end = (textNode === range.endContainer) ? range.endOffset : len;
+        if (end <= start) continue;
+
+        const existingMark = textNode.parentElement?.closest("mark.hl-mark");
+        if (existingMark && start === 0 && end === len) {
+          existingMark.dataset.color = color;
+          paintedAny = true;
+          continue;
+        }
+
+        const subRange = document.createRange();
+        subRange.setStart(textNode, start);
+        subRange.setEnd(textNode, end);
+
+        const mark = document.createElement("mark");
+        mark.className = "hl-mark";
+        mark.dataset.color = color;
+        try {
+          subRange.surroundContents(mark);
+          paintedAny = true;
+        } catch (err) {
+          const frag = subRange.extractContents();
+          mark.appendChild(frag);
+          subRange.insertNode(mark);
+          paintedAny = true;
+        }
+      }
+
+      if (paintedAny) {
+        stemEl.querySelectorAll("mark.hl-mark").forEach(m => {
+          if (!m.textContent) m.remove();
+        });
+        state.highlights[qId] = stemEl.innerHTML;
+        scheduleCloudSync();
+      }
+      return paintedAny;
+    }
+
+    function buildOrderedRange(caretA, caretB) {
+      if (!caretA || !caretB) return null;
+      const rA = document.createRange();
+      rA.setStart(caretA.node, caretA.offset);
+      rA.collapse(true);
+
+      const rB = document.createRange();
+      rB.setStart(caretB.node, caretB.offset);
+      rB.collapse(true);
+
+      const cmp = rA.compareBoundaryPoints(Range.START_TO_START, rB);
+      const full = document.createRange();
+      if (cmp <= 0) {
+        full.setStart(caretA.node, caretA.offset);
+        full.setEnd(caretB.node, caretB.offset);
+      } else {
+        full.setStart(caretB.node, caretB.offset);
+        full.setEnd(caretA.node, caretA.offset);
+      }
+      return full;
+    }
+
+    function updatePenStrokePreview() {
+      if (!penStroke || !penStroke.startCaret || !penStroke.lastCaret) return;
+      const range = buildOrderedRange(penStroke.startCaret, penStroke.lastCaret);
+      if (!range || range.collapsed) return;
+      expandRangeToWordBoundaries(range);
+
+      if (window.CSS && CSS.highlights && typeof Highlight !== "undefined") {
+        CSS.highlights.set("pen-live-preview", new Highlight(range));
+      } else {
+        const sel = window.getSelection();
+        if (sel) {
+          sel.removeAllRanges();
+          sel.addRange(range);
+        }
+      }
+      penStroke.latestRange = range;
+    }
+
+    function finalizePenStroke() {
+      if (!penStroke) return;
+      if (window.CSS && CSS.highlights) {
+        CSS.highlights.delete("pen-live-preview");
+      }
+      const sel = window.getSelection();
+      if (sel) sel.removeAllRanges();
+
+      if (penStroke.latestRange && !penStroke.latestRange.collapsed) {
+        applySafeHighlightRange(penStroke.latestRange, penStroke.stemEl, penStroke.qId, ui.activeHlColor);
+      }
+      penStroke = null;
     }
 
     // =========================================================================
@@ -2656,6 +2975,102 @@
       row.setAttribute("aria-checked", String(isChecked));
     }
 
+    // Suporte direto ao toque (dedo) nos controles de marca-texto do cabecalho do card
+    const questionsContainerEl = document.getElementById("questionsContainer");
+    questionsContainerEl.addEventListener("touchend", (e) => {
+      const penBtn = e.target.closest("[data-action='hl-pen']");
+      if (penBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        togglePenMode();
+        return;
+      }
+      const hlBtn = e.target.closest("[data-action='hl-color']");
+      if (hlBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        setActiveHighlightColor(hlBtn.dataset.color);
+        applyHighlightToCurrentSelection(hlBtn.dataset.qid, hlBtn.dataset.color);
+      }
+    }, { passive: false });
+
+    // Eventos de deslizar o dedo (Touch) e arrastar o mouse (Mouse) no Modo Caneta
+    questionsContainerEl.addEventListener("touchstart", (e) => {
+      if (!ui.penMode) return;
+      const stemEl = e.target.closest(".q-stem");
+      if (!stemEl || e.touches.length !== 1) return;
+      e.preventDefault();
+      const touch = e.touches[0];
+      const caret = getCaretPointFromCoords(touch.clientX, touch.clientY);
+      if (!caret || !stemEl.contains(caret.node)) return;
+      penStroke = {
+        qId: stemEl.dataset.qid,
+        stemEl: stemEl,
+        startCaret: caret,
+        lastCaret: caret,
+        latestRange: null
+      };
+    }, { passive: false });
+
+    questionsContainerEl.addEventListener("touchmove", (e) => {
+      if (!ui.penMode || !penStroke || e.touches.length !== 1) return;
+      e.preventDefault();
+      const touch = e.touches[0];
+      const caret = getCaretPointFromCoords(touch.clientX, touch.clientY);
+      if (caret && penStroke.stemEl.contains(caret.node)) {
+        penStroke.lastCaret = caret;
+        updatePenStrokePreview();
+      }
+    }, { passive: false });
+
+    questionsContainerEl.addEventListener("touchend", () => {
+      if (penStroke) finalizePenStroke();
+    });
+    questionsContainerEl.addEventListener("touchcancel", () => {
+      if (penStroke) finalizePenStroke();
+    });
+
+    questionsContainerEl.addEventListener("mousedown", (e) => {
+      if (!ui.penMode || e.button !== 0) return;
+      const stemEl = e.target.closest(".q-stem");
+      if (!stemEl) return;
+      e.preventDefault();
+      const caret = getCaretPointFromCoords(e.clientX, e.clientY);
+      if (!caret || !stemEl.contains(caret.node)) return;
+      penStroke = {
+        qId: stemEl.dataset.qid,
+        stemEl: stemEl,
+        startCaret: caret,
+        lastCaret: caret,
+        latestRange: null
+      };
+    });
+
+    document.addEventListener("mousemove", (e) => {
+      if (!ui.penMode || !penStroke) return;
+      const caret = getCaretPointFromCoords(e.clientX, e.clientY);
+      if (caret && penStroke.stemEl.contains(caret.node)) {
+        penStroke.lastCaret = caret;
+        updatePenStrokePreview();
+      }
+    });
+
+    document.addEventListener("mouseup", () => {
+      if (penStroke) finalizePenStroke();
+    });
+
+    // Controles do Banner Flutuante do Modo Caneta
+    document.getElementById("penModeBanner").addEventListener("click", (e) => {
+      const colorBtn = e.target.closest("[data-banner-color]");
+      if (colorBtn) {
+        setActiveHighlightColor(colorBtn.dataset.bannerColor);
+        return;
+      }
+      if (e.target.closest("#disablePenBannerBtn")) {
+        togglePenMode(false);
+      }
+    });
+
     // Delegacao de eventos nos Cards de Questoes
     document.getElementById("questionsContainer").addEventListener("click", (e) => {
       const actionBtn = e.target.closest("[data-action]");
@@ -2676,8 +3091,12 @@
         handleRedoQuestion(qId);
       } else if (action === "toggle-note") {
         handleToggleNote(qId);
+      } else if (action === "hl-pen") {
+        e.stopPropagation();
+        togglePenMode();
       } else if (action === "hl-color") {
         e.stopPropagation();
+        setActiveHighlightColor(actionBtn.dataset.color);
         applyHighlightToCurrentSelection(qId, actionBtn.dataset.color);
       } else if (action === "hl-clear") {
         e.stopPropagation();
@@ -2685,23 +3104,52 @@
       }
     });
 
-    // Impede perda de selecao ao clicar nos botoes de cor do marca-texto
-    document.addEventListener("mousedown", (e) => {
+    // Impede perda de selecao ao tocar ou clicar nos botoes de cor do marca-texto
+    function preserveSelectionOnPress(e) {
       if (e.target.closest(".hl-dot") || e.target.closest(".selection-popover")) {
         e.preventDefault();
       }
-    });
+    }
+    document.addEventListener("mousedown", preserveSelectionOnPress);
+    document.addEventListener("touchstart", preserveSelectionOnPress, { passive: false });
 
-    // Mini-popover flutuante ao selecionar texto
-    document.getElementById("selectionPopover").addEventListener("click", (e) => {
+    // Mini-popover flutuante ao selecionar texto (Mouse e Dedo/Touch)
+    const selectionPopoverEl = document.getElementById("selectionPopover");
+    selectionPopoverEl.addEventListener("touchend", (e) => {
+      const btn = e.target.closest("[data-pop-color]");
+      if (!btn || !pendingSelection) return;
+      e.preventDefault();
+      e.stopPropagation();
+      applyHighlightToCurrentSelection(pendingSelection.qId, btn.dataset.popColor);
+    }, { passive: false });
+
+    selectionPopoverEl.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-pop-color]");
       if (!btn || !pendingSelection) return;
       applyHighlightToCurrentSelection(pendingSelection.qId, btn.dataset.popColor);
     });
 
+    let selectionCheckTimer = null;
+    function scheduleSelectionInspect(delay = 20) {
+      clearTimeout(selectionCheckTimer);
+      selectionCheckTimer = setTimeout(inspectTextSelection, delay);
+    }
+
     document.addEventListener("mouseup", (e) => {
       if (e.target.closest(".selection-popover") || e.target.closest(".hl-dot")) return;
-      setTimeout(inspectTextSelection, 10);
+      scheduleSelectionInspect(15);
+    });
+
+    document.addEventListener("touchend", (e) => {
+      if (e.target.closest(".selection-popover") || e.target.closest(".hl-dot")) return;
+      scheduleSelectionInspect(80);
+    }, { passive: true });
+
+    // Detecta ajuste das alcas de selecao com o dedo (Android/iOS)
+    document.addEventListener("selectionchange", () => {
+      const activeTag = document.activeElement?.tagName;
+      if (activeTag === "INPUT" || activeTag === "TEXTAREA") return;
+      scheduleSelectionInspect(140);
     });
 
     document.addEventListener("scroll", hideSelectionPopover, { passive: true });
